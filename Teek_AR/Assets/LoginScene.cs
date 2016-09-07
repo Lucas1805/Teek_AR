@@ -27,11 +27,13 @@ public class LoginScene : MonoBehaviour {
 
         //Check if Login Infomartion is valid or not
         //REPLACE BELOW CODE WITH LOGIN API 
-        if (usernameField.text == "admin" && passwordField.text == "admin")
-        {
-            //Start a coroutine that will load the desired scene.
-            StartCoroutine(LoadNextScene());
-        }
+        //if (usernameField.text == "admin" && passwordField.text == "admin")
+        //{
+        //    Start a coroutine that will load the desired scene.
+        //    StartCoroutine(LoadNextScene());
+        //    Debug.Log("Success");
+        //    Application.LoadLevel("pokemon");
+        //}
 
 
         string url = "10.255.250.160:19291/api/account/login/";
