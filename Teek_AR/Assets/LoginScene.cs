@@ -4,10 +4,12 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class LoginScene : MonoBehaviour {
     public UnityEngine.UI.InputField usernameField;
     public UnityEngine.UI.InputField passwordField;
+    public Text message;
     public int nextSceneID;
 
     private string url = "";
@@ -21,6 +23,7 @@ public class LoginScene : MonoBehaviour {
 	void Update () {
 	
 	}
+    
 
     public void checkLogin()
     {
@@ -30,38 +33,32 @@ public class LoginScene : MonoBehaviour {
 
         //Check if Login Infomartion is valid or not
         //REPLACE BELOW CODE WITH LOGIN API 
-        //if (usernameField.text == "admin" && passwordField.text == "admin")
+        if (usernameField.text == "admin" && passwordField.text == "admin")
+        {
+            //Start a coroutine that will load the desired scene.
+            SceneManager.LoadSceneAsync(nextSceneID);
+        }
+
+
+        //WWWForm form = new WWWForm();
+        //form.AddField("Username", username);
+        //form.AddField("Password", password);
+
+        ////SEND POST REQUEST
+        //UnityWebRequest www = UnityWebRequest.Post(url,form);
+        //www.Send();
+
+        ////Check result
+        //if(!www.isError) //If send request sucess
         //{
-        //    //Start a coroutine that will load the desired scene.
-        //    StartCoroutine(LoadNextScene());
-        //    Debug.Log("Success");
+        //    Debug.Log(www.downloadHandler.text);
         //}
-
-
-        WWWForm form = new WWWForm();
-        form.AddField("Username", username);
-        form.AddField("Password", password);
-
-        //SEND POST REQUEST
-        UnityWebRequest www = UnityWebRequest.Post(url,form);
-        www.Send();
-
-        //Check result
-        if(!www.isError) //If send request sucess
-        {
-            Debug.Log(www.downloadHandler.text);
-        }
     }
 
-    IEnumerator LoadNextScene()
+    public void resetField()
     {
-        // Start an asynchronous operation to load the scene that was passed to the LoadNewScene coroutine.
-        AsyncOperation async = Application.LoadLevelAsync(nextSceneID);
-
-        // While the asynchronous operation to load the new scene is not yet complete, continue waiting until it's done.
-        while (!async.isDone)
-        {
-            yield return null;
-        }
+        usernameField.text = "";
+        passwordField.text = "";
     }
+    
 }
