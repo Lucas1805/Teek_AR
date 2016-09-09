@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using LitJson;
 
 public class LoginScene : MonoBehaviour {
     public UnityEngine.UI.InputField usernameField;
@@ -40,21 +41,37 @@ public class LoginScene : MonoBehaviour {
         }
 
 
-        //WWWForm form = new WWWForm();
-        //form.AddField("Username", username);
-        //form.AddField("Password", password);
+        WWWForm form = new WWWForm();
+        form.AddField("Username", username);
+        form.AddField("Password", password);
 
-        ////SEND POST REQUEST
-        //UnityWebRequest www = UnityWebRequest.Post(url,form);
-        //www.Send();
+        //SEND POST REQUEST
+        UnityWebRequest www = UnityWebRequest.Post(url, form);
+        www.Send();
 
-        ////Check result
-        //if(!www.isError) //If send request sucess
-        //{
-        //    Debug.Log(www.downloadHandler.text);
-        //}
+        //Check result
+        if (!www.isError) //If send request sucess
+        {
+            BuuCLass person = new BuuCLass();
+            
+
+            person = JsonMapper.ToObject<BuuCLass>(www.downloadHandler.text);
+            Debug.Log(person.Succeed + " " + person.Message);
+           
+        }
     }
+    [System.Serializable]
+    public class BuuCLass
+    {
 
+        public bool Succeed { get; set; }
+
+        public string Message { get; set; }
+
+        public string Errors { get; set; }
+        public string Data { get; set; }
+       
+    }
     public void resetField()
     {
         usernameField.text = "";
