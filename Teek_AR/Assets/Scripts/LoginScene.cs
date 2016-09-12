@@ -60,7 +60,7 @@ public class LoginScene : MonoBehaviour {
 
 
                 person = JsonMapper.ToObject<BuuCLass>(www.downloadHandler.text);
-                Debug.Log(person.Succeed + " " + person.Message);
+                //Debug.Log(person.Succeed + " " + person.Message);
 
             }
         }
