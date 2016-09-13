@@ -34,6 +34,14 @@ public class DragAndThrow : MonoBehaviour {
     private double timeCounterDragonDead;
     private bool isDead;
 
+    private AudioSource source;
+    public AudioClip shootSound;
+    public AudioClip hitSound;
+    public AudioClip dragonBackgroundSound;
+    public AudioClip victorySound;
+    private float volLowRange = .5f;
+    private float volHighRange = 1.0f;
+
     void Start()
     {
         initialPosition = transform.position;
@@ -48,6 +56,11 @@ public class DragAndThrow : MonoBehaviour {
         anim = dragon.GetComponent<Animator>();
         timeCounterDragonDead = 0;
         isDead = false;
+
+        source = GetComponent<AudioSource>();
+
+        source.PlayOneShot(dragonBackgroundSound, .3F);
+        
     }
     void OnMouseDown()
     {
@@ -72,6 +85,8 @@ public class DragAndThrow : MonoBehaviour {
         this.GetComponent<Rigidbody>().velocity += this.transform.up * speedCounter / 6;
         dragging = false;
         isThrow = true;
+
+        source.PlayOneShot(shootSound, 1F);
     }
 	// Update is called once per frame
 	void Update () {
@@ -102,11 +117,13 @@ public class DragAndThrow : MonoBehaviour {
             //direction = Camera.main.transform.InverseTransformDirection(direction);
 
             //this.GetComponent<Rigidbody>().AddForce(direction * curveAmount * Time.deltaTime);
+            
         }
         if (isThrow)
         {
             timeCounter += Time.deltaTime;
             
+
         }
         if (timeCounter >= 5)
         {
@@ -151,7 +168,7 @@ public class DragAndThrow : MonoBehaviour {
             dragon.SetActive(false);
 
             healthPanel.SetActive(false);
-            transform.gameObject.SetActive(false);
+            //transform.gameObject.SetActive(false);
 
             resultPanel.SetActive(true);
             milk.SetActive(true);
@@ -227,14 +244,11 @@ public class DragAndThrow : MonoBehaviour {
         if (other.gameObject.CompareTag("Dragon"))
         {
             health.value -= 10;
-            //anim.SetTrigger("Dead");
-            anim.SetTrigger("IsDamaged");
+            anim.SetTrigger("Dead");
+            //anim.SetTrigger("IsDamaged");
 
-            //if (health.value <=30 )
-            //{
-            //    health.GetComponent<Renderer>().material.color = Color.red;
-            //}
-
+            source.PlayOneShot(hitSound, .8F);
+            
             if (health.value <=0)
             {
                 //other.gameObject.SetActive(false);
@@ -242,7 +256,10 @@ public class DragAndThrow : MonoBehaviour {
                 //health.gameObject.SetActive(false);
                 //dragon.SetActive(false);
 
+                
                 isDead = true;
+                dragonBackgroundSound.UnloadAudioData();
+                source.PlayOneShot(victorySound, 1F);
 
                 //anim.SetTrigger("Dead");
                 //anim.SetTrigger("Dead");
