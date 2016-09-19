@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using System.Net.NetworkInformation;
 using System.Linq;
 using System;
-using com.aeksaekhow.androidnativeplugin;
+
 
 public class HomeScript : MonoBehaviour {
         
@@ -21,72 +21,34 @@ public class HomeScript : MonoBehaviour {
         
 	}
 
+
     /// <summary>
-    /// This function is used to get MAC address of Wifi the phone is connected to
+    /// This function is used to get MAC address of Wifi the phone is connected to. THIS FUNTION ONLY WORK ON ANDROID
     /// </summary>
     /// <returns>MAC Address String</returns>
     public string getBSSID()
     {
-        string mac = "test";
-        //var card = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault();
-        //if (card == null)
-        //    return null;
-        //else
-        //{
-        //    byte[] bytes = card.GetPhysicalAddress().GetAddressBytes();
-        //    for (int i = 0; i < bytes.Length; i++)
-        //    {
-        //        mac = string.Concat(mac + (string.Format("{0}", bytes[i].ToString("X2"))));
-        //        if (i != bytes.Length - 1)
-        //        {
-        //            mac = string.Concat(mac + ":");
-        //        }
-        //    }
-        //    mac = card.GetPhysicalAddress().ToString();
-        //    return mac;
-        //}
-
-        AndroidJavaObject jc = new AndroidJavaObject("android.net.wifi.WifiInfo");
-        mac = jc.Call<string>("getBSSID");
-        //AndroidJavaClass jc = new AndroidJavaClass("android.os.Build");
-        //mac = jc.Get<string>("BRAND");
-        return mac;
-    }
-
-    public string getWifiName()
-    {
-        string wifiName = "";
-        return wifiName;
-
-
-    }
-
-    public string getMacAddress()
-    {
-        string mac = null;
-        var card = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault();
-        if (card == null)
-            return null;
-        else
+        string bssid = null;
+        
+        AndroidJavaObject mWiFiManager = null;
+        if(mWiFiManager == null)
         {
-            byte[] bytes = card.GetPhysicalAddress().GetAddressBytes();
-            for (int i = 0; i < bytes.Length; i++)
+            using (AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity"))
             {
-                mac = string.Concat(mac + (string.Format("{0}", bytes[i].ToString("X2"))));
-                if (i != bytes.Length - 1)
-                {
-                    mac = string.Concat(mac + ":");
-                }
+                mWiFiManager = activity.Call<AndroidJavaObject>("getSystemService", "wifi");
             }
-            mac = card.GetPhysicalAddress().ToString();
-            return mac;
         }
+        bssid = mWiFiManager.Call<AndroidJavaObject>("getConnectionInfo").Call<string>("getBSSID");
+        return bssid;
     }
+    
 
     public void showMac()
     {
-        mac.text = getMacAddress();
+        mac.text = getBSSID();
     }
+
+
     
     
 }
