@@ -35,12 +35,17 @@ public class DragAndThrow : MonoBehaviour {
     private bool isDead;
 
     private AudioSource source;
-    public AudioClip shootSound;
-    public AudioClip hitSound;
-    public AudioClip dragonBackgroundSound;
-    public AudioClip victorySound;
+    //public AudioClip dragonBackgroundSound;
+    //public AudioClip victorySound;
     private float volLowRange = .5f;
     private float volHighRange = 1.0f;
+    public Slider backgroundSlider;
+    public Slider soundEffectSlider;
+
+    public GameObject dragonBackgroundSound;
+    public GameObject victorySound;
+    public GameObject shootSound;
+    public GameObject hitSound;
 
     void Start()
     {
@@ -59,8 +64,9 @@ public class DragAndThrow : MonoBehaviour {
 
         source = GetComponent<AudioSource>();
 
-        source.PlayOneShot(dragonBackgroundSound, .3F);
-        
+        dragonBackgroundSound.SetActive(true);
+
+        //source.PlayOneShot(dragonBackgroundSound, backgroundSlider.value);
     }
     void OnMouseDown()
     {
@@ -86,7 +92,11 @@ public class DragAndThrow : MonoBehaviour {
         dragging = false;
         isThrow = true;
 
-        source.PlayOneShot(shootSound, 1F);
+        //source.PlayOneShot(shootSound, soundEffectSlider.value);
+        //shootSound.SetActive(true);
+        shootSound.SetActive(false);
+
+        shootSound.SetActive(true);
     }
 	// Update is called once per frame
 	void Update () {
@@ -172,6 +182,8 @@ public class DragAndThrow : MonoBehaviour {
 
             resultPanel.SetActive(true);
             milk.SetActive(true);
+
+            transform.position = new Vector3(0, Screen.height * 2, 0);
         }
 
         
@@ -247,7 +259,8 @@ public class DragAndThrow : MonoBehaviour {
             anim.SetTrigger("Dead");
             //anim.SetTrigger("IsDamaged");
 
-            source.PlayOneShot(hitSound, .8F);
+            hitSound.SetActive(false);
+            hitSound.SetActive(true);
             
             if (health.value <=0)
             {
@@ -258,8 +271,12 @@ public class DragAndThrow : MonoBehaviour {
 
                 
                 isDead = true;
-                dragonBackgroundSound.UnloadAudioData();
-                source.PlayOneShot(victorySound, 1F);
+                //dragonBackgroundSound.UnloadAudioData();
+                //source.PlayOneShot(victorySound, backgroundSlider.value);
+
+                dragonBackgroundSound.SetActive(false);
+                victorySound.SetActive(true);
+                
 
                 //anim.SetTrigger("Dead");
                 //anim.SetTrigger("Dead");
