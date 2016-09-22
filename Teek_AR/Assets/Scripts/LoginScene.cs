@@ -11,20 +11,24 @@ public class LoginScene : MonoBehaviour {
     public UnityEngine.UI.InputField usernameField;
     public UnityEngine.UI.InputField passwordField;
     public Text message;
+    public GameObject messagePanel;
+    public GameObject loginPanel;
     public int nextSceneID;
 
-    private string url = "";
+    private string url = "http://localhost/Teek/api/account/login";
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-    
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
 
     public void checkLogin()
     {
@@ -38,11 +42,11 @@ public class LoginScene : MonoBehaviour {
         {
             //Check if Login Infomartion is valid or not
             //REPLACE BELOW CODE WITH LOGIN API 
-            if (usernameField.text == "admin" && passwordField.text == "admin")
-            {
-                //Start a coroutine that will load the desired scene.
-                SceneManager.LoadSceneAsync(nextSceneID);
-            }
+            //if (usernameField.text == "admin" && passwordField.text == "admin")
+            //{
+            //    //Start a coroutine that will load the desired scene.
+            //    SceneManager.LoadSceneAsync(nextSceneID);
+            //}
 
             //Create object to sen Http Request
             WWWForm form = new WWWForm();
@@ -50,41 +54,79 @@ public class LoginScene : MonoBehaviour {
             form.AddField("Password", password);
 
             //SEND POST REQUEST
-            UnityWebRequest www = UnityWebRequest.Post(url, form);
-            www.Send();
 
-            //Check result
-            if (!www.isError) //If send request sucess
-            {
-                BuuCLass person = new BuuCLass();
+            WWW www = new WWW(url, form);
 
-
-                person = JsonMapper.ToObject<BuuCLass>(www.downloadHandler.text);
-                //Debug.Log(person.Succeed + " " + person.Message);
-
-            }
+            StartCoroutine(WaitForRequest(www));
         }
         else
         {
-            message.text = "Please enter username and password";
+            //message.text = "Please enter username and password";
+            showMessage("Please enter username and password");
         }
     }
-    [System.Serializable]
-    public class BuuCLass
-    {
 
+    IEnumerator WaitForRequest(WWW www)
+    {
+        yield return www;
+
+         //Check for errors
+        if (www.error == null)
+        {
+            JSONResponseObject jsonResponse = new JSONResponseObject();
+
+
+            jsonResponse = JsonMapper.ToObject<JSONResponseObject>(www.text);
+
+            if (jsonResponse.Succeed)
+            {
+                //Load next scene
+                SceneManager.LoadSceneAsync(nextSceneID);
+            }
+            else
+            {
+                //Show error message
+                showMessage(jsonResponse.Message);
+            }
+        }
+        else {
+            Debug.Log("WWW Error: " + www.error);
+        }
+    }
+
+    [System.Serializable]
+    public class JSONResponseObject
+    {
+            
         public bool Succeed { get; set; }
 
         public string Message { get; set; }
 
         public string Errors { get; set; }
-        public string Data { get; set; }
-       
+        public Data Data { get; set; }
+
+    }
+
+    public class Data
+    {
+        public string Id { get; set; }
+        public string Role { get; set; }
+        public string Email { get; set; }
+        public string Username { get; set; }
+        public string ImageUrl { get; set; }
+        public string PhoneNumber { get; set; }
+        public string FullName { get; set; }
     }
     public void resetField()
     {
         usernameField.text = "";
         passwordField.text = "";
     }
-    
+
+    public void showMessage(string messageString)
+    {
+        loginPanel.SetActive(false);
+        message.text = messageString;
+        messagePanel.SetActive(true);
+    }
 }
