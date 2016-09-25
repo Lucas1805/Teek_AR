@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using MobyShop;
 
 public class DragAndThrow : MonoBehaviour {
     bool dragging = false;
@@ -10,6 +11,7 @@ public class DragAndThrow : MonoBehaviour {
     public float Speed;
     double timeCounter;
     bool isThrow = false;
+    bool isSpawned;
     float speedCounter;
     float dragTotalTime;
     Vector3 initialPosition;
@@ -49,8 +51,8 @@ public class DragAndThrow : MonoBehaviour {
 
     void Start()
     {
+        ProductInfo fireball = Shop.GetProduct("fireball");
         initialPosition = transform.position;
-
         //this.GetComponent<Rigidbody>().freezeRotation = true;
 
         initialRotation = this.GetComponent<Rigidbody>().rotation;
@@ -66,7 +68,20 @@ public class DragAndThrow : MonoBehaviour {
 
         dragonBackgroundSound.SetActive(true);
 
-        //source.PlayOneShot(dragonBackgroundSound, backgroundSlider.value);
+        if (fireball != null)
+        {
+            if(fireball.Value <= 0)
+            {
+                transform.position = new Vector3(0, Screen.height * 2, 0);
+               
+            } else
+            {
+                createBall();
+            }
+        }
+        else Debug.Log("Cannot get product object. Please check for product ID");
+
+        timeCounter += Time.deltaTime;
     }
     void OnMouseDown()
     {
@@ -92,6 +107,16 @@ public class DragAndThrow : MonoBehaviour {
         dragging = false;
         isThrow = true;
 
+        ProductInfo fireball = Shop.GetProduct("fireball");
+        if (fireball != null)
+        {
+            if (fireball.Value > 0)
+            {
+                fireball.Value = fireball.Value - 1;
+            }
+        }
+        else Debug.Log("Cannot get product object. Please check for product ID");
+
         //source.PlayOneShot(shootSound, soundEffectSlider.value);
         //shootSound.SetActive(true);
         shootSound.SetActive(false);
@@ -100,20 +125,28 @@ public class DragAndThrow : MonoBehaviour {
     }
 	// Update is called once per frame
 	void Update () {
-        //distancePokeballRaikou = transform.position - raikou.transform.position;
-        //if (distancePokeballRaikou.x < 0.0)
-        //{
-        //    displayText.text = "trúng xD";
-        //    //raikou.SetActive(false);
-        //}
-        //else
-        //{
-        //    displayText.text = distance.ToString();
-        //}
+        if(!dragging || isThrow)
+        {
 
-        //this.GetComponent<Rigidbody>().maxAngularVelocity = curveAmount * 8f;
-        //this.GetComponent<Rigidbody>().angularVelocity = transform.forward * curveAmount * 8f
-        //    + this.GetComponent<Rigidbody>().angularVelocity;
+            ProductInfo fireball = Shop.GetProduct("fireball");
+
+            if (fireball.Value > 0)
+            {
+                if (!isSpawned)
+                {
+                    Invoke("createBall", 5);
+                }
+                
+            }
+        }
+
+
+            //if (timeCounter >= 5)
+            //{
+            //    createBall();
+            //    dragon.SetActive(true);
+
+            //}
 
         if (dragging)
         {
@@ -122,49 +155,12 @@ public class DragAndThrow : MonoBehaviour {
             transform.position = Vector3.Lerp(this.transform.position, rayPoint, Speed * Time.deltaTime);
 
             dragTotalTime += Time.deltaTime;
-
-            //Vector3 direction = Vector3.right;
-            //direction = Camera.main.transform.InverseTransformDirection(direction);
-
-            //this.GetComponent<Rigidbody>().AddForce(direction * curveAmount * Time.deltaTime);
             
         }
         if (isThrow)
         {
             timeCounter += Time.deltaTime;
-            
-
-        }
-        if (timeCounter >= 5)
-        {
-            
-
-            timeCounter = 0;
-            isThrow = false;
-            transform.position = initialPosition;
-            this.GetComponent<Rigidbody>().useGravity = false;
-            //this.GetComponent<Rigidbody>().velocity = this.transform.forward * 0;
-            this.GetComponent<Rigidbody>().velocity = Vector3.zero;
-
-            this.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-            //transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-            transform.rotation = initialRotation;
-            //transform.SetParent(Camera.main.transform);
-
-            dragon.SetActive(true);
-
-            count++;
-
-            if (isHit)
-            {
-                arrayList.Add(1);
-                isHit = false;
-                displayText.text = "";
-            }
-            else
-            {
-                arrayList.Add(0);
-            }
+            isSpawned = false;
         }
 
         if (isDead)
@@ -186,69 +182,23 @@ public class DragAndThrow : MonoBehaviour {
             transform.position = new Vector3(0, Screen.height * 2, 0);
         }
 
-        
-	}
+    }
 
-    void OnGUI()
+    void createBall()
     {
-        //if (shouldDisplay)
-        {
-            // Welcome screen group
-            GUI.BeginGroup(new Rect(50, 50, 200, Screen.height));
+        CancelInvoke();
+        transform.position = initialPosition;
+        timeCounter = 0;
+        isThrow = false;
+        this.GetComponent<Rigidbody>().useGravity = false;
+        //this.GetComponent<Rigidbody>().velocity = this.transform.forward * 0;
+        this.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
-            // Make a box so you can see where the group is on-screen.
-            //GUI.Box(new Rect(0, 0, 300, 20), "");
-
-            string text = "";
-
-            //ArrayList arrayList = new ArrayList();
-            //for (int i = 0; i < count; i++)
-            //{
-            //    arrayList.Add(i);
-            //}
-
-            GUI.Box(new Rect(0, 0, 200, 20), "");
-            text = "chọi đi xD";
-            GUI.Label(new Rect(10, 0, 200, 20), text);
-
-            for (int i = 0; i < count; i++)
-            {
-                text = "chọi lần " + (i+1) + ": ";
-                if (int.Parse(arrayList[i].ToString()) == 0)
-                {
-                    GUI.color = Color.red;
-                    text += "miss 8-}";
-                }
-                else
-                {
-                    GUI.color = Color.green;
-                    text += "trúng xD";
-                }
-
-                GUI.Box(new Rect(0, (i+1) * 21, 200, 20), "");
-                GUI.Label(new Rect(10, (i+1) * 21, 200, 20), text);
-            }
-
-            //if (count > 0)
-            //{
-            //    GUI.Box(new Rect(0, count*10, 300, 20), "");
-            //    text = "chọi " + count.ToString() + " cái rồi đó xD";
-            //    GUI.Label(new Rect(count*10, 0, 300, 20), text);
-            //}
-            //else
-            //{
-            //    GUI.Box(new Rect(0, 0, 300, 20), "");
-            //    text = "chọi đi xD";
-            //    GUI.Label(new Rect(10, 0, 300, 20), text);
-            //}
-            //GUI.Label(new Rect(10, 0, 650, 300), text);
-
-
-
-
-            // End Welcome group
-            GUI.EndGroup();
-        }
+        this.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        //transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        transform.rotation = initialRotation;
+        //transform.SetParent(Camera.main.transform);
+        isSpawned = true;
     }
 
     void OnTriggerEnter(Collider other)
@@ -295,7 +245,7 @@ public class DragAndThrow : MonoBehaviour {
 
             //displayText.text = "trúng xD";
 
-            timeCounter = 5;
+            //timeCounter = 5;
 
             //transform.position = initialPosition;
             //this.GetComponent<Rigidbody>().useGravity = false;
@@ -304,6 +254,7 @@ public class DragAndThrow : MonoBehaviour {
             
 
             isHit = true;
+            
         }
     }
 }
