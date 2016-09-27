@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: f798b872a68f64d4282f975278741415
+timeCreated: 1470051559
+licenseType: Store
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Gotham ExtraLight
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 615c0155d14f84faeb98ca89aa920207, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
