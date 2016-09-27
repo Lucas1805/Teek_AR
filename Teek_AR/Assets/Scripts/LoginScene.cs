@@ -30,12 +30,11 @@ public class LoginScene : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        PlayerPrefs.SetString(usernameKeyValue,Encrypt.EncryptString("aaaaa"));
+        PlayerPrefs.SetString(passwordKeyValue, Encrypt.EncryptString("aaaaa"));
+        PlayerPrefs.Save();
+
         sp = gameObject.GetComponent<SpriteRenderer>();
-        if (sp != null)
-        {
-            sp.enabled = false;
-        }
-        else Debug.Log("Cannot get Sprite Renderer Object in Start function");
 
         //Check if Player has Login Info (Login Session) in PlayerPrefs. If YES auto login
         if (PlayerPrefs.HasKey(usernameKeyValue) && PlayerPrefs.HasKey(usernameKeyValue))
@@ -52,7 +51,6 @@ public class LoginScene : MonoBehaviour {
     
     public void checkLogin()
     {
-        //Enable loading indicator
         showLoadingIndicator();
 
         //Reset message text
@@ -94,6 +92,8 @@ public class LoginScene : MonoBehaviour {
 
     private void checkLoginWithSession()
     {
+        showLoadingIndicator();
+
         //Get username and pass from PlayerPrefs and decrypted it
         username = Decrypt.DecryptString((PlayerPrefs.GetString(usernameKeyValue)));
         password = Decrypt.DecryptString((PlayerPrefs.GetString(passwordKeyValue)));
@@ -113,36 +113,41 @@ public class LoginScene : MonoBehaviour {
     IEnumerator WaitForRequest(WWW www)
     {
         yield return www;
-
-         //Check for errors
-        if (www.error == null)
+        
+        if(www.isDone)
         {
-            JSONResponseObject jsonResponse = new JSONResponseObject();
-
-
-            jsonResponse = JsonMapper.ToObject<JSONResponseObject>(www.text);
-
-            if (jsonResponse.Succeed)
+            //Check for errors
+            if (www.error == null)
             {
-                //Store login info for auto login
-                PlayerPrefs.SetString(usernameKeyValue, Encrypt.EncryptString(username));
-                PlayerPrefs.SetString(passwordKeyValue, Encrypt.EncryptString(password));
-                PlayerPrefs.Save();
+                JSONResponseObject jsonResponse = new JSONResponseObject();
 
-                //Load next scene
-                disableLoadinIndicator();
-                SceneManager.LoadSceneAsync(nextSceneID);
+
+                jsonResponse = JsonMapper.ToObject<JSONResponseObject>(www.text);
+
+                if (jsonResponse.Succeed)
+                {
+                    //Store login info for auto login
+                    PlayerPrefs.SetString(usernameKeyValue, Encrypt.EncryptString(username));
+                    PlayerPrefs.SetString(passwordKeyValue, Encrypt.EncryptString(password));
+                    PlayerPrefs.Save();
+
+                    //Load next scene
+                    disableLoadinIndicator();
+                    SceneManager.LoadSceneAsync(nextSceneID);
+                }
+                else
+                {
+                    //Show error message
+                    disableLoadinIndicator();
+                    showMessage(jsonResponse.Message);
+                }
             }
-            else
-            {
-                //Show error message
-                showMessage(jsonResponse.Message);
-                disableLoadinIndicator();
+            else {
+                showMessage(www.error);
+                Debug.Log("WWW Error: " + www.error);
             }
         }
-        else {
-            Debug.Log("WWW Error: " + www.error);
-        }
+        
     }
 
     [System.Serializable]
@@ -184,6 +189,7 @@ public class LoginScene : MonoBehaviour {
     
     public void showLoadingIndicator()
     {
+        loginPanel.SetActive(false);
         if (sp != null && loadingPanel != null)
         {
             sp.enabled = true;
@@ -213,4 +219,32 @@ public class LoginScene : MonoBehaviour {
 
         showMessage(Decrypt.DecryptString(PlayerPrefs.GetString("TESTAUTO")));
     }
+
+    /// <summary>
+    /// This function is used to get MAC address of Wifi the phone is connected to. THIS FUNTION ONLY WORK ON ANDROID
+    /// </summary>
+    /// <returns>MAC Address String</returns>
+    private string getBSSID()
+    {
+#if UNITY_ANDROID
+        string bssid = null;
+
+        AndroidJavaObject mWiFiManager = null;
+        if (mWiFiManager == null)
+        {
+            using (AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity"))
+            {
+                mWiFiManager = activity.Call<AndroidJavaObject>("getSystemService", "wifi");
+            }
+        }
+        bssid = mWiFiManager.Call<AndroidJavaObject>("getConnectionInfo").Call<string>("getBSSID");
+        return bssid;
+#endif
+
+#if UNITY_IOS
+        //NOT IMPLEMENT YET
+#endif
+    }
+
+
 }

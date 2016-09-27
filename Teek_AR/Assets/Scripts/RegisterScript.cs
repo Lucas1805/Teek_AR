@@ -27,11 +27,6 @@ public class RegisterScript : MonoBehaviour {
     // Use this for initialization
     void Start () {
         sp = gameObject.GetComponent<SpriteRenderer>();
-        if (sp != null)
-        {
-            sp.enabled = false;
-        }
-        else Debug.Log("Cannot get Sprite Renderer Object in Start function");
     }
 	
 	// Update is called once per frame
@@ -204,6 +199,7 @@ public class RegisterScript : MonoBehaviour {
 
     public void showLoadingIndicator()
     {
+        registerPanel.SetActive(false);
         if (sp != null && loadingPanel != null)
         {
             sp.enabled = true;
@@ -215,6 +211,7 @@ public class RegisterScript : MonoBehaviour {
 
     public void disableLoadinIndicator()
     {
+        registerPanel.SetActive(true);
         if (sp != null && loadingPanel != null)
         {
             if (sp.enabled == true)
