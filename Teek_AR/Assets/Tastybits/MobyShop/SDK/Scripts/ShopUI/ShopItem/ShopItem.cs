@@ -215,14 +215,24 @@ namespace MobyShop.UI {
 			} else {
 				Shop.BuyProduct( this.productId );
 			}
-		}
+
+            //QuanHM - set parent DialogConfirmPurchase(Clone) to ShopCanvas
+            #region
+            GameObject dialogConfirmPurchase = GameObject.Find("DialogConfirmPurchase(Clone)");
+            if (dialogConfirmPurchase != null)
+            {
+                GameObject shopCanvas = GameObject.Find("ShopCanvas");
+                dialogConfirmPurchase.transform.SetParent(shopCanvas.transform);
+            }
+            #endregion
+        }
 
 
-		/**
+        /**
 		 * This is a way of setting the text property on an instance of a object with a text property
 		 * It can be used on diffirent classes as long as they have a field or property named "text".
 		 */
-		static void TextObjectValue( UnityEngine.Object o, string newv ) {
+        static void TextObjectValue( UnityEngine.Object o, string newv ) {
 			if (o == null) {
 				return;
 			}
