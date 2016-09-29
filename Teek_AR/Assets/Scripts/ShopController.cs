@@ -2,10 +2,11 @@
 using System.Collections;
 using MobyShop;
 using MobyShop.UI;
+using UnityEngine.SceneManagement;
 
 public class ShopController : MonoBehaviour {
     public ShopUIBase mobyShop;
-
+    
     private const int FIREBALL_DEFAULT_NUMBER = 20;
 
 	// Use this for initialization
@@ -34,4 +35,6 @@ public class ShopController : MonoBehaviour {
         else Debug.Log("Cannot get product object. Please check for product ID");
 
     }
+
+    
 }

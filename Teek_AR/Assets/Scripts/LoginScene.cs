@@ -30,6 +30,7 @@ public class LoginScene : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        //THIS CODE USED TO TEST, PLEASE DELETE IT BEFORE BUILDING A FINAL PRODUCT
         PlayerPrefs.SetString(usernameKeyValue,Encrypt.EncryptString("aaaaa"));
         PlayerPrefs.SetString(passwordKeyValue, Encrypt.EncryptString("aaaaa"));
         PlayerPrefs.Save();

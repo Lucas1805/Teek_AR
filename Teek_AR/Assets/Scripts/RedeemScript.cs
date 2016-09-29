@@ -8,16 +8,24 @@ public class RedeemScript : MonoBehaviour {
     public InputField inputCodeField;
     public GameObject redeemCodePanel;
     public GameObject messagePanel;
+    public GameObject loadingPanel;
+
+
     public Text message;
 
     string code;
 
-    private string url = "";
+    private string url = "http://localhost/Teek/api/account/login";
+    private SpriteRenderer sp;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
+    // Use this for initialization
+    void Start () {
+        sp = gameObject.GetComponent<SpriteRenderer>();
+        if(sp == null)
+        {
+            Debug.Log("Cannot get loading sprite object");
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -31,7 +39,21 @@ public class RedeemScript : MonoBehaviour {
         //Get value
         code = inputCodeField.text;
 
-        if(code.Length <= 0)
+        if(code.Length > 0)
+        {
+            showLoadingIndicator();
+
+            //Create object to sen Http Request
+            WWWForm form = new WWWForm();
+            form.AddField("RedeemCode", code);
+
+            //SEND POST REQUEST
+
+            WWW www = new WWW(url, form);
+
+            StartCoroutine(WaitForRequest(www));
+        }
+        else
         {
             showMessage("Please enter code");
         }
@@ -57,13 +79,17 @@ public class RedeemScript : MonoBehaviour {
             if (jsonResponse.Succeed)
             {
                 //If code is correct
+
+                disableLoadinIndicator();
             }
             else
             {
-                
+                disableLoadinIndicator();
+                showMessage(jsonResponse.Message);
             }
         }
         else {
+            showMessage(www.error);
             Debug.Log("WWW Error: " + www.error);
         }
     }
@@ -97,6 +123,33 @@ public class RedeemScript : MonoBehaviour {
         redeemCodePanel.SetActive(false);
         messagePanel.SetActive(true);
         message.text = messageString;
-        
+        disableLoadinIndicator();
+        resetField();
+
     }
+
+    public void showLoadingIndicator()
+    {
+        redeemCodePanel.SetActive(false);
+        if (sp != null && loadingPanel != null)
+        {
+            sp.enabled = true;
+            loadingPanel.SetActive(true);
+        }
+        else
+            Debug.Log("Null Sprite Renderer of Loading Panel");
+    }
+
+    public void disableLoadinIndicator()
+    {
+        if (sp != null && loadingPanel != null)
+        {
+            if (sp.enabled == true)
+                sp.enabled = false;
+            loadingPanel.SetActive(false);
+        }
+        else
+            Debug.Log("Null Sprite Renderer of Loading Panel");
+    }
+
 }
