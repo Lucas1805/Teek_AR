@@ -97,7 +97,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
     {
         distance = Vector3.Distance(transform.position,
 
-Camera.main.transform.position);
+        Camera.main.transform.position);
         dragging = true;
 
     }
@@ -131,7 +131,8 @@ speedCounter / 6;
             if (ballAmount > 0)
             {
                 Shop.IncrementProductClassAmount(FireballItemClass, -1);
-                ballAmount = Shop.GetProductClassAmount
+                ballAmount = Shop.GetProductClassAmount
+
 (FireballItemClass);
             }
         }
@@ -174,7 +175,8 @@ speedCounter / 6;
 
         if (dragging)
         {
-            Ray ray = Camera.main.ScreenPointToRay
+            Ray ray = Camera.main.ScreenPointToRay
+
 (Input.mousePosition);
             Vector3 rayPoint = ray.GetPoint(distance);
             transform.position = Vector3.Lerp(this.transform.position,

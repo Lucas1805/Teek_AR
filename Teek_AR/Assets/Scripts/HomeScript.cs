@@ -5,11 +5,12 @@ using UnityEngine.UI;
 using System.Net.NetworkInformation;
 using System.Linq;
 using System;
-
+using UnityEngine.SceneManagement;
+using Assets;
 
 public class HomeScript : MonoBehaviour {
-        
-    public Text mac;
+
+    //public Text mac;
 
 	// Use this for initialization
 	void Start () {
@@ -51,10 +52,17 @@ public class HomeScript : MonoBehaviour {
 
     public void showMac()
     {
-        mac.text = getBSSID();
+        //mac.text = getBSSID();
     }
 
+    public void loadPlayerInfoScene()
+    {
+        SceneManager.LoadSceneAsync(ConstantClass.PlayerInfoSceneName);
+    }
 
-    
-    
+    public void loadRedeemCodeScene()
+    {
+        SceneManager.LoadSceneAsync(ConstantClass.RedeemCodeSceneName);
+    }
+
 }

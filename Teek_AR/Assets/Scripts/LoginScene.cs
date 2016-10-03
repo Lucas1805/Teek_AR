@@ -6,6 +6,7 @@ using System;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using LitJson;
+using Assets;
 
 public class LoginScene : MonoBehaviour {
     public UnityEngine.UI.InputField usernameField;
@@ -14,7 +15,6 @@ public class LoginScene : MonoBehaviour {
     public GameObject messagePanel;
     public GameObject loginPanel;
     public GameObject loadingPanel;
-    public int nextSceneID;
 
     //Use these 2 Key string to store login session in PlayerPrefs
     private readonly string usernameKeyValue = "Username";
@@ -132,9 +132,9 @@ public class LoginScene : MonoBehaviour {
                     PlayerPrefs.SetString(passwordKeyValue, Encrypt.EncryptString(password));
                     PlayerPrefs.Save();
 
-                    //Load next scene
+                    //Load home scene
                     disableLoadinIndicator();
-                    SceneManager.LoadSceneAsync(nextSceneID);
+                    SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
                 }
                 else
                 {
