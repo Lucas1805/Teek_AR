@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using MobyShop;
+using Assets;
 
 public class DragAndThrow : MonoBehaviour
 {
@@ -52,18 +53,17 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
     public GameObject shootSound;
     public GameObject hitSound;
 
-    private readonly string FireballItemClass = "weapon";
     private ProductInfo ball;
     private int ballAmount;
 
     void Start()
     {
-        ballAmount = Shop.GetProductClassAmount(FireballItemClass);
+        ballAmount = Shop.GetProductClassAmount(ConstantClass.FireBallItemClassName);
 
         // lay so banh hien tai
-        //Shop.IncrementProductClassAmount(FireballItemClass, -ballAmount + 1); // tang so banh them 1
+        //Shop.IncrementProductClassAmount(ConstantClass.FireBallItemClassName, -ballAmount + 1); // tang so banh them 1
 
-        ball = Shop.GetProduct(FireballItemClass);  // lay item Fireball
+        ball = Shop.GetProduct(ConstantClass.FireBallItemClassName);  // lay item Fireball
 
         initialPosition = transform.position;
 
@@ -130,10 +130,10 @@ speedCounter / 6;
         {
             if (ballAmount > 0)
             {
-                Shop.IncrementProductClassAmount(FireballItemClass, -1);
+                Shop.IncrementProductClassAmount(ConstantClass.FireBallItemClassName, -1);
                 ballAmount = Shop.GetProductClassAmount
 
-(FireballItemClass);
+(ConstantClass.FireBallItemClassName);
             }
         }
         //else Debug.Log("Cannot get product object. Please check for product ID");
@@ -144,7 +144,7 @@ speedCounter / 6;
     // Update is called once per frame
     void Update()
     {
-        ballAmount = Shop.GetProductClassAmount(FireballItemClass);
+        ballAmount = Shop.GetProductClassAmount(ConstantClass.FireBallItemClassName);
         if (isThrow)
         {
             //ProductInfo fireball = Shop.GetProduct("fireball");

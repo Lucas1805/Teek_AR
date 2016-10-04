@@ -15,8 +15,7 @@ public class ShopController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        //GET USERNAME FROM LOGINSCENE TO LOAD PLAYER INFORMATION
-        //username = ;
+        setDefaultForShop();
 	}
 	
 	// Update is called once per frame
@@ -29,30 +28,40 @@ public class ShopController : MonoBehaviour {
         mobyShop.Show(0,null);
     }
 
-    //public void setDefault()
-    //{
-    //    //Set number o fireball of account to Default Value
-    //    ProductInfo product = Shop.GetProduct("fireball");
-    //    if (product != null)
-    //    {
-    //        product.Value = FIREBALL_DEFAULT_NUMBER;
-    //    }
-    //    else Debug.Log("Cannot get product object. Please check for product ID");
+    public void setDefaultForShop()
+    {
+        Shop.ClearAllPurchaseData();
 
-    //}
+        ProductInfo fireball = Shop.GetProduct(ConstantClass.FireBallItemID);
+        ProductInfo coin = Shop.GetProduct(ConstantClass.CoinItemID);
+
+        //SET VALUE
+        fireball.Value = 10;
+        coin.Value = 150;
+
+    }
 
     public void loadRedeemCodeScene()
     {
+        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
+        MySceneManager.setLastScene(ConstantClass.GameSceneName);
+
         SceneManager.LoadSceneAsync(ConstantClass.RedeemCodeSceneName);
     }
 
     public void loadHomeScene()
     {
+        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
+        MySceneManager.setLastScene(ConstantClass.GameSceneName);
+
         SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
     }
 
     public void loadInventoryScene()
     {
+        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
+        MySceneManager.setLastScene(ConstantClass.GameSceneName);
+
         SceneManager.LoadSceneAsync(ConstantClass.InventorySceneName);
     }
 
