@@ -133,9 +133,9 @@ public class RegisterScript : MonoBehaviour {
 
     public void showMessage(string messageString)
     {
+        registerPanel.SetActive(false);
         messagePanel.SetActive(true);
         message.text = messageString;
-        registerPanel.SetActive(false);
         disableLoadinIndicator();
     }
 

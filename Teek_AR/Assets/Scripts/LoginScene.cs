@@ -31,9 +31,9 @@ public class LoginScene : MonoBehaviour {
     void Start()
     {
         //THIS CODE USED TO TEST, PLEASE DELETE IT BEFORE BUILDING A FINAL PRODUCT
-        PlayerPrefs.SetString(usernameKeyValue,Encrypt.EncryptString("aaaaa"));
-        PlayerPrefs.SetString(passwordKeyValue, Encrypt.EncryptString("aaaaa"));
-        PlayerPrefs.Save();
+        //PlayerPrefs.SetString(usernameKeyValue,Encrypt.EncryptString("aaaaa"));
+        //PlayerPrefs.SetString(passwordKeyValue, Encrypt.EncryptString("aaaaa"));
+        //PlayerPrefs.Save();
 
         sp = gameObject.GetComponent<SpriteRenderer>();
 
@@ -42,6 +42,7 @@ public class LoginScene : MonoBehaviour {
         {
             this.checkLoginWithSession();
         }
+
     }
 
     // Update is called once per frame
@@ -67,11 +68,11 @@ public class LoginScene : MonoBehaviour {
             //Check if Login Infomartion is valid or not
 
             //BACKDOOR CODE
-            //if (usernameField.text == "admin" && passwordField.text == "admin")
-            //{
-            //    //Start a coroutine that will load the desired scene.
-            //    SceneManager.LoadSceneAsync(nextSceneID);
-            //}
+            if (usernameField.text == "adminThongNe" && passwordField.text == "adminThong123")
+            {
+                //Start a coroutine that will load the desired scene.
+                SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
+            }
 
             //Create object to sen Http Request
             WWWForm form = new WWWForm();
@@ -132,12 +133,19 @@ public class LoginScene : MonoBehaviour {
                     PlayerPrefs.SetString(passwordKeyValue, Encrypt.EncryptString(password));
                     PlayerPrefs.Save();
 
+                    //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
+                    MySceneManager.setLastScene(ConstantClass.LoginSceneName);
+
                     //Load home scene
                     disableLoadinIndicator();
                     SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
                 }
                 else
                 {
+                    //Delete autologin info when login failed
+                    PlayerPrefs.DeleteKey(usernameKeyValue);
+                    PlayerPrefs.DeleteKey(passwordKeyValue);
+
                     //Show error message
                     disableLoadinIndicator();
                     showMessage(jsonResponse.Message);

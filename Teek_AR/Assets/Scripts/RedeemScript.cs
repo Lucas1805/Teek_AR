@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using LitJson;
+using Assets;
 
 public class RedeemScript : MonoBehaviour {
 
@@ -152,4 +153,8 @@ public class RedeemScript : MonoBehaviour {
             Debug.Log("Null Sprite Renderer of Loading Panel");
     }
 
+    public void loadLastScene()
+    {
+        MySceneManager.loadPreviousScene();
+    }
 }
