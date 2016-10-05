@@ -25,5 +25,7 @@ namespace Assets.ResponseModels
         public virtual Nullable<int> Status { get; set; }
         public virtual bool EnableInteractionPage { get; set; }
         public virtual bool Active { get; set; }
+
+        public virtual List<string> Categories { get; set; }
     }
 }
