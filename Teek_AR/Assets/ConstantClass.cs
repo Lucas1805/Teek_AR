@@ -24,5 +24,22 @@ namespace Assets
         //USED THESE ID TO LOAD PLAYER INTEMS FROM SERVER
         public const string FireBallItemID = "fireball";
         public const string CoinItemID = "coinpack1";
+
+        //USED THESE TO STORE DATA IN PLAYERSPREFS
+        public const string PP_UsernameKey = "Username";
+        public const string PP_PasswordKey = "Password";
+        public const string PP_UserIDKey = "PlayerID";
+
+        //API LINKS
+        public const string API_Login = "http://192.168.2.132/Teek/api/account/login";
+        public const string API_Register = "http://localhost/Teek/api/account/register";
+
+        public static string API_UserInfo = "http://localhost/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
+
+
+        //TEST LOGIN INFO
+        //USername: test123
+        //Password: testtest
+
     }
 }
