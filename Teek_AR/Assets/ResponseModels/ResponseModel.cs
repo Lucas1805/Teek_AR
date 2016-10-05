@@ -5,12 +5,18 @@ using System.Text;
 
 namespace Assets.ResponseModels
 {
-    class ResponseModel<T> where T:class
+    public class ResponseModel<T> where T:class
     {
         public bool Succeed { get; set; }
         public string Message { get; set; }
         public string Errors { get; set; }
         public T Data { get; set; }
 
+    }
+    public class RatingResponseModel
+    {
+        public int RateCount { get; set; }
+        public double Point { get; set; }
+        public double UserRate { get; set; }
     }
 }
