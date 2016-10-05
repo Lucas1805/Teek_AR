@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
 using LitJson;
+using Assets;
 
 public class RegisterScript : MonoBehaviour {
     public UnityEngine.UI.InputField fullnameField;
@@ -15,7 +16,6 @@ public class RegisterScript : MonoBehaviour {
     public GameObject registerPanel;
     public GameObject loadingPanel;
 
-    private string url = "http://localhost/Teek/api/account/register";
     private SpriteRenderer sp;
 
     string fullname;
@@ -70,7 +70,7 @@ public class RegisterScript : MonoBehaviour {
 
             //SEND POST REQUEST
 
-            WWW www = new WWW(url, form);
+            WWW www = new WWW(ConstantClass.API_Register, form);
 
             StartCoroutine(WaitForRequest(www));
         }

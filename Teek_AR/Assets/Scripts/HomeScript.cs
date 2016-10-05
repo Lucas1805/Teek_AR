@@ -71,4 +71,12 @@ public class HomeScript : MonoBehaviour {
         SceneManager.LoadSceneAsync(ConstantClass.RedeemCodeSceneName);
     }
 
+    public void loadTutorialScene()
+    {
+        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
+        MySceneManager.setLastScene(ConstantClass.HomeSceneName);
+
+        SceneManager.LoadSceneAsync(ConstantClass.TutorialSceneName);
+    }
+
 }

@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using LitJson;
 using Assets;
+using Assets.ResponseModels;
 
 public class LoginScene : MonoBehaviour {
     public UnityEngine.UI.InputField usernameField;
@@ -15,30 +16,22 @@ public class LoginScene : MonoBehaviour {
     public GameObject messagePanel;
     public GameObject loginPanel;
     public GameObject loadingPanel;
-
-    //Use these 2 Key string to store login session in PlayerPrefs
-    private readonly string usernameKeyValue = "Username";
-    private readonly string passwordKeyValue = "Pass";
+    
 
     private string username = "";
     private string password = "";
 
-
-    private string url = "http://localhost/Teek/api/account/login";
+    
     private SpriteRenderer sp;
 
     // Use this for initialization
     void Start()
     {
-        //THIS CODE USED TO TEST, PLEASE DELETE IT BEFORE BUILDING A FINAL PRODUCT
-        //PlayerPrefs.SetString(usernameKeyValue,Encrypt.EncryptString("aaaaa"));
-        //PlayerPrefs.SetString(passwordKeyValue, Encrypt.EncryptString("aaaaa"));
-        //PlayerPrefs.Save();
 
         sp = gameObject.GetComponent<SpriteRenderer>();
 
         //Check if Player has Login Info (Login Session) in PlayerPrefs. If YES auto login
-        if (PlayerPrefs.HasKey(usernameKeyValue) && PlayerPrefs.HasKey(usernameKeyValue))
+        if (PlayerPrefs.HasKey(ConstantClass.PP_UsernameKey) && PlayerPrefs.HasKey(ConstantClass.PP_PasswordKey))
         {
             this.checkLoginWithSession();
         }
@@ -81,13 +74,12 @@ public class LoginScene : MonoBehaviour {
 
             //SEND POST REQUEST
 
-            WWW www = new WWW(url, form);
+            WWW www = new WWW(ConstantClass.API_Login, form);
 
             StartCoroutine(WaitForRequest(www));
         }
         else
         {
-            //message.text = "Please enter username and password";
             showMessage("Please enter username and password");
         }
     }
@@ -97,8 +89,8 @@ public class LoginScene : MonoBehaviour {
         showLoadingIndicator();
 
         //Get username and pass from PlayerPrefs and decrypted it
-        username = Decrypt.DecryptString((PlayerPrefs.GetString(usernameKeyValue)));
-        password = Decrypt.DecryptString((PlayerPrefs.GetString(passwordKeyValue)));
+        username = Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UsernameKey)));
+        password = Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_PasswordKey)));
 
         //Create object to sen Http Request
         WWWForm form = new WWWForm();
@@ -107,7 +99,7 @@ public class LoginScene : MonoBehaviour {
 
         //SEND POST REQUEST
 
-        WWW www = new WWW(url, form);
+        WWW www = new WWW(ConstantClass.API_Login, form);
 
         StartCoroutine(WaitForRequest(www));
     }
@@ -121,16 +113,16 @@ public class LoginScene : MonoBehaviour {
             //Check for errors
             if (www.error == null)
             {
-                JSONResponseObject jsonResponse = new JSONResponseObject();
-
-
-                jsonResponse = JsonMapper.ToObject<JSONResponseObject>(www.text);
+                ResponseModel<LoginModel> jsonResponse = new ResponseModel<LoginModel>();
+                jsonResponse.Data = new LoginModel();
+                jsonResponse = JsonMapper.ToObject<ResponseModel<LoginModel>>(www.text);
 
                 if (jsonResponse.Succeed)
                 {
-                    //Store login info for auto login
-                    PlayerPrefs.SetString(usernameKeyValue, Encrypt.EncryptString(username));
-                    PlayerPrefs.SetString(passwordKeyValue, Encrypt.EncryptString(password));
+                    //Store login info for auto login and store player id to get player detail info later
+                    PlayerPrefs.SetString(ConstantClass.PP_UsernameKey, Encrypt.EncryptString(username));
+                    PlayerPrefs.SetString(ConstantClass.PP_PasswordKey, Encrypt.EncryptString(password));
+                    PlayerPrefs.SetString(ConstantClass.PP_UserIDKey, Encrypt.EncryptString(jsonResponse.Data.Id));
                     PlayerPrefs.Save();
 
                     //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
@@ -143,8 +135,9 @@ public class LoginScene : MonoBehaviour {
                 else
                 {
                     //Delete autologin info when login failed
-                    PlayerPrefs.DeleteKey(usernameKeyValue);
-                    PlayerPrefs.DeleteKey(passwordKeyValue);
+                    PlayerPrefs.DeleteKey(ConstantClass.PP_UsernameKey);
+                    PlayerPrefs.DeleteKey(ConstantClass.PP_PasswordKey);
+                    PlayerPrefs.DeleteKey(ConstantClass.PP_UserIDKey);
 
                     //Show error message
                     disableLoadinIndicator();
@@ -159,29 +152,6 @@ public class LoginScene : MonoBehaviour {
         
     }
 
-    [System.Serializable]
-    public class JSONResponseObject
-    {
-            
-        public bool Succeed { get; set; }
-
-        public string Message { get; set; }
-
-        public string Errors { get; set; }
-        public Data Data { get; set; }
-
-    }
-
-    public class Data
-    {
-        public string Id { get; set; }
-        public string Role { get; set; }
-        public string Email { get; set; }
-        public string Username { get; set; }
-        public string ImageUrl { get; set; }
-        public string PhoneNumber { get; set; }
-        public string FullName { get; set; }
-    }
     public void resetField()
     {
         usernameField.text = "";
