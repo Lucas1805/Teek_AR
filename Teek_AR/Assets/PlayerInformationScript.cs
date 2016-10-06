@@ -40,6 +40,7 @@ public class PlayerInformationScript : MonoBehaviour {
 
     public void loadPreviousScene()
     {
+        LoadingManager.showLoadingIndicator(loadingPanel);
         MySceneManager.loadPreviousScene();
     }
 

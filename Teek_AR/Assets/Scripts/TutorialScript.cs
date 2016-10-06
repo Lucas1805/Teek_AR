@@ -4,6 +4,8 @@ using Assets;
 
 public class TutorialScript : MonoBehaviour {
 
+    public GameObject loadingPanel;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -16,6 +18,7 @@ public class TutorialScript : MonoBehaviour {
 
     public void loadPreviousScene()
     {
+        LoadingManager.showLoadingIndicator(loadingPanel);
         MySceneManager.loadPreviousScene();
     }
 }

@@ -29,6 +29,7 @@ namespace Assets
         public const string PP_UsernameKey = "Username";
         public const string PP_PasswordKey = "Password";
         public const string PP_UserIDKey = "PlayerID";
+        public const string PP_EventID = "EventID";
 
         //API LINKS
         public const string API_HOST_IP = "192.168.2.123";

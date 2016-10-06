@@ -30,6 +30,8 @@ public class RedeemScript : MonoBehaviour {
     {
         message.text = "";
 
+        LoadingManager.showLoadingIndicator(loadingPanel);
+
         //Get value
         code = inputCodeField.text;
 
@@ -124,6 +126,7 @@ public class RedeemScript : MonoBehaviour {
 
     public void loadLastScene()
     {
+        LoadingManager.showLoadingIndicator(loadingPanel);
         MySceneManager.loadPreviousScene();
     }
 }
