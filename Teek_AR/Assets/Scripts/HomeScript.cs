@@ -11,7 +11,6 @@ using Assets;
 public class HomeScript : MonoBehaviour {
 
     //public Text mac;
-    public GameObject loadingPanel;
 
 	// Use this for initialization
 	void Start () {
@@ -58,7 +57,6 @@ public class HomeScript : MonoBehaviour {
 
     public void loadPlayerInfoScene()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.HomeSceneName);
 
@@ -80,4 +78,11 @@ public class HomeScript : MonoBehaviour {
 
         SceneManager.LoadSceneAsync(ConstantClass.TutorialSceneName);
     }
+
+    public void loadEventDetailScene()
+    {
+        MySceneManager.setLastScene(ConstantClass.HomeSceneName);
+        SceneManager.LoadSceneAsync(ConstantClass.EventDetailSceneName);
+    }
+
 }
