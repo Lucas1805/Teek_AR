@@ -16,16 +16,9 @@ public class RedeemScript : MonoBehaviour {
 
     string code;
 
-    private string url = "http://localhost/Teek/api/account/login";
-    private SpriteRenderer sp;
-
     // Use this for initialization
     void Start () {
-        sp = gameObject.GetComponent<SpriteRenderer>();
-        if(sp == null)
-        {
-            Debug.Log("Cannot get loading sprite object");
-        }
+
     }
 	
 	// Update is called once per frame
@@ -42,7 +35,8 @@ public class RedeemScript : MonoBehaviour {
 
         if(code.Length > 0)
         {
-            showLoadingIndicator();
+            //Show loading indicator
+            LoadingManager.showLoadingIndicator(loadingPanel);
 
             //Create object to sen Http Request
             WWWForm form = new WWWForm();
@@ -50,7 +44,7 @@ public class RedeemScript : MonoBehaviour {
 
             //SEND POST REQUEST
 
-            WWW www = new WWW(url, form);
+            WWW www = new WWW(ConstantClass.API_RedeemCode, form);
 
             StartCoroutine(WaitForRequest(www));
         }
@@ -81,11 +75,10 @@ public class RedeemScript : MonoBehaviour {
             {
                 //If code is correct
 
-                disableLoadinIndicator();
+                LoadingManager.hideLoadingIndicator(loadingPanel);
             }
             else
             {
-                disableLoadinIndicator();
                 showMessage(jsonResponse.Message);
             }
         }
@@ -124,33 +117,9 @@ public class RedeemScript : MonoBehaviour {
         redeemCodePanel.SetActive(false);
         messagePanel.SetActive(true);
         message.text = messageString;
-        disableLoadinIndicator();
+        LoadingManager.hideLoadingIndicator(loadingPanel);
         resetField();
 
-    }
-
-    public void showLoadingIndicator()
-    {
-        redeemCodePanel.SetActive(false);
-        if (sp != null && loadingPanel != null)
-        {
-            sp.enabled = true;
-            loadingPanel.SetActive(true);
-        }
-        else
-            Debug.Log("Null Sprite Renderer of Loading Panel");
-    }
-
-    public void disableLoadinIndicator()
-    {
-        if (sp != null && loadingPanel != null)
-        {
-            if (sp.enabled == true)
-                sp.enabled = false;
-            loadingPanel.SetActive(false);
-        }
-        else
-            Debug.Log("Null Sprite Renderer of Loading Panel");
     }
 
     public void loadLastScene()
