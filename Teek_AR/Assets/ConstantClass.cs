@@ -32,8 +32,10 @@ namespace Assets
 
         //API LINKS
         public const string API_HOST_IP = "192.168.2.123";
+
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
+        public static string API_RedeemCode = "http://" + API_HOST_IP + "/Teek/api/";
 
         public static string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
 
