@@ -31,10 +31,11 @@ namespace Assets
         public const string PP_UserIDKey = "PlayerID";
 
         //API LINKS
-        public const string API_Login = "http://192.168.2.132/Teek/api/account/login";
-        public const string API_Register = "http://localhost/Teek/api/account/register";
+        public const string API_HOST_IP = "192.168.2.123";
+        public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
+        public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
 
-        public static string API_UserInfo = "http://localhost/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
+        public static string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
 
 
         //TEST LOGIN INFO

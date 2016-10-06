@@ -11,18 +11,17 @@ public class PlayerInformationScript : MonoBehaviour {
     private string playerID;
 
     public Image profileImage;
-    public Image genderImage;
-    public Sprite femaleGenderIcon;
-    public Sprite maleGenderIcon;
     public Text usernameText;
     public Text fullnameText;
     public Text emailText;
     public Text phoneText;
+    public GameObject loadingPanel;
 
     // Use this for initialization
     void Start () {
         //Get player id from PlayerPrefs and decrypted it
         playerID = Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+        loadPlayerInfo();
         
     }
 	
@@ -46,6 +45,9 @@ public class PlayerInformationScript : MonoBehaviour {
 
     private void loadPlayerInfo()
     {
+        //Show loading indicator
+        LoadingManager.showLoadingIndicator(loadingPanel);
+
         if(playerID != null && playerID.Length >0)
         {
             //Create object to sen Http Request
@@ -98,21 +100,13 @@ public class PlayerInformationScript : MonoBehaviour {
                     //Load Profile Image
                     WWW www_loadImage = new WWW(jsonResponse.Data.ImageUrl);
                     StartCoroutine(loadProfileImage(www_loadImage));
-                }
-                else
-                {
-                    //Delete autologin info when login failed
-                    PlayerPrefs.DeleteKey(ConstantClass.PP_UsernameKey);
-                    PlayerPrefs.DeleteKey(ConstantClass.PP_PasswordKey);
-                    PlayerPrefs.DeleteKey(ConstantClass.PP_UserIDKey);
 
-                    ////Show error message
-                    //disableLoadinIndicator();
-                    //showMessage(jsonResponse.Message);
+                    LoadingManager.hideLoadingIndicator(loadingPanel);
                 }
             }
             else {
                 //showMessage(www.error);
+                LoadingManager.hideLoadingIndicator(loadingPanel);
                 Debug.Log("WWW Error: " + www.error);
             }
         }
@@ -121,17 +115,7 @@ public class PlayerInformationScript : MonoBehaviour {
     IEnumerator loadProfileImage(WWW www)
     {
         yield return www;
-        profileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-    }
-
-    void changeGenderIconToMale()
-    {
-        genderImage.sprite = maleGenderIcon;
-    }
-
-    void changeGenderIconToFemale()
-    {
-        genderImage.sprite = femaleGenderIcon;
+        profileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width * 130/100, www.texture.height * 130 / 100), new Vector2(0, 0));
     }
 
 }

@@ -8,34 +8,46 @@ using UnityEngine.SceneManagement;
 using LitJson;
 using Assets;
 using Assets.ResponseModels;
+using System.Text.RegularExpressions;
 
 public class LoginScene : MonoBehaviour {
+
+    //VARIABLE FOR LOGIN
     public UnityEngine.UI.InputField usernameField;
     public UnityEngine.UI.InputField passwordField;
-    public Text message;
-    public GameObject messagePanel;
+    public Text loginMessage;
+    public GameObject loginMessagePanel;
     public GameObject loginPanel;
     public GameObject loadingPanel;
-    
+
 
     private string username = "";
     private string password = "";
 
-    
-    private SpriteRenderer sp;
+    //VARIABLE FOR REGISTER
+    public UnityEngine.UI.InputField rg_fullnameField;
+    public UnityEngine.UI.InputField rg_usernameField;
+    public UnityEngine.UI.InputField rg_emailField;
+    public UnityEngine.UI.InputField rg_passwordField;
+    public UnityEngine.UI.InputField rg_passwordAgainField;
+    public GameObject registerPanel;
+    public GameObject registerMessagePanel;
+    public Text registerMessage;
+
+    string rg_fullname;
+    string rg_username;
+    string rg_email;
+    string rg_password;
+    string rg_passwordAgain;
 
     // Use this for initialization
     void Start()
     {
-
-        sp = gameObject.GetComponent<SpriteRenderer>();
-
         //Check if Player has Login Info (Login Session) in PlayerPrefs. If YES auto login
         if (PlayerPrefs.HasKey(ConstantClass.PP_UsernameKey) && PlayerPrefs.HasKey(ConstantClass.PP_PasswordKey))
         {
             this.checkLoginWithSession();
         }
-
     }
 
     // Update is called once per frame
@@ -46,10 +58,10 @@ public class LoginScene : MonoBehaviour {
     
     public void checkLogin()
     {
-        showLoadingIndicator();
+        LoadingManager.showLoadingIndicator(loadingPanel);
 
         //Reset message text
-        message.text = "";
+        loginMessage.text = "";
 
         //Get value from input fields
         username = usernameField.text;
@@ -76,17 +88,17 @@ public class LoginScene : MonoBehaviour {
 
             WWW www = new WWW(ConstantClass.API_Login, form);
 
-            StartCoroutine(WaitForRequest(www));
+            StartCoroutine(WaitForLoginRequest(www));
         }
         else
         {
-            showMessage("Please enter username and password");
+            showLoginMessage("Please enter username and password");
         }
     }
 
     private void checkLoginWithSession()
     {
-        showLoadingIndicator();
+        LoadingManager.showLoadingIndicator(loadingPanel);
 
         //Get username and pass from PlayerPrefs and decrypted it
         username = Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UsernameKey)));
@@ -101,10 +113,42 @@ public class LoginScene : MonoBehaviour {
 
         WWW www = new WWW(ConstantClass.API_Login, form);
 
-        StartCoroutine(WaitForRequest(www));
+        StartCoroutine(WaitForLoginRequest(www));
     }
 
-    IEnumerator WaitForRequest(WWW www)
+    public void doRegister()
+    {
+        //Enable loading indicator
+        LoadingManager.showLoadingIndicator(loadingPanel);
+
+        //Reset message
+        registerMessage.text = "";
+
+        //Get values
+        rg_fullname = rg_fullnameField.text;
+        rg_email = rg_emailField.text;
+        rg_username = rg_usernameField.text;
+        rg_password = rg_passwordField.text;
+        rg_passwordAgain = rg_passwordAgainField.text;
+
+        if (checkRequireInfo())
+        {
+            //Create object to sen Http Request
+            WWWForm form = new WWWForm();
+            form.AddField("Username", rg_username);
+            form.AddField("Fullname", rg_fullname);
+            form.AddField("Email", rg_email);
+            form.AddField("Password", rg_password);
+
+            //SEND POST REQUEST
+
+            WWW www = new WWW(ConstantClass.API_Register, form);
+
+            StartCoroutine(WaitForRegisterRequest(www));
+        }
+    }
+
+    IEnumerator WaitForLoginRequest(WWW www)
     {
         yield return www;
         
@@ -129,7 +173,6 @@ public class LoginScene : MonoBehaviour {
                     MySceneManager.setLastScene(ConstantClass.LoginSceneName);
 
                     //Load home scene
-                    disableLoadinIndicator();
                     SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
                 }
                 else
@@ -140,90 +183,136 @@ public class LoginScene : MonoBehaviour {
                     PlayerPrefs.DeleteKey(ConstantClass.PP_UserIDKey);
 
                     //Show error message
-                    disableLoadinIndicator();
-                    showMessage(jsonResponse.Message);
+                    showLoginMessage(jsonResponse.Message);
+                    resetLoginField();
                 }
             }
             else {
-                showMessage(www.error);
+                showLoginMessage(www.error);
+                resetLoginField();
                 Debug.Log("WWW Error: " + www.error);
             }
         }
         
     }
 
-    public void resetField()
+    IEnumerator WaitForRegisterRequest(WWW www)
+    {
+        yield return www;
+
+        //Check for errors
+        if (www.error == null)
+        {
+            ResponseModel<RegisterModel> jsonResponse = new ResponseModel<RegisterModel>();
+            jsonResponse.Data = new RegisterModel();
+            jsonResponse = JsonMapper.ToObject<ResponseModel<RegisterModel>>(www.text);
+
+            if (jsonResponse.Succeed)
+            {
+                registerPanel.SetActive(false);
+                loginPanel.SetActive(true);
+
+                //Set variable and do login
+                usernameField.text = rg_username;
+                passwordField.text = rg_password;
+                checkLogin();
+            }
+            else
+            {
+                //Show error message
+                showRegisterMessage(jsonResponse.Message);
+            }
+        }
+        else {
+            showRegisterMessage(www.error);
+            Debug.Log("WWW Error: " + www.error);
+        }
+    }
+
+    public void resetLoginField()
     {
         usernameField.text = "";
         passwordField.text = "";
     }
 
-    public void showMessage(string messageString)
+    public void resetRegisterField()
+    {
+        rg_fullnameField.text = "";
+        rg_usernameField.text = "";
+        rg_emailField.text = "";
+        rg_passwordField.text = "";
+        rg_passwordAgainField.text = "";
+    }
+
+    public void showLoginMessage(string messageString)
     {
         loginPanel.SetActive(false);
-        message.text = messageString;
-        messagePanel.SetActive(true);
-        disableLoadinIndicator();
+        loginMessage.text = messageString;
+        loginMessagePanel.SetActive(true);
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
-    
-    public void showLoadingIndicator()
+
+    public void showRegisterMessage(string messageString)
     {
-        loginPanel.SetActive(false);
-        if (sp != null && loadingPanel != null)
+        registerPanel.SetActive(false);
+        registerMessagePanel.SetActive(true);
+        registerMessage.text = messageString;
+        LoadingManager.hideLoadingIndicator(loadingPanel);
+    }
+
+    private bool validateEmail(string email)
+    {
+        var regex = new Regex(@"[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+        return regex.IsMatch(email);
+    }
+
+    private bool checkRequireInfo()
+    {
+        bool result = true;
+        if (rg_fullname.Length <= 0)
         {
-            sp.enabled = true;
-            loadingPanel.SetActive(true);
+            result = false;
+            showRegisterMessage("Please enter fullname");
+            resetPasswordFields();
         }
-        else
-            Debug.Log("Null Sprite Renderer of Loading Panel");
-    }
-
-    public void disableLoadinIndicator()
-    {
-        if (sp != null && loadingPanel != null)
+        else if (rg_email.Length <= 0)
         {
-            if (sp.enabled == true)
-                sp.enabled = false;
-            loadingPanel.SetActive(false);
+            result = false;
+            showRegisterMessage("Please enter email");
+            resetPasswordFields();
         }
-        else
-            Debug.Log("Null Sprite Renderer of Loading Panel");
-    }
-
-    public void testAutoLogin()
-    {
-        Debug.Log(Encrypt.EncryptString(usernameField.text));
-        PlayerPrefs.SetString("TESTAUTO", Encrypt.EncryptString(usernameField.text));
-        PlayerPrefs.Save();
-
-        showMessage(Decrypt.DecryptString(PlayerPrefs.GetString("TESTAUTO")));
-    }
-
-    /// <summary>
-    /// This function is used to get MAC address of Wifi the phone is connected to. THIS FUNTION ONLY WORK ON ANDROID
-    /// </summary>
-    /// <returns>MAC Address String</returns>
-    private string getBSSID()
-    {
-#if UNITY_ANDROID
-        string bssid = null;
-
-        AndroidJavaObject mWiFiManager = null;
-        if (mWiFiManager == null)
+        else if (rg_email.Length > 0 && !validateEmail(rg_email))
         {
-            using (AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity"))
-            {
-                mWiFiManager = activity.Call<AndroidJavaObject>("getSystemService", "wifi");
-            }
-        }
-        bssid = mWiFiManager.Call<AndroidJavaObject>("getConnectionInfo").Call<string>("getBSSID");
-        return bssid;
-#endif
+            result = false;
+            showRegisterMessage("Email format is not valid");
+            resetPasswordFields();
 
-#if UNITY_IOS
-        //NOT IMPLEMENT YET
-#endif
+        }
+        else if (rg_username.Length <= 0)
+        {
+            result = false;
+            showRegisterMessage("Please enter your username");
+            resetPasswordFields();
+        }
+        else if (rg_password.Length <= 0)
+        {
+            result = false;
+            showRegisterMessage("Please enter your password");
+            resetPasswordFields();
+        }
+        else if (!rg_password.Equals(rg_passwordAgain))
+        {
+            result = false;
+            showRegisterMessage("Re-enter Password is not match");
+            resetPasswordFields();
+        }
+        return result;
     }
 
 
+    public void resetPasswordFields()
+    {
+        rg_passwordField.text = "";
+        rg_passwordAgainField.text = "";
+    }
 }
