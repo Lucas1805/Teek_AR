@@ -6,6 +6,7 @@ using System.Text;
 using Assets.ResponseModels;
 using System.Collections.Generic;
 using LitJson;
+using System;
 
 public class ScrollControllerScript : MonoBehaviour {
     private RectTransform panel; // to hold the ScrollPanel
@@ -39,6 +40,9 @@ public class ScrollControllerScript : MonoBehaviour {
     private bool isCurrentMinPanelNum = false;
 
     private List<EventModel> listEventResponseModel;
+    private Sprite eventImageSprite = new Sprite();
+
+    public static int eventId;
 
     void Start()
     {
@@ -133,6 +137,9 @@ public class ScrollControllerScript : MonoBehaviour {
             if (minDistance == distance[a])
             {
                 minPanelNum = a;
+                eventId = listEventResponseModel[a].Id;
+                //GameObject.Find("GoToEventDetailText").GetComponent<Text>().text = "go to eventId: "+eventId;
+                
             }
         }
 
@@ -207,7 +214,12 @@ public class ScrollControllerScript : MonoBehaviour {
             GameObject panelItem = new GameObject("PanelItem_" + i);
             panelItem.AddComponent<CanvasRenderer>();
             Image panelItemImage = panelItem.AddComponent<Image>();
-            panelItemImage.color = Color.white;
+            panelItemImage.color = Color.gray;
+            string imageUrl = "https://www.google.com.vn/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
+            //WWW www_loadImage = new WWW(listEventResponseModel[i].ImageUrl);
+            WWW www_loadImage = new WWW(imageUrl);
+            StartCoroutine(loadImage(www_loadImage));
+            panelItemImage.sprite = eventImageSprite;
             panelItem.transform.SetParent(scrollPanel.transform, false);
             panelItem.GetComponent<RectTransform>().sizeDelta = new Vector2(700, 550);
             panelItem.transform.position = new Vector2(scrollPanel.transform.position.x + 975 * i, scrollPanel.transform.position.y);
@@ -216,7 +228,7 @@ public class ScrollControllerScript : MonoBehaviour {
             name.AddComponent<CanvasRenderer>();
             name.transform.SetParent(panelItem.transform, false);
             Text textName = name.AddComponent<Text>();
-            textName.text = listEventResponseModel[i].Name;
+            textName.text = listEventResponseModel[i].Id.ToString();
             //textName.text = listLine[i].ToString().Split(';')[0];
             //textName.font = Resources.Load<Font>("Fonts/Arial");
             textName.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
@@ -258,13 +270,14 @@ public class ScrollControllerScript : MonoBehaviour {
             detail.transform.SetParent(eventDetailPanelItem.transform, false);
             EventModel em = listEventResponseModel[minPanelNum];
             string textDetailContent = "";
+            textDetailContent += em.Name + "\n";
             if (em.Description.Length!=0)
             {
                 textDetailContent += "Mô tả: "+em.Description + "\n";
             }
             if (em.Categories.Count!=0)
             {
-                textDetailContent += "Thể loại: ";
+                //textDetailContent += "Thể loại: ";
                 foreach (var item in em.Categories)
                 {
                     textDetailContent += item + "; ";
@@ -272,33 +285,44 @@ public class ScrollControllerScript : MonoBehaviour {
                 textDetailContent = textDetailContent.Substring(0, textDetailContent.Length - 2);
                 textDetailContent += "\n";
             }
-            textDetailContent += "Ngày bắt đầu: " + em.StartDate + "\n";
-            textDetailContent += "Ngày kết thúc: " + em.EndDate + "\n";
+            textDetailContent += em.StartDate + "\n";
+            //"/Date(1473094800000)/";
+            //DateTime dt = new DateTime(long.Parse("1473094800000"));
+            //new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(1221818565)
+            var d = new DateTime(1245398693390);
+            textDetailContent += em.EndDate + "\n";
             if (em.Address!=null)
             {
                 textDetailContent += "Địa chỉ: " + em.Address + "\n";
             }
             if (em.IsFree)
             {
-                textDetailContent += "Giá: 0" + "\n";
+                textDetailContent += "0" + "\n";
             }
             else
             {
-                textDetailContent += "Giá: " + em.Price + "\n";
+                textDetailContent += em.Price + "\n";
             }
             Text textDetail = detail.AddComponent<Text>();
             textDetail.text = textDetailContent;
             //textName.font = Resources.Load<Font>("Fonts/Arial");
             textDetail.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             textDetail.color = Color.black;
-            textDetail.transform.position = new Vector2(eventDetailPanel.transform.position.x-380, eventDetailPanel.transform.position.y);
+            textDetail.transform.position = new Vector2(eventDetailPanel.transform.position.x-300, eventDetailPanel.transform.position.y-100);
             textDetail.fontSize = 45;
             textDetail.alignment = TextAnchor.MiddleLeft;
             textDetail.horizontalOverflow = HorizontalWrapMode.Overflow;
             textDetail.verticalOverflow = VerticalWrapMode.Overflow;
+            textDetail.lineSpacing = 2;
 
             listEventDetailPanelItem.SetValue(eventDetailPanelItem, 0);   // tai i chay tu 1 nen phai tru 1
         }
+    }
+
+    IEnumerator loadImage(WWW www)
+    {
+        yield return www;
+        eventImageSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
     }
 
 }

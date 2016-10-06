@@ -79,4 +79,10 @@ public class HomeScript : MonoBehaviour {
         SceneManager.LoadSceneAsync(ConstantClass.TutorialSceneName);
     }
 
+    public void loadEventDetailScene()
+    {
+        MySceneManager.setLastScene(ConstantClass.HomeSceneName);
+        SceneManager.LoadSceneAsync(ConstantClass.EventDetailSceneName);
+    }
+
 }
