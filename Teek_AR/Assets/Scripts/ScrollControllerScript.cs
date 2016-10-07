@@ -238,6 +238,9 @@ public class ScrollControllerScript : MonoBehaviour {
             textName.horizontalOverflow = HorizontalWrapMode.Overflow;
             textName.verticalOverflow = VerticalWrapMode.Overflow;
 
+            Button buttonForEvent = panelItem.AddComponent<Button>();
+            buttonForEvent.onClick.AddListener(() => new HomeScript().loadEventDetailScene(minPanelNum));
+
             listPanelItem.SetValue(panelItem, i);
         }
     }
