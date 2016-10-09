@@ -43,7 +43,7 @@ public class EventDetailScript : MonoBehaviour
         GameObject PointScrollView = GameObject.Find("PointScrollView");
         listLine = Load("NayThiLoadFileText.txt");
         listPanelItem = new GameObject[listLine.Count];
-
+        PointScrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(363.5f, (listLine.Count) * 178);
         for (int i = 0; i < listLine.Count; i++)
         {
             //Panel Item
@@ -108,7 +108,7 @@ public class EventDetailScript : MonoBehaviour
 
             panelItem.transform.SetParent(PointScrollView.transform, false);
             panelItem.GetComponent<RectTransform>().sizeDelta = new Vector2(727, 178);
-            panelItem.transform.position = new Vector2(panel.transform.position.x, panel.transform.position.y - (240 * i));
+            panelItem.transform.localPosition = new Vector2(0, -89 - (178 * i));
 
             //    //GameObject name = new GameObject("Name");
             //    //name.AddComponent<CanvasRenderer>();
@@ -128,12 +128,15 @@ public class EventDetailScript : MonoBehaviour
 
         //Populate Point Reward Data
         GameObject ComboScrollView = GameObject.Find("ComboScrollView");
+
         listPanelItem = new GameObject[listLine.Count];
+        ComboScrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(363.5f, (listLine.Count) * 178);
 
         for (int i = 0; i < listLine.Count; i++)
         {
             //Panel Item
             GameObject panelItem = new GameObject("ComboRewardItem_" + i);
+            
             panelItem.AddComponent<CanvasRenderer>();
             Image panelItemImage = panelItem.AddComponent<Image>();
             panelItemImage.color = new Color32(255, 255, 255, 255);
@@ -194,7 +197,7 @@ public class EventDetailScript : MonoBehaviour
 
             panelItem.transform.SetParent(ComboScrollView.transform, false);
             panelItem.GetComponent<RectTransform>().sizeDelta = new Vector2(727, 178);
-            panelItem.transform.position = new Vector2(panel.transform.position.x, panel.transform.position.y - (240 * i));
+            panelItem.transform.localPosition = new Vector2(0, -89 - (178 * i));
 
             //    //GameObject name = new GameObject("Name");
             //    //name.AddComponent<CanvasRenderer>();
@@ -211,6 +214,63 @@ public class EventDetailScript : MonoBehaviour
 
             //    listPanelItem.SetValue(panelItem, i);
         }
+        //Populate Point Reward Data
+        GameObject ShopScrollView = GameObject.Find("ShopScrollView");
+
+        listPanelItem = new GameObject[listLine.Count];
+        ShopScrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(363.5f, (listLine.Count) * 89);
+
+        for (int i = 0; i < listLine.Count; i++)
+        {
+            //Panel Item
+            GameObject panelItem = new GameObject("ShopItem_" + i);
+
+            panelItem.AddComponent<CanvasRenderer>();
+            Image panelItemImage = panelItem.AddComponent<Image>();
+            panelItemImage.color = new Color32(255, 255, 255, 255);
+            panelItemImage.sprite = sprite;
+            panelItemImage.type = Image.Type.Sliced;
+
+           
+            GameObject reward = new GameObject();
+            Text txt3 = reward.AddComponent<Text>();
+            txt3.text = "Một ly cà phê";
+            txt3.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+            txt3.fontSize = 12;
+            txt3.color = new Color32(50, 50, 50, 255);
+            var txt3RectTransform = txt3.GetComponent<RectTransform>();
+            txt3RectTransform.localPosition = new Vector2(-70, 0);//set position txtPoint
+            txt3RectTransform.sizeDelta = new Vector2(170, 27);
+            txt3RectTransform.localScale = new Vector2(3.040522f, 3.040522f); //set scale txtPoint
+            txt3.alignment = TextAnchor.MiddleLeft;
+            //item.transform.SetParent(panelItem.transform, false);
+            txt3.transform.SetParent(panelItem.transform, false);
+
+
+
+
+
+
+            panelItem.transform.SetParent(ShopScrollView.transform, false);
+            panelItem.GetComponent<RectTransform>().sizeDelta = new Vector2(727, 89);
+            panelItem.transform.localPosition = new Vector2(0, -44.5f - (89 * i));
+
+            //    //GameObject name = new GameObject("Name");
+            //    //name.AddComponent<CanvasRenderer>();
+            //    //name.transform.SetParent(panelItem.transform, false);
+            //    //Text textName = name.AddComponent<Text>();
+            //    //textName.text = listLine[i].ToString().Split(';')[0];
+            //    ////textName.font = Resources.Load<Font>("Fonts/Arial");
+            //    //textName.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            //    //textName.color = Color.black;
+            //    //textName.fontSize = 55;
+            //    //textName.alignment = TextAnchor.MiddleCenter;
+            //    //textName.horizontalOverflow = HorizontalWrapMode.Overflow;
+            //    //textName.verticalOverflow = VerticalWrapMode.Overflow;
+
+            //    listPanelItem.SetValue(panelItem, i);
+        }
+
     }
 
     // Update is called once per frame
