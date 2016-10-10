@@ -11,6 +11,7 @@ public class ShopController : MonoBehaviour {
 
     public ShopUIBase mobyShop;
     public GameObject loadingPanel;
+    public GameObject menuGroupButtonPanel;
 
     //private const int FIREBALL_DEFAULT_NUMBER = 20;
     private readonly string username;
@@ -210,5 +211,13 @@ public class ShopController : MonoBehaviour {
     private void restorePurchase(ProductInfo product, int deviation)
     {
         product.Value = product.Value - deviation;
+    }
+
+    public void showHideMenuGroup()
+    {
+        if (menuGroupButtonPanel.active)
+            menuGroupButtonPanel.SetActive(false);
+        else
+            menuGroupButtonPanel.SetActive(true);        
     }
 }
