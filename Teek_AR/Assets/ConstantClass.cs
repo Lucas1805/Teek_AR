@@ -30,6 +30,10 @@ namespace Assets
         public const string PP_UserIDKey = "PlayerID";
         public const string PP_EventID = "EventID";
 
+        public string PP_FireballAmountBeforePurchase; //Used to restore purchase when calling API to update data on server fail
+        public string PP_CoinsAmountBeforePurchase; //Used to restore purchase when calling API to update data on server fail
+
+
         //API LINKS
         public const string API_HOST_IP = "192.168.2.123";
 
@@ -37,6 +41,7 @@ namespace Assets
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
         public static string API_RedeemCode = "http://" + API_HOST_IP + "/Teek/api/";
         public static string API_GetAllEvents = "http://" + API_HOST_IP + "/Teek/api/event/GetEvents";
+        public static string API_UpdateShopItem = "http://" + API_HOST_IP + "/Teek/api/";
 
         public static string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
 
