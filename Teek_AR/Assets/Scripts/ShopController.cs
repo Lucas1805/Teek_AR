@@ -5,6 +5,7 @@ using MobyShop.UI;
 using UnityEngine.SceneManagement;
 using Assets;
 using LitJson;
+using Assets.ResponseModels;
 
 public class ShopController : MonoBehaviour {
 
@@ -13,15 +14,18 @@ public class ShopController : MonoBehaviour {
 
     //private const int FIREBALL_DEFAULT_NUMBER = 20;
     private readonly string username;
+    private string productID;
+    private int deviation; //Used to restore purchase when calling API to update data on server fail
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         setDefaultForShop();
-	}
+        Shop.OnProductBought += this.OnProductBought;
+    }
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 
     public void showShop()
@@ -142,5 +146,69 @@ public class ShopController : MonoBehaviour {
         public string ImageUrl { get; set; }
         public string PhoneNumber { get; set; }
         public string FullName { get; set; }
+    }
+    
+    void OnProductBought( MobyShop.BoughtOrRestored state, MobyShop.ProductInfo product, int amount)
+    {
+        //Show loading
+        LoadingManager.showLoadingIndicator(loadingPanel);
+
+        productID = product.ProductId;
+        deviation = product.IncrementOnBuy; //Used to restore purchase when calling API to update data on server fail
+        
+
+        //CALL API TO UPDATE VALUE OF PRODUCT IN SERVER DATABASE
+        //Create object to send Http Request
+        WWWForm form = new WWWForm();
+        form.AddField("productID", productID);
+        form.AddField("deviation", deviation);
+
+        //SEND POST REQUEST
+
+        WWW www = new WWW(ConstantClass.API_UpdateShopItem, form);
+
+        StartCoroutine(UpdateShopItem(www, product));
+    }
+
+    IEnumerator UpdateShopItem(WWW www, MobyShop.ProductInfo product)
+    {
+        yield return www;
+
+        if (www.isDone)
+        {
+            //Check for errors
+            if (www.error == null)
+            {
+                ResponseModel<UpdateShopItemModel> jsonResponse = new ResponseModel<UpdateShopItemModel>();
+                jsonResponse.Data = new UpdateShopItemModel();
+                jsonResponse = JsonMapper.ToObject<ResponseModel<UpdateShopItemModel>>(www.text);
+
+                if (jsonResponse.Succeed)
+                {
+                    LoadingManager.hideLoadingIndicator(loadingPanel);
+                }
+                else
+                {
+                    //RESTORE PURCHASE
+                    restorePurchase(product, deviation);
+                    LoadingManager.hideLoadingIndicator(loadingPanel);
+                    //Show error message
+                    //showLoginMessage(jsonResponse.Message);
+                }
+            }
+            else {
+                //RESTORE PURCHASE
+                restorePurchase(product, deviation);
+                LoadingManager.hideLoadingIndicator(loadingPanel);
+                //showLoginMessage(www.error);
+                Debug.Log("WWW Error: " + www.error);
+            }
+        }
+
+    }
+
+    private void restorePurchase(ProductInfo product, int deviation)
+    {
+        product.Value = product.Value - deviation;
     }
 }
