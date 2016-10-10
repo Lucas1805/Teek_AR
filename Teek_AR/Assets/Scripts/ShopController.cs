@@ -7,10 +7,11 @@ using Assets;
 using LitJson;
 
 public class ShopController : MonoBehaviour {
+
     public ShopUIBase mobyShop;
+    public GameObject loadingPanel;
 
     //private const int FIREBALL_DEFAULT_NUMBER = 20;
-    private const string url = "http://localhost/Teek/api/";
     private readonly string username;
 
 	// Use this for initialization
@@ -43,6 +44,7 @@ public class ShopController : MonoBehaviour {
 
     public void loadRedeemCodeScene()
     {
+        LoadingManager.showLoadingIndicator(loadingPanel);
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.GameSceneName);
 
@@ -51,6 +53,7 @@ public class ShopController : MonoBehaviour {
 
     public void loadHomeScene()
     {
+        LoadingManager.showLoadingIndicator(loadingPanel);
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.GameSceneName);
 
@@ -59,6 +62,7 @@ public class ShopController : MonoBehaviour {
 
     public void loadInventoryScene()
     {
+        LoadingManager.showLoadingIndicator(loadingPanel);
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.GameSceneName);
 
@@ -70,13 +74,15 @@ public class ShopController : MonoBehaviour {
     /// </summary>
     private void loadAllInfo()
     {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+
         //Create object to sen Http Request
         WWWForm form = new WWWForm();
         form.AddField("Username", username);
 
         //SEND POST REQUEST
 
-        WWW www = new WWW(url, form);
+        WWW www = new WWW("", form);
 
         StartCoroutine(WaitForRequest(www));
     }

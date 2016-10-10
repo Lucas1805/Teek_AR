@@ -7,7 +7,6 @@ namespace Assets
 {
     class ConstantClass
     {
-        public string a = "";
         public const string HomeSceneName = "HomeScene";
         public const string PlayerInfoSceneName = "PlayerInfoScene";
         public const string LoginSceneName = "LoginScene";
