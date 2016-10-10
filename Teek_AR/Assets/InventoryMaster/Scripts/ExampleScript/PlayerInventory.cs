@@ -330,7 +330,14 @@ public class PlayerInventory : MonoBehaviour
             string[] listItem = loadResult.Split(';');
             foreach (var item in listItem)
             {
-                mainInventory.addItemToInventory(int.Parse(item));
+                mainInventory.addItemToInventory(int.Parse(item), int.Parse(item));
+            }
+
+            mainInventory.addItemToInventory(10, 55);
+
+            foreach (var item in GameObject.FindGameObjectsWithTag("Item"))
+            {
+                item.transform.localScale = new Vector3(2, 2, 1);
             }
         }
         #endregion
