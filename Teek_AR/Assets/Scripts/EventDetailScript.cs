@@ -43,7 +43,7 @@ public class EventDetailScript : MonoBehaviour
         GameObject PointScrollView = GameObject.Find("PointScrollView");
         listLine = Load("NayThiLoadFileText.txt");
         listPanelItem = new GameObject[listLine.Count];
-        PointScrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(363.5f, (listLine.Count) * 178);
+        PointScrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (listLine.Count) * 178);
         for (int i = 0; i < listLine.Count; i++)
         {
             //Panel Item
@@ -51,8 +51,8 @@ public class EventDetailScript : MonoBehaviour
             panelItem.AddComponent<CanvasRenderer>();
             Image panelItemImage = panelItem.AddComponent<Image>();
             panelItemImage.color = new Color32(255, 255, 255, 255);
-            panelItemImage.sprite = sprite;
-            panelItemImage.type = Image.Type.Sliced;
+            //panelItemImage.sprite = sprite;
+            //panelItemImage.type = Image.Type.Sliced;
 
             //Item
             GameObject item = new GameObject("Item_" + i);
@@ -107,7 +107,7 @@ public class EventDetailScript : MonoBehaviour
 
 
             panelItem.transform.SetParent(PointScrollView.transform, false);
-            panelItem.GetComponent<RectTransform>().sizeDelta = new Vector2(727, 178);
+            panelItem.GetComponent<RectTransform>().sizeDelta = new Vector2(800, 178);
             panelItem.transform.localPosition = new Vector2(0, -89 - (178 * i));
 
             //    //GameObject name = new GameObject("Name");
@@ -130,7 +130,7 @@ public class EventDetailScript : MonoBehaviour
         GameObject ComboScrollView = GameObject.Find("ComboScrollView");
 
         listPanelItem = new GameObject[listLine.Count];
-        ComboScrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(363.5f, (listLine.Count) * 178);
+        ComboScrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (listLine.Count) * 178);
 
         for (int i = 0; i < listLine.Count; i++)
         {
@@ -140,8 +140,8 @@ public class EventDetailScript : MonoBehaviour
             panelItem.AddComponent<CanvasRenderer>();
             Image panelItemImage = panelItem.AddComponent<Image>();
             panelItemImage.color = new Color32(255, 255, 255, 255);
-            panelItemImage.sprite = sprite;
-            panelItemImage.type = Image.Type.Sliced;
+            //panelItemImage.sprite = sprite;
+            //panelItemImage.type = Image.Type.Sliced;
 
             //Item
             GameObject item = new GameObject("Item_" + i);
@@ -196,7 +196,7 @@ public class EventDetailScript : MonoBehaviour
 
 
             panelItem.transform.SetParent(ComboScrollView.transform, false);
-            panelItem.GetComponent<RectTransform>().sizeDelta = new Vector2(727, 178);
+            panelItem.GetComponent<RectTransform>().sizeDelta = new Vector2(800, 178);
             panelItem.transform.localPosition = new Vector2(0, -89 - (178 * i));
 
             //    //GameObject name = new GameObject("Name");
@@ -218,7 +218,7 @@ public class EventDetailScript : MonoBehaviour
         GameObject ShopScrollView = GameObject.Find("ShopScrollView");
 
         listPanelItem = new GameObject[listLine.Count];
-        ShopScrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(363.5f, (listLine.Count) * 89);
+        ShopScrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (listLine.Count) * 89);
 
         for (int i = 0; i < listLine.Count; i++)
         {
@@ -228,8 +228,8 @@ public class EventDetailScript : MonoBehaviour
             panelItem.AddComponent<CanvasRenderer>();
             Image panelItemImage = panelItem.AddComponent<Image>();
             panelItemImage.color = new Color32(255, 255, 255, 255);
-            panelItemImage.sprite = sprite;
-            panelItemImage.type = Image.Type.Sliced;
+            //panelItemImage.sprite = sprite;
+            //panelItemImage.type = Image.Type.Sliced;
 
            
             GameObject reward = new GameObject();
@@ -252,7 +252,7 @@ public class EventDetailScript : MonoBehaviour
 
 
             panelItem.transform.SetParent(ShopScrollView.transform, false);
-            panelItem.GetComponent<RectTransform>().sizeDelta = new Vector2(727, 89);
+            panelItem.GetComponent<RectTransform>().sizeDelta = new Vector2(800, 89);
             panelItem.transform.localPosition = new Vector2(0, -44.5f - (89 * i));
 
             //    //GameObject name = new GameObject("Name");
