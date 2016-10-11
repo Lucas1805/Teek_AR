@@ -8,7 +8,7 @@ using LitJson;
 
 public class PlayerInformationScript : MonoBehaviour {
 
-    private string playerID;
+    private string userId;
 
     public Image profileImage;
     public Text usernameText;
@@ -20,7 +20,7 @@ public class PlayerInformationScript : MonoBehaviour {
     // Use this for initialization
     void Start () {
         //Get player id from PlayerPrefs and decrypted it
-        playerID = Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+        userId = Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
         loadPlayerInfo();
         
     }
@@ -49,11 +49,11 @@ public class PlayerInformationScript : MonoBehaviour {
         //Show loading indicator
         LoadingManager.showLoadingIndicator(loadingPanel);
 
-        if(playerID != null && playerID.Length >0)
+        if(userId != null && userId.Length >0)
         {
             //Create object to sen Http Request
             WWWForm form = new WWWForm();
-            string url = ConstantClass.API_UserInfo + playerID;
+            string url = ConstantClass.API_UserInfo + userId;
 
             //SEND POST REQUEST
             WWW www = new WWW(url);
@@ -101,8 +101,6 @@ public class PlayerInformationScript : MonoBehaviour {
                     //Load Profile Image
                     WWW www_loadImage = new WWW(jsonResponse.Data.ImageUrl);
                     StartCoroutine(loadProfileImage(www_loadImage));
-
-                    LoadingManager.hideLoadingIndicator(loadingPanel);
                 }
             }
             else {
@@ -116,7 +114,16 @@ public class PlayerInformationScript : MonoBehaviour {
     IEnumerator loadProfileImage(WWW www)
     {
         yield return www;
-        profileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width * 130/100, www.texture.height * 130 / 100), new Vector2(0, 0));
+
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        if(www.isDone)
+        {
+            if(www.error == null)
+            {
+                profileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                LoadingManager.hideLoadingIndicator(loadingPanel);
+            }
+        }
     }
 
 }

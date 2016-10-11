@@ -5,12 +5,8 @@ using System.Text;
 
 namespace Assets.ResponseModels
 {
-    class Utils
+    class LoadFireballModel
     {
-        //public DateTimeOffset GetDateTimeOffset(string inDate)
-        //{
-            
-        //}
-
+        public int Fireball { get; set; }
     }
 }

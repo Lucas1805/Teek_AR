@@ -25,25 +25,27 @@ namespace Assets
         public const string CoinItemID = "coinpack1";
 
         //USED THESE TO STORE DATA IN PLAYERSPREFS
-        public const string PP_UsernameKey = "Username";
-        public const string PP_PasswordKey = "Password";
-        public const string PP_UserIDKey = "PlayerID";
-        public const string PP_EventID = "EventID";
-
-        public string PP_FireballAmountBeforePurchase; //Used to restore purchase when calling API to update data on server fail
-        public string PP_CoinsAmountBeforePurchase; //Used to restore purchase when calling API to update data on server fail
-
+        public const string PP_UsernameKey = "Username"; //MUST ENCRYPT
+        public const string PP_PasswordKey = "Password"; //MUST ENCRYPT
+        public const string PP_UserIDKey = "UserID"; //MUST ENCRYPT
+        public const string PP_EventIDKey = "EventID";
+        public const string PP_UserParticipationID = "UserParticipationID";
+        
 
         //API LINKS
         public const string API_HOST_IP = "172.16.20.32";
 
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
-        public static string API_RedeemCode = "http://" + API_HOST_IP + "/Teek/api/";
-        public static string API_GetAllEvents = "http://" + API_HOST_IP + "/Teek/api/event/GetEvents";
-        public static string API_UpdateShopItem = "http://" + API_HOST_IP + "/Teek/api/";
+        public const string API_RedeemCode = "http://" + API_HOST_IP + "/Teek/api/";
+        public const string API_GetAllEvents = "http://" + API_HOST_IP + "/Teek/api/event/GetEvents";
 
-        public static string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
+        public const string API_LoadCoins = "http://" + API_HOST_IP + "/Teek/api/";
+        public const string API_LoadFireball = "http://" + API_HOST_IP + "/Teek/api/";
+        public const string API_BuyItem = "http://" + API_HOST_IP + "/Teek/api/";
+        public const string API_UseFireball = "http://" + API_HOST_IP + "/Teek/api/";
+
+        public const string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
 
 
         //TEST LOGIN INFO

@@ -14,13 +14,20 @@ public class ShopController : MonoBehaviour {
     public GameObject menuGroupButtonPanel;
 
     //private const int FIREBALL_DEFAULT_NUMBER = 20;
-    private readonly string username;
-    private string productID;
-    private int deviation; //Used to restore purchase when calling API to update data on server fail
+    private int coinNumber = 5000;
+    private int fireballNumber = 0;
+
+    private bool error = false; //Check if loading data from server before playing is error or not
 
     // Use this for initialization
     void Start () {
-        setDefaultForShop();
+
+        //CALL AIP TO GET NUMBER OF ITEM OF USER TO LOAD
+        //loadCoins();
+        //loadItem();
+
+        //SET VALUE TO SHOP
+        setValueToShop();
         Shop.OnProductBought += this.OnProductBought;
     }
 	
@@ -34,7 +41,7 @@ public class ShopController : MonoBehaviour {
         mobyShop.Show(0,null);
     }
 
-    public void setDefaultForShop()
+    public void setValueToShop()
     {
         Shop.ClearAllPurchaseData();
 
@@ -42,88 +49,11 @@ public class ShopController : MonoBehaviour {
         ProductInfo coin = Shop.GetProduct(ConstantClass.CoinItemID);
 
         //SET VALUE
-        fireball.Value = 10;
-        coin.Value = 150;
+        fireball.Value = fireballNumber;
+        coin.Value = coinNumber;
 
     }
 
-    public void loadRedeemCodeScene()
-    {
-        LoadingManager.showLoadingIndicator(loadingPanel);
-        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
-        MySceneManager.setLastScene(ConstantClass.GameSceneName);
-
-        SceneManager.LoadSceneAsync(ConstantClass.RedeemCodeSceneName);
-    }
-
-    public void loadHomeScene()
-    {
-        LoadingManager.showLoadingIndicator(loadingPanel);
-        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
-        MySceneManager.setLastScene(ConstantClass.GameSceneName);
-
-        SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
-    }
-
-    public void loadInventoryScene()
-    {
-        LoadingManager.showLoadingIndicator(loadingPanel);
-        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
-        MySceneManager.setLastScene(ConstantClass.GameSceneName);
-
-        SceneManager.LoadSceneAsync(ConstantClass.InventorySceneName);
-    }
-
-    /// <summary>
-    /// Used this to load all information of Player in that Event andset to PlayerPref (Shop item, coins, etc...) before playing.
-    /// </summary>
-    private void loadAllInfo()
-    {
-        LoadingManager.showLoadingIndicator(loadingPanel);
-
-        //Create object to sen Http Request
-        WWWForm form = new WWWForm();
-        form.AddField("Username", username);
-
-        //SEND POST REQUEST
-
-        WWW www = new WWW("", form);
-
-        StartCoroutine(WaitForRequest(www));
-    }
-
-    IEnumerator WaitForRequest(WWW www)
-    {
-        yield return www;
-
-        if (www.isDone)
-        {
-            //Check for errors
-            if (www.error == null)
-            {
-                JSONResponseObject jsonResponse = new JSONResponseObject();
-
-
-                jsonResponse = JsonMapper.ToObject<JSONResponseObject>(www.text);
-
-                if (jsonResponse.Succeed)
-                {
-                    //SET ALL INFO TO PLAYERPREFS
-                }
-                else
-                {
-                    //Show error message
-                    //disableLoadinIndicator();
-                    //showMessage(jsonResponse.Message);
-                }
-            }
-            else {
-                //showMessage(www.error);
-                Debug.Log("WWW Error: " + www.error);
-            }
-        }
-
-    }
 
     [System.Serializable]
     public class JSONResponseObject
@@ -153,25 +83,24 @@ public class ShopController : MonoBehaviour {
     {
         //Show loading
         LoadingManager.showLoadingIndicator(loadingPanel);
-
-        productID = product.ProductId;
-        deviation = product.IncrementOnBuy; //Used to restore purchase when calling API to update data on server fail
         
 
         //CALL API TO UPDATE VALUE OF PRODUCT IN SERVER DATABASE
         //Create object to send Http Request
         WWWForm form = new WWWForm();
-        form.AddField("productID", productID);
-        form.AddField("deviation", deviation);
+        form.AddField("userParticipationID",PlayerPrefs.GetInt(ConstantClass.PP_UserParticipationID));
+        form.AddField("productClass", product.ProductClass);
+        form.AddField("amount", product.IncrementOnBuy);
+        form.AddField("price", product.price);
 
         //SEND POST REQUEST
 
-        WWW www = new WWW(ConstantClass.API_UpdateShopItem, form);
+        WWW www = new WWW(ConstantClass.API_BuyItem, form);
 
-        StartCoroutine(UpdateShopItem(www, product));
+        StartCoroutine(BuyItemRequest(www, product));
     }
 
-    IEnumerator UpdateShopItem(WWW www, MobyShop.ProductInfo product)
+    IEnumerator BuyItemRequest(WWW www, MobyShop.ProductInfo product)
     {
         yield return www;
 
@@ -191,7 +120,7 @@ public class ShopController : MonoBehaviour {
                 else
                 {
                     //RESTORE PURCHASE
-                    restorePurchase(product, deviation);
+                    restorePurchase(product, product.IncrementOnBuy);
                     LoadingManager.hideLoadingIndicator(loadingPanel);
                     //Show error message
                     //showLoginMessage(jsonResponse.Message);
@@ -199,7 +128,7 @@ public class ShopController : MonoBehaviour {
             }
             else {
                 //RESTORE PURCHASE
-                restorePurchase(product, deviation);
+                restorePurchase(product, product.IncrementOnBuy);
                 LoadingManager.hideLoadingIndicator(loadingPanel);
                 //showLoginMessage(www.error);
                 Debug.Log("WWW Error: " + www.error);
@@ -210,7 +139,11 @@ public class ShopController : MonoBehaviour {
 
     private void restorePurchase(ProductInfo product, int deviation)
     {
+        //Restore product value
         product.Value = product.Value - deviation;
+
+        //Restore coin value
+        Shop.GetProduct(ConstantClass.CoinItemID).Value = Shop.GetProduct(ConstantClass.CoinItemID).Value + product.price;
     }
 
     public void showHideMenuGroup()
@@ -220,4 +153,150 @@ public class ShopController : MonoBehaviour {
         else
             menuGroupButtonPanel.SetActive(true);        
     }
+
+    void loadCoins()
+    {
+        //Create object to sen Http Request
+        WWWForm form = new WWWForm();
+        form.AddField("UserId", Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UserIDKey))));
+
+        //SEND POST REQUEST
+
+        WWW www = new WWW(ConstantClass.API_LoadCoins, form);
+
+        StartCoroutine(LoadCoinRequest(www));
+    }
+
+    void loadFireball()
+    {
+        //Create object to sen Http Request
+        WWWForm form = new WWWForm();
+        form.AddField("UserId", Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UserIDKey))));
+        form.AddField("EventId",PlayerPrefs.GetInt(ConstantClass.PP_EventIDKey));
+
+        //SEND POST REQUEST
+
+        WWW www = new WWW(ConstantClass.API_LoadFireball, form);
+
+        StartCoroutine(LoadFireballRequest(www));
+    }
+
+    IEnumerator LoadCoinRequest(WWW www)
+    {
+        yield return www;
+
+        if (www.isDone)
+        {
+            //Check for errors
+            if (www.error == null)
+            {
+                ResponseModel<LoadCoinModel> jsonResponse = new ResponseModel<LoadCoinModel>();
+                jsonResponse.Data = new LoadCoinModel();
+                jsonResponse = JsonMapper.ToObject<ResponseModel<LoadCoinModel>>(www.text);
+
+                if (jsonResponse.Succeed)
+                {
+                    coinNumber = jsonResponse.Data.Coin;
+                }
+            }
+            else {
+                Debug.Log("WWW Error: " + www.error);
+            }
+        }
+    }
+    IEnumerator LoadFireballRequest(WWW www)
+    {
+        yield return www;
+
+        if (www.isDone)
+        {
+            //Check for errors
+            if (www.error == null)
+            {
+                ResponseModel<LoadFireballModel> jsonResponse = new ResponseModel<LoadFireballModel>();
+                jsonResponse.Data = new LoadFireballModel();
+                jsonResponse = JsonMapper.ToObject<ResponseModel<LoadFireballModel>>(www.text);
+
+                if (jsonResponse.Succeed)
+                {
+                    fireballNumber = jsonResponse.Data.Fireball;
+                }
+            }
+            else {
+                Debug.Log("WWW Error: " + www.error);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Used everytimeplayer buy an item 
+    /// </summary>
+    void useFireball()
+    {
+        //Create object to sen Http Request
+        WWWForm form = new WWWForm();
+        form.AddField("UserId", Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UserIDKey))));
+        form.AddField("EventId", PlayerPrefs.GetInt(ConstantClass.PP_EventIDKey));
+
+        //SEND POST REQUEST
+
+        WWW www = new WWW("", form);
+
+        StartCoroutine(UpdateItemToDatabaseRequest(www));
+    }
+
+    IEnumerator UpdateItemToDatabaseRequest(WWW www)
+    {
+        yield return www;
+
+        if (www.isDone)
+        {
+            //Check for errors
+            if (www.error == null)
+            {
+                ResponseModel<LoadCoinModel> jsonResponse = new ResponseModel<LoadCoinModel>();
+                jsonResponse.Data = new LoadCoinModel();
+                jsonResponse = JsonMapper.ToObject<ResponseModel<LoadCoinModel>>(www.text);
+
+                if (!jsonResponse.Succeed)
+                {
+                    Debug.Log(jsonResponse.Message);
+                }
+            }
+            else {
+                //showLoginMessage(www.error);
+                Debug.Log("WWW Error: " + www.error);
+            }
+        }
+    }
+
+    #region LOAD OTHER SCENE
+
+    public void loadRedeemCodeScene()
+    {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
+        MySceneManager.setLastScene(ConstantClass.GameSceneName);
+
+        SceneManager.LoadSceneAsync(ConstantClass.RedeemCodeSceneName);
+    }
+
+    public void loadHomeScene()
+    {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
+        MySceneManager.setLastScene(ConstantClass.GameSceneName);
+
+        SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
+    }
+
+    public void loadInventoryScene()
+    {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
+        MySceneManager.setLastScene(ConstantClass.GameSceneName);
+
+        SceneManager.LoadSceneAsync(ConstantClass.InventorySceneName);
+    }
+    #endregion
 }

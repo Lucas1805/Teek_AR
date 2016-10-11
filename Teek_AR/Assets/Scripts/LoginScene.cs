@@ -151,7 +151,7 @@ public class LoginScene : MonoBehaviour {
     IEnumerator WaitForLoginRequest(WWW www)
     {
         yield return www;
-        
+
         if(www.isDone)
         {
             //Check for errors
