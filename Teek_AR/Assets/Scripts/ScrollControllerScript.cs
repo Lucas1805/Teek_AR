@@ -55,7 +55,6 @@ public class ScrollControllerScript : MonoBehaviour {
         //jsonResponse = JsonMapper.ToObject<ResponseModel<List<EventResponseModel>>>(www.text);
         listEventResponseModel = jsonResponse.Data;
 
-        Debug.Log("ABC");
 
         //Load();
         CreateListEventByScript();

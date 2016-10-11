@@ -52,8 +52,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
     public GameObject victorySound;
     public GameObject shootSound;
     public GameObject hitSound;
-
-    private ProductInfo ball;
+    
     private int ballAmount;
 
     void Start()
@@ -62,8 +61,6 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
         // lay so banh hien tai
         //Shop.IncrementProductClassAmount(ConstantClass.FireBallItemClassName, -ballAmount + 1); // tang so banh them 1
-
-        ball = Shop.GetProduct(ConstantClass.FireBallItemClassName);  // lay item Fireball
 
         initialPosition = transform.position;
 

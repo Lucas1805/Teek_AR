@@ -82,7 +82,7 @@ public class HomeScript : MonoBehaviour {
 
     public void loadEventDetailScene(int eventId)
     {
-        PlayerPrefs.SetString(ConstantClass.PP_EventID, eventId.ToString());
+        PlayerPrefs.SetString(ConstantClass.PP_EventIDKey, eventId.ToString());
 
         LoadingManager.showLoadingIndicator(loadingPanel);
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE

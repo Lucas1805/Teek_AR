@@ -5,12 +5,8 @@ using System.Text;
 
 namespace Assets.ResponseModels
 {
-    class Utils
+    class LoadCoinModel
     {
-        //public DateTimeOffset GetDateTimeOffset(string inDate)
-        //{
-            
-        //}
-
+        public int Coin { get; set; }
     }
 }
