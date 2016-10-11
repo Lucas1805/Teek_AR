@@ -35,7 +35,7 @@ namespace Assets
 
 
         //API LINKS
-        public const string API_HOST_IP = "192.168.2.123";
+        public const string API_HOST_IP = "172.16.20.32";
 
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";

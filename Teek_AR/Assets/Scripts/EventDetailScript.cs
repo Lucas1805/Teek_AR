@@ -4,11 +4,12 @@ using System.IO;
 using System.Text;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Assets;
 
 public class EventDetailScript : MonoBehaviour
 {
     public Sprite sprite;
-    public GameObject panel;
+    public GameObject loadingPanel;
 
     private GameObject[] listPanelItem;
     private ArrayList listLine = new ArrayList();
@@ -282,6 +283,8 @@ public class EventDetailScript : MonoBehaviour
 
     public void PlayGame()
     {
-        SceneManager.LoadSceneAsync("pokemon");
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        //Save event ID to PlayerPrefs
+        SceneManager.LoadSceneAsync(ConstantClass.GameSceneName);
     }
 }
