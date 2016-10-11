@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 
 public class PlayerInventory : MonoBehaviour
 {
@@ -304,41 +305,49 @@ public class PlayerInventory : MonoBehaviour
 
     private bool isBeingDeleted = false;
     private float timeWaitDelete = 0;
+    private bool isAlready = false;
 
     // Update is called once per frame
     void Update()
     {
         mainInventory.openInventory();
 
-        //an nut "u" de update lai inventory
-        #region
-        if (Input.GetKeyDown("u"))
+        if (!isAlready)
         {
-            mainInventory.deleteAllItems();
-            isBeingDeleted = true;
-        }
-        if (isBeingDeleted)
-        {
-            timeWaitDelete += Time.deltaTime;
-        }
-        if (timeWaitDelete >= 1)
-        {
-            isBeingDeleted = false;
-            timeWaitDelete = 0;
-
-            string loadResult = Load("NayThiLoadFileTextInventory.txt");
-            string[] listItem = loadResult.Split(';');
-            foreach (var item in listItem)
+            //an nut "u" de update lai inventory
+            #region
+            //if (Input.GetKeyDown("u"))
             {
-                mainInventory.addItemToInventory(int.Parse(item), int.Parse(item));
+                //mainInventory.deleteAllItems();
+                isBeingDeleted = true;
+            }
+            if (isBeingDeleted)
+            {
+                timeWaitDelete += Time.deltaTime;
+            }
+            //if (timeWaitDelete >= 1)
+            {
+                isBeingDeleted = false;
+                timeWaitDelete = 0;
+
+                //string loadResult = Load("NayThiLoadFileTextInventory.txt");
+                //string[] listItem = loadResult.Split(';');
+                string[] listItem = new string[3];
+                listItem.SetValue("36", 0);
+                listItem.SetValue("37", 1);
+                listItem.SetValue("38", 2);
+                foreach (var item in listItem)
+                {
+                    mainInventory.addItemToInventory(int.Parse(item), int.Parse(item));
+                }
+
+                foreach (var item in GameObject.FindGameObjectsWithTag("Item"))
+                {
+                    item.transform.localScale = new Vector3(2, 2, 1);
+                }
             }
 
-            mainInventory.addItemToInventory(10, 55);
-
-            foreach (var item in GameObject.FindGameObjectsWithTag("Item"))
-            {
-                item.transform.localScale = new Vector3(2, 2, 1);
-            }
+            isAlready = true;
         }
         #endregion
 
