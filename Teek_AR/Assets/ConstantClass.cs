@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Assets
 {
-    class ConstantClass
+    class ConstantClass 
     {
         public const string HomeSceneName = "HomeScene";
         public const string PlayerInfoSceneName = "PlayerInfoScene";
