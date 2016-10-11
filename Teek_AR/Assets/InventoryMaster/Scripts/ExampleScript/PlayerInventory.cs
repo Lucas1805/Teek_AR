@@ -345,6 +345,22 @@ public class PlayerInventory : MonoBehaviour
                 {
                     item.transform.localScale = new Vector3(2, 2, 1);
                 }
+
+                foreach (var item in GameObject.FindGameObjectsWithTag("Item"))
+                {
+                    Text itemText = item.transform.GetChild(1).GetComponent<Text>();
+                    foreach (Transform child in item.transform)
+                    {
+                        if (child.name.Equals("Text"))
+                        {
+                            if (child.GetComponent<Text>() != null)
+                            {
+                                child.GetComponent<Text>().enabled = true;
+                            }
+                            child.GetComponent<RectTransform>().anchoredPosition = new Vector2(13f, 13f);
+                        }
+                    }
+                }
             }
 
             isAlready = true;
