@@ -33,7 +33,7 @@ namespace Assets
         
 
         //API LINKS
-        public const string API_HOST_IP = "172.16.20.32";
+        public const string API_HOST_IP = "192.168.1.59";
 
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
@@ -47,7 +47,7 @@ namespace Assets
 
         public const string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
 
-
+        public const string Msg_TimeOut = "Connection Timeout!!!";
         //TEST LOGIN INFO
         //USername: test123
         //Password: testtest

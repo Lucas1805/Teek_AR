@@ -21,7 +21,7 @@ public class PlayerInformationScript : MonoBehaviour {
     void Start () {
         //Get player id from PlayerPrefs and decrypted it
         userId = Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
-        loadPlayerInfo();
+        //loadPlayerInfo();
         
     }
 	

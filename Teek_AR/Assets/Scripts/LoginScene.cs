@@ -9,8 +9,10 @@ using LitJson;
 using Assets;
 using Assets.ResponseModels;
 using System.Text.RegularExpressions;
+using Ucss;
 
-public class LoginScene : MonoBehaviour {
+public class LoginScene : MonoBehaviour
+{
 
     //VARIABLE FOR LOGIN
     public UnityEngine.UI.InputField usernameField;
@@ -55,7 +57,7 @@ public class LoginScene : MonoBehaviour {
     {
 
     }
-    
+
     public void checkLogin()
     {
         LoadingManager.showLoadingIndicator(loadingPanel);
@@ -79,16 +81,20 @@ public class LoginScene : MonoBehaviour {
                 SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
             }
 
-            //Create object to sen Http Request
+            //Create object to send Http Request
+            HTTPRequest request = new HTTPRequest();
             WWWForm form = new WWWForm();
             form.AddField("Username", username);
             form.AddField("Password", password);
+            request.url = ConstantClass.API_Login;
 
-            //SEND POST REQUEST
+            request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallLoginRequest);
+            request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
+            request.onError = new EventHandlerServiceError(this.OnLoginError);
 
-            WWW www = new WWW(ConstantClass.API_Login, form);
+            request.formData = form;
 
-            StartCoroutine(WaitForLoginRequest(www));
+            UCSS.HTTP.PostForm(request);
         }
         else
         {
@@ -105,15 +111,20 @@ public class LoginScene : MonoBehaviour {
         password = Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_PasswordKey)));
 
         //Create object to sen Http Request
+        //Create object to send Http Request
+        HTTPRequest request = new HTTPRequest();
         WWWForm form = new WWWForm();
         form.AddField("Username", username);
         form.AddField("Password", password);
+        request.url = ConstantClass.API_Login;
 
-        //SEND POST REQUEST
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallLoginRequest);
+        request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
+        request.onError = new EventHandlerServiceError(this.OnLoginError);
 
-        WWW www = new WWW(ConstantClass.API_Login, form);
+        request.formData = form;
 
-        StartCoroutine(WaitForLoginRequest(www));
+        UCSS.HTTP.PostForm(request);
     }
 
     public void doRegister()
@@ -133,99 +144,22 @@ public class LoginScene : MonoBehaviour {
 
         if (checkRequireInfo())
         {
-            //Create object to sen Http Request
+            //Create object to send Http Request
+            HTTPRequest request = new HTTPRequest();
             WWWForm form = new WWWForm();
             form.AddField("Username", rg_username);
             form.AddField("Fullname", rg_fullname);
             form.AddField("Email", rg_email);
             form.AddField("Password", rg_password);
+            request.url = ConstantClass.API_Register;
 
-            //SEND POST REQUEST
+            request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallRegisterRequest);
+            request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
+            request.onError = new EventHandlerServiceError(this.OnRegisterError);
 
-            WWW www = new WWW(ConstantClass.API_Register, form);
+            request.formData = form;
 
-            StartCoroutine(WaitForRegisterRequest(www));
-        }
-    }
-
-    IEnumerator WaitForLoginRequest(WWW www)
-    {
-        yield return www;
-
-        if(www.isDone)
-        {
-            //Check for errors
-            if (www.error == null)
-            {
-                ResponseModel<LoginModel> jsonResponse = new ResponseModel<LoginModel>();
-                jsonResponse.Data = new LoginModel();
-                jsonResponse = JsonMapper.ToObject<ResponseModel<LoginModel>>(www.text);
-
-                if (jsonResponse.Succeed)
-                {
-                    //Store login info for auto login and store player id to get player detail info later
-                    PlayerPrefs.SetString(ConstantClass.PP_UsernameKey, Encrypt.EncryptString(username));
-                    PlayerPrefs.SetString(ConstantClass.PP_PasswordKey, Encrypt.EncryptString(password));
-                    PlayerPrefs.SetString(ConstantClass.PP_UserIDKey, Encrypt.EncryptString(jsonResponse.Data.Id));
-                    PlayerPrefs.Save();
-
-                    //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
-                    MySceneManager.setLastScene(ConstantClass.LoginSceneName);
-
-                    //Load home scene
-                    SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
-                }
-                else
-                {
-                    //Delete autologin info when login failed
-                    PlayerPrefs.DeleteKey(ConstantClass.PP_UsernameKey);
-                    PlayerPrefs.DeleteKey(ConstantClass.PP_PasswordKey);
-                    PlayerPrefs.DeleteKey(ConstantClass.PP_UserIDKey);
-
-                    //Show error message
-                    showLoginMessage(jsonResponse.Message);
-                    resetLoginField();
-                }
-            }
-            else {
-                showLoginMessage(www.error);
-                resetLoginField();
-                Debug.Log("WWW Error: " + www.error);
-            }
-        }
-        
-    }
-
-    IEnumerator WaitForRegisterRequest(WWW www)
-    {
-        yield return www;
-
-        //Check for errors
-        if (www.error == null)
-        {
-            ResponseModel<RegisterModel> jsonResponse = new ResponseModel<RegisterModel>();
-            jsonResponse.Data = new RegisterModel();
-            jsonResponse = JsonMapper.ToObject<ResponseModel<RegisterModel>>(www.text);
-
-            if (jsonResponse.Succeed)
-            {
-                registerPanel.SetActive(false);
-                loginPanel.SetActive(true);
-
-                //Set variable and do login
-                usernameField.text = rg_username;
-                passwordField.text = rg_password;
-                checkLogin();
-            }
-            else
-            {
-                //Show error message
-                showRegisterMessage(jsonResponse.Message);
-            }
-        }
-        else {
-            showRegisterMessage(www.error);
-            Debug.Log("WWW Error: " + www.error);
+            UCSS.HTTP.PostForm(request);
         }
     }
 
@@ -300,6 +234,12 @@ public class LoginScene : MonoBehaviour {
             showRegisterMessage("Please enter your password");
             resetPasswordFields();
         }
+        else if (rg_password.Length < 8)
+        {
+            result = false;
+            showRegisterMessage("Password must be at least 8 characters");
+            resetPasswordFields();
+        }
         else if (!rg_password.Equals(rg_passwordAgain))
         {
             result = false;
@@ -314,5 +254,85 @@ public class LoginScene : MonoBehaviour {
     {
         rg_passwordField.text = "";
         rg_passwordAgainField.text = "";
+    }
+
+    private void OnDoneCallLoginRequest(string result, string transactionId)
+    {
+        ResponseModel<LoginModel> jsonResponse = new ResponseModel<LoginModel>();
+        jsonResponse.Data = new LoginModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<LoginModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            //Store login info for auto login and store player id to get player detail info later
+            PlayerPrefs.SetString(ConstantClass.PP_UsernameKey, Encrypt.EncryptString(username));
+            PlayerPrefs.SetString(ConstantClass.PP_PasswordKey, Encrypt.EncryptString(password));
+            PlayerPrefs.SetString(ConstantClass.PP_UserIDKey, Encrypt.EncryptString(jsonResponse.Data.Id));
+            PlayerPrefs.Save();
+
+            //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
+            MySceneManager.setLastScene(ConstantClass.LoginSceneName);
+
+            //Load home scene
+            SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
+        }
+        else
+        {
+            //Delete autologin info when login failed
+            PlayerPrefs.DeleteKey(ConstantClass.PP_UsernameKey);
+            PlayerPrefs.DeleteKey(ConstantClass.PP_PasswordKey);
+            PlayerPrefs.DeleteKey(ConstantClass.PP_UserIDKey);
+
+            //Show error message
+            showLoginMessage(jsonResponse.Message);
+            resetLoginField();
+        }
+    }
+
+    private void OnDoneCallRegisterRequest(string result, string transactionId)
+    {
+        ResponseModel<RegisterModel> jsonResponse = new ResponseModel<RegisterModel>();
+        jsonResponse.Data = new RegisterModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<RegisterModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            registerPanel.SetActive(false);
+            loginPanel.SetActive(true);
+
+            //Set variable and do login
+            usernameField.text = rg_username;
+            passwordField.text = rg_password;
+            checkLogin();
+        }
+        else
+        {
+            //Show error message
+            if (jsonResponse.Errors != null)
+                showRegisterMessage(jsonResponse.Message + " " + jsonResponse.Errors[0]);
+            else
+                showRegisterMessage(jsonResponse.Message);
+            resetPasswordFields();
+        }
+    }
+
+    private void OnLoginError(string error, string transactionId)
+    {
+        showLoginMessage(error);
+        Debug.Log(error);
+        resetLoginField();
+    }
+
+    private void OnRegisterError(string error, string transactionId)
+    {
+        showRegisterMessage(error);
+        Debug.Log("WWW Error: " + error);
+        resetPasswordFields();
+    }
+
+    private void OnTimeOut(string transactionId)
+    {
+        showLoginMessage(ConstantClass.Msg_TimeOut);
+        Debug.Log(ConstantClass.Msg_TimeOut);
     }
 }
