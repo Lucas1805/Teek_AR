@@ -7,6 +7,7 @@ using Assets.ResponseModels;
 using System.Collections.Generic;
 using LitJson;
 using System;
+using Assets;
 
 public class ScrollControllerScript : MonoBehaviour {
     private RectTransform panel; // to hold the ScrollPanel
@@ -46,6 +47,9 @@ public class ScrollControllerScript : MonoBehaviour {
 
     void Start()
     {
+        //DialogScript.ConfirmDialog("này thì ConfirmDialog");
+        //DialogScript.MessageDialog("này thì MessageDialog");
+
         ResponseModel<List<EventModel>> jsonResponse = new ResponseModel<List<EventModel>>();
 
         jsonResponse.Data = new List<EventModel>();
@@ -56,6 +60,7 @@ public class ScrollControllerScript : MonoBehaviour {
         listEventResponseModel = jsonResponse.Data;
 
 
+        //loadParticipateEvent();
         //Load();
         CreateListEventByScript();
 
@@ -325,6 +330,51 @@ public class ScrollControllerScript : MonoBehaviour {
     {
         yield return www;
         eventImageSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+    }
+
+    void loadParticipateEvent()
+    {
+        string userID = Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+
+        WWWForm form = new WWWForm();
+        form.AddField("userId", userID);
+
+        //SEND POST REQUEST
+
+        WWW www = new WWW(ConstantClass.API_GetParticipateEvents, form);
+
+        StartCoroutine(GetParticipateEventRequest(www));
+    }
+
+    IEnumerator GetParticipateEventRequest(WWW www)
+    {
+        yield return www;
+
+        if (www.isDone)
+        {
+            //Check for errors
+            if (www.error == null)
+            {
+                ResponseModel<List<EventModel>> jsonResponse = new ResponseModel<List<EventModel>>();
+                jsonResponse.Data = new List<EventModel>();
+                jsonResponse = JsonMapper.ToObject<ResponseModel<List<EventModel>>>(www.text);
+
+                if (jsonResponse.Succeed)
+                {
+                    listEventResponseModel = jsonResponse.Data;
+                    CreateListEventByScript();
+                }
+                else
+                {
+                    
+                }
+            }
+            else
+            {
+                Debug.Log("WWW Error: " + www.error);
+            }
+        }
+
     }
 
 }

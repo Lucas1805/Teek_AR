@@ -33,12 +33,13 @@ namespace Assets
         
 
         //API LINKS
-        public const string API_HOST_IP = "172.16.20.32";
+        public const string API_HOST_IP = "172.16.20.28";
 
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
         public const string API_RedeemCode = "http://" + API_HOST_IP + "/Teek/api/";
         public const string API_GetAllEvents = "http://" + API_HOST_IP + "/Teek/api/event/GetEvents";
+        public const string API_GetParticipateEvents = "http://" + API_HOST_IP + "/Teek/api/event/ParticipateEvents";
 
         public const string API_LoadCoins = "http://" + API_HOST_IP + "/Teek/api/";
         public const string API_LoadFireball = "http://" + API_HOST_IP + "/Teek/api/";
