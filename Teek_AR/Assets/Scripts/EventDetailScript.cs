@@ -19,7 +19,7 @@ public class EventDetailScript : MonoBehaviour
     public GameObject ButtonTemplate;
     public List<ItemTemplate> listItem;
 
-    public Transform contentPanel;
+    public GameObject contentPanel;
 
    
     // Use this for initialization
@@ -43,9 +43,24 @@ public class EventDetailScript : MonoBehaviour
             sampleButton.PrizeName.text = item.name;
             sampleButton.CoinImage.sprite = item.icon;
             sampleButton.CoinAmount.text = item.coin.ToString();
-            newButton.transform.SetParent (contentPanel,false);
+            newButton.transform.SetParent(contentPanel.transform, false);
         }
     }
+
+    public void FilterCombo()
+    {
+        foreach (Transform childTransform in contentPanel.transform)
+        {
+            GameObject childGameObject = childTransform.gameObject;
+            if (childTransform.GetChild(2).GetComponent<Text>().text.Equals("24"))
+            {
+                childGameObject.SetActive(false);
+            }
+            
+        }
+        
+    }
+            
 
 
     public void PlayGame()
