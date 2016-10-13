@@ -209,7 +209,7 @@ public class ShopController : MonoBehaviour {
 
     private void OnBuyItemError(string error, string transactionId)
     {
-        DialogScript.MessageDialog(error);
+        MessageHelper.MessageDialog(error);
 
         //RESTORE PURCHASE
         restorePurchase(justBoughtProduct, justBoughtProduct.IncrementOnBuy);
@@ -232,14 +232,14 @@ public class ShopController : MonoBehaviour {
         }
         else
         {
-            DialogScript.MessageDialog("Cannot Load Coin");
+            MessageHelper.MessageDialog("Cannot Load Coin");
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     private void OnLoadCoinError(string error, string transactionId)
     {
-        DialogScript.MessageDialog(error);
+        MessageHelper.MessageDialog(error);
         Debug.Log(error);
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
@@ -258,14 +258,14 @@ public class ShopController : MonoBehaviour {
         }
         else
         {
-            DialogScript.MessageDialog("Cannot Load Fireball");
+            MessageHelper.MessageDialog("Cannot Load Fireball");
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     private void OnLoadFireballError(string error, string transactionId)
     {
-        DialogScript.MessageDialog(error);
+        MessageHelper.MessageDialog(error);
         Debug.Log(error);
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
@@ -284,14 +284,14 @@ public class ShopController : MonoBehaviour {
         }
         else
         {
-            DialogScript.MessageDialog("Cannot Load Teek");
+            MessageHelper.MessageDialog("Cannot Load Teek");
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     private void OnLoadTeekError(string error, string transactionId)
     {
-        DialogScript.MessageDialog(error);
+        MessageHelper.MessageDialog(error);
         Debug.Log(error);
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
@@ -301,7 +301,7 @@ public class ShopController : MonoBehaviour {
     private void OnTimeOut(string transactionId)
     {
         //showLoginMessage(ConstantClass.Msg_TimeOut);
-        DialogScript.MessageDialog(ConstantClass.Msg_TimeOut);
+        MessageHelper.MessageDialog(ConstantClass.Msg_TimeOut);
         Debug.Log(ConstantClass.Msg_TimeOut);
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }

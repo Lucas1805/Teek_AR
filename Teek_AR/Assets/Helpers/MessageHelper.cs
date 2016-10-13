@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class DialogScript : MonoBehaviour {
+public class MessageHelper : MonoBehaviour {
 
     //// Use this for initialization
     //void Start () {
