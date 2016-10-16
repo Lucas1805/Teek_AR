@@ -9,6 +9,7 @@ using LitJson;
 using Assets;
 using Assets.ResponseModels;
 using System.Text.RegularExpressions;
+using Ucss;
 
 public class LoginScene : MonoBehaviour {
 
@@ -83,7 +84,12 @@ public class LoginScene : MonoBehaviour {
             WWWForm form = new WWWForm();
             form.AddField("Username", username);
             form.AddField("Password", password);
-
+            showLoginMessage("Please enter username and password");
+            HTTPRequest request = new HTTPRequest();
+            request.url = "";
+            request.stringCallback = new EventHandlerHTTPString(this.OnDone);
+            request.formData = form;
+            UCSS.HTTP.PostForm(request);
             //SEND POST REQUEST
 
             WWW www = new WWW(ConstantClass.API_Login, form);
@@ -92,8 +98,13 @@ public class LoginScene : MonoBehaviour {
         }
         else
         {
-            showLoginMessage("Please enter username and password");
+            
         }
+    }
+
+    private void OnDone(string result, string transactionId)
+    {
+        
     }
 
     private void checkLoginWithSession()
@@ -145,6 +156,7 @@ public class LoginScene : MonoBehaviour {
             WWW www = new WWW(ConstantClass.API_Register, form);
 
             StartCoroutine(WaitForRegisterRequest(www));
+
         }
     }
 
