@@ -1,7 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: a0ca1144360185d4584d4f3a6eeb6c6e
 folderAsset: yes
 timeCreated: 1476279776
+=======
+guid: 866f22d3f8c011e42aa052b64e2328c0
+folderAsset: yes
+timeCreated: 1476279713
+>>>>>>> buupv
 licenseType: Free
 DefaultImporter:
   userData: 
