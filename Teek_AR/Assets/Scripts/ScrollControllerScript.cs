@@ -126,57 +126,57 @@ public class ScrollControllerScript : MonoBehaviour {
 
     void Update()
     {
-        for (int i = 0; i < listPanelItem.Length; i++)
-        {
-            distReposition[i] = center.GetComponent<RectTransform>().position.x
-                - listPanelItem[i].GetComponent<RectTransform>().position.x;
-            distance[i] = Mathf.Abs(distReposition[i]);
-
-        }
-
-        float minDistance = Mathf.Min(distance);    // get the min distance
-
-        for (int a = 0; a < listPanelItem.Length; a++)
-        {
-            if (minDistance == distance[a])
-            {
-                minPanelNum = a;
-                eventId = listEventResponseModel[a].Id;
-                //GameObject.Find("GoToEventDetailText").GetComponent<Text>().text = "go to eventId: "+eventId;
-                
-            }
-        }
-
-        if (currentMinPanelNum != minPanelNum)
-        {
-            currentMinPanelNum = minPanelNum;
-            isCurrentMinPanelNum = true;
-        }
-
-        if (isCurrentMinPanelNum)
-        {
-            isCurrentMinPanelNum = false;
-            CreateEventDetailByScript(minPanelNum);
-        }
-
-        //GameObject.Find("DebugText").GetComponent<Text>().text = "currentMinPanelNum: " + currentMinPanelNum
-        //    + " - minPanelNum: " + minPanelNum + " - isCurrentMinPanelNum: " + isCurrentMinPanelNum;
-
-        //string[] lineOfMinDistancePanel = listLine[minPanelNum].ToString().Split(';');
-        //string eventDetailTextContent = "";
-        //for (int i = 1; i < lineOfMinDistancePanel.Length; i++)
+        //for (int i = 0; i < listPanelItem.Length; i++)
         //{
-        //    eventDetailTextContent += lineOfMinDistancePanel[i] + "\n";
+        //    distReposition[i] = center.GetComponent<RectTransform>().position.x
+        //        - listPanelItem[i].GetComponent<RectTransform>().position.x;
+        //    distance[i] = Mathf.Abs(distReposition[i]);
+
         //}
-        ////eventDetailText.text = "này thì EventDetail: \n"+eventDetailTextContent;
+
+        //float minDistance = Mathf.Min(distance);    // get the min distance
+
+        //for (int a = 0; a < listPanelItem.Length; a++)
+        //{
+        //    if (minDistance == distance[a])
+        //    {
+        //        minPanelNum = a;
+        //        eventId = listEventResponseModel[a].Id;
+        //        //GameObject.Find("GoToEventDetailText").GetComponent<Text>().text = "go to eventId: "+eventId;
+                
+        //    }
+        //}
+
+        //if (currentMinPanelNum != minPanelNum)
+        //{
+        //    currentMinPanelNum = minPanelNum;
+        //    isCurrentMinPanelNum = true;
+        //}
+
+        //if (isCurrentMinPanelNum)
+        //{
+        //    isCurrentMinPanelNum = false;
+        //    CreateEventDetailByScript(minPanelNum);
+        //}
+
+        ////GameObject.Find("DebugText").GetComponent<Text>().text = "currentMinPanelNum: " + currentMinPanelNum
+        ////    + " - minPanelNum: " + minPanelNum + " - isCurrentMinPanelNum: " + isCurrentMinPanelNum;
+
+        ////string[] lineOfMinDistancePanel = listLine[minPanelNum].ToString().Split(';');
+        ////string eventDetailTextContent = "";
+        ////for (int i = 1; i < lineOfMinDistancePanel.Length; i++)
+        ////{
+        ////    eventDetailTextContent += lineOfMinDistancePanel[i] + "\n";
+        ////}
+        //////eventDetailText.text = "này thì EventDetail: \n"+eventDetailTextContent;
 
 
 
-        if (!dragging)
-        {
-            //LerpToBttn(minButtonNum * -bttnDistance);
-            LerpToPanel(-listPanelItem[minPanelNum].GetComponent<RectTransform>().anchoredPosition.x);
-        }
+        //if (!dragging)
+        //{
+        //    //LerpToBttn(minButtonNum * -bttnDistance);
+        //    LerpToPanel(-listPanelItem[minPanelNum].GetComponent<RectTransform>().anchoredPosition.x);
+        //}
     }
 
     void LerpToPanel(float position)

@@ -12,9 +12,12 @@ public class HomeScript : MonoBehaviour {
 
     //public Text mac;
     public GameObject loadingPanel;
+    public InputField searchInput;
+    public GameObject AllBrandsPanel;
+    public GameObject MyBrandsPanel;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 	
 	}
 	
@@ -88,5 +91,32 @@ public class HomeScript : MonoBehaviour {
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.HomeSceneName);
         SceneManager.LoadSceneAsync(ConstantClass.EventDetailSceneName);
+    }
+
+    public void SearchByName()
+    {
+        foreach (Transform item in AllBrandsPanel.transform)
+        {
+            GameObject parent = item.gameObject;
+            if (!parent.GetComponentInChildren<Text>().text.ToLower().StartsWith(searchInput.text.ToLower()))
+            {
+                parent.SetActive(false);
+            } else
+            {
+                parent.SetActive(true);
+            }
+        }
+        foreach (Transform item in MyBrandsPanel.transform)
+        {
+            GameObject parent = item.gameObject;
+            if (!parent.GetComponentInChildren<Text>().text.ToLower().StartsWith(searchInput.text.ToLower()))
+            {
+                parent.SetActive(false);
+            }
+            else
+            {
+                parent.SetActive(true);
+            }
+        }
     }
 }
