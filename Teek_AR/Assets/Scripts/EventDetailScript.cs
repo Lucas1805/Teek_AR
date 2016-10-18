@@ -29,6 +29,7 @@ public class EventDetailScript : MonoBehaviour
     public GameObject CouponTemplate;
     public List<ItemTemplate> listItem;
     public List<CouponTemplate> listCoupon;
+    public static int id;
 
     public GameObject contentPanel;
     public GameObject couponPanel;
@@ -37,7 +38,7 @@ public class EventDetailScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        PopulateDataList();
+        PopulateDataList(id);
         PopulateCoupon();
     }
 
@@ -67,7 +68,7 @@ public class EventDetailScript : MonoBehaviour
             newButton.transform.SetParent(couponPanel.transform, false);
         }
     }
-    public void PopulateDataList()
+    public void PopulateDataList(int id)
     {
         foreach (var item in listItem)
         {
