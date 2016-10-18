@@ -9,5 +9,5 @@ public class RewardButtonTemplate : MonoBehaviour {
     public GameObject Coin;
     public GameObject Gem;
 
+    
 }
-
