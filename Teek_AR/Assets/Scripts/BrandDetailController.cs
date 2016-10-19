@@ -7,6 +7,8 @@ using LitJson;
 using System.Collections.Generic;
 using Assets.ViewModels;
 using System;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BrandDetailController : MonoBehaviour {
 
@@ -154,17 +156,24 @@ public class BrandDetailController : MonoBehaviour {
                     if (item.Multiplier != 0)
                         sampleButton.Activities.transform.GetChild(1).gameObject.SetActive(true);
 
-                    foreach (var activity in item.Activities)
+                    if (item.Activities != null)
                     {
-                        if (activity.GameId != null || activity.GameId != 0)
+                        foreach (var activity in item.Activities)
                         {
-                            sampleButton.Activities.transform.GetChild(0).gameObject.SetActive(true);
-                        }
-                        if (activity.SurveyId != null || activity.SurveyId != 0)
-                        {
-                            sampleButton.Activities.transform.GetChild(2).gameObject.SetActive(true);
+                            if (activity != null)
+                            {
+                                if (activity.GameId != null || activity.GameId != 0)
+                                {
+                                    sampleButton.Activities.transform.GetChild(0).gameObject.SetActive(true);
+                                }
+                                if (activity.SurveyId != null || activity.SurveyId != 0)
+                                {
+                                    sampleButton.Activities.transform.GetChild(2).gameObject.SetActive(true);
+                                }
+                            }
                         }
                     }
+                    
 
                     newButton.transform.SetParent(EventContentPanel.transform, false);
                 }
@@ -190,7 +199,25 @@ public class BrandDetailController : MonoBehaviour {
 
     public void Refresh()
     {
+        //Clear Store List
+        foreach (Transform child in StoreContentPanel.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
         LoadStoreList();
+
+        //Clear Event List
+        foreach (Transform child in EventContentPanel.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
         LoadEventListByOrganizer();
     }
+
+    public void LoadPreviousScene()
+    {
+        MySceneManager.loadPreviousScene();
+    }
+
+    
 }
