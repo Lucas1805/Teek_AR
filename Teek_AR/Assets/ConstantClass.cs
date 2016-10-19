@@ -15,6 +15,8 @@ namespace Assets
         public const string EventDetailSceneName = "EventDetailScene";
         public const string InventorySceneName = "InventoryScene";
         public const string TutorialSceneName = "TutorialScene";
+        public const string StoreEventSceneName = "StoreEventScene";
+        public const string BrandDetailSceneName = "BrandDetailScene";
 
         //THIS CLASS NAME IS CLASS NAME IN MOBY SHOP
         public const string FireBallItemClassName = "Fireball";
@@ -45,6 +47,7 @@ namespace Assets
         public const string API_GetParticipateEvents = "http://" + API_HOST_IP + "/Teek/api/event/ParticipateEvents";
         public const string API_LoadStoreList = "http://" + API_HOST_IP + "/Teek/api/store/GetStoresByOrganizerId";
         public const string API_LoadEventListByOrganizer = "http://" + API_HOST_IP + "/Teek/api/event/GetEventByOrganizer";
+        public const string API_LoadEventListByStore = "http://" + API_HOST_IP + "/Teek/api/event/GetEventByStore";
 
         public const string API_LoadCoins = "http://" + API_HOST_IP + "/Teek/api/";
         public const string API_LoadTeek = "http://" + API_HOST_IP + "/Teek/api/";
