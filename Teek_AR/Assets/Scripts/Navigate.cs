@@ -5,9 +5,11 @@ using Assets;
 using UnityEngine.SceneManagement;
 
 public class Navigate : MonoBehaviour {
-    public void NavigateStoreEventScene(Text StoreId)
+    public void NavigateStoreEventScene(GameObject ButtonObject)
     {
-        StoreEventController.StoreId = int.Parse(StoreId.text);
+        StoreEventController.StoreId = int.Parse(ButtonObject.transform.GetChild(0).gameObject.GetComponent<Text>().text);
+        StoreEventController.StoreName = ButtonObject.transform.GetChild(1).gameObject.GetComponent<Text>().text;
+
         MySceneManager.setLastScene(ConstantClass.BrandDetailSceneName);
         SceneManager.LoadSceneAsync(ConstantClass.StoreEventSceneName);
     }

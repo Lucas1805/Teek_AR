@@ -11,7 +11,7 @@ namespace Assets.ResponseModels
         {
             string result = OriginalString;
 
-            if (OriginalString.Length > MaxChar - 3)
+            if (OriginalString.Length > MaxChar - 3 && OriginalString != null && OriginalString.Length > 0)
             {
                 result = OriginalString.Substring(0, MaxChar - 3);
                 result = result + "...";

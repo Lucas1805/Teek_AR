@@ -13,18 +13,22 @@ using UnityEngine.SceneManagement;
 public class BrandDetailController : MonoBehaviour {
 
     public static int OrganizerId;
+    public static string OrganizerName = "";
+
     public bool OnStoreTab = true;
     public GameObject StoreButtonTemplate;
     public GameObject StoreContentPanel;
     public GameObject EventButtonTemplate;
     public GameObject EventContentPanel;
     public GameObject LoadingPanel;
+    public Text OrganizerNameText;
 
 
 	// Use this for initialization
 	void Start () {
         //TEST VALUE FOR ORGANIZER ID
         OrganizerId = 39;
+        OrganizerNameText.text = Utils.TruncateLongString(OrganizerName, 21);
         LoadStoreList();
         LoadEventListByOrganizer();
 	}
@@ -151,7 +155,11 @@ public class BrandDetailController : MonoBehaviour {
                     sampleButton.EventId.text = item.Id.ToString();
                     sampleButton.EventName.text = item.Name;
                     sampleButton.Time.text = item.StartDate;
-                    
+
+                    //Load event image
+                    WWW www_loadImage = new WWW("https://agenciatrampo.com.br/wp-content/uploads/2016/02/Solu%C3%A7%C3%B5es-em-Marketing-Digital-para-eventos-480x379.jpg");
+                    StartCoroutine(LoadImage(www_loadImage, sampleButton.EventImgUrl));
+
 
                     if (item.Multiplier != 0)
                         sampleButton.Activities.transform.GetChild(1).gameObject.SetActive(true);
@@ -219,5 +227,12 @@ public class BrandDetailController : MonoBehaviour {
         MySceneManager.loadPreviousScene();
     }
 
-    
+    IEnumerator LoadImage(WWW www, Image image)
+    {
+        LoadingManager.showLoadingIndicator(LoadingPanel);
+        yield return www;
+        image.overrideSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+        LoadingManager.hideLoadingIndicator(LoadingPanel);
+        
+    }
 }
