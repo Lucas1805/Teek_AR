@@ -102,10 +102,6 @@ public class LoginScene : MonoBehaviour
         }
     }
 
-    public void GetName(Text name)
-    {
-        Debug.Log(name.text);
-    }
     private void checkLoginWithSession()
     {
         LoadingManager.showLoadingIndicator(loadingPanel);

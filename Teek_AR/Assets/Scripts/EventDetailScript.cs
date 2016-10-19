@@ -5,6 +5,10 @@ using System.Text;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using Ucss;
+using Assets.ResponseModels;
+using LitJson;
+using Assets;
 
 [System.Serializable]
 public class ItemTemplate
@@ -27,10 +31,11 @@ public class EventDetailScript : MonoBehaviour
 {
     public GameObject ButtonTemplate;
     public GameObject CouponTemplate;
-    public List<ItemTemplate> listItem;
+    
     public List<CouponTemplate> listCoupon;
-    public static int id;
+    public static int eventId =101;
 
+    public GameObject loadingPanel;
     public GameObject contentPanel;
     public GameObject couponPanel;
 
@@ -38,7 +43,8 @@ public class EventDetailScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        PopulateDataList(id);
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        GetPrizeData();
         PopulateCoupon();
     }
 
@@ -68,38 +74,60 @@ public class EventDetailScript : MonoBehaviour
             newButton.transform.SetParent(couponPanel.transform, false);
         }
     }
-    public void PopulateDataList(int id)
+    public void GetPrizeData()
     {
-        foreach (var item in listItem)
+
+        HTTPRequest request = new HTTPRequest();
+        request.url = "http://10.5.50.21/Teek/api/prize/GetPrizes?eventId=" + eventId;
+
+        request.stringCallback = new EventHandlerHTTPString(this.PopulateDataList);
+
+        UCSS.HTTP.GetString(request);
+    }
+    private void PopulateDataList(string result,string transactionId)
+    {
+        ResponseModel<List<PrizeResponseModel>> jsonResponse = new ResponseModel<List<PrizeResponseModel>>();
+        jsonResponse.Data = new List<PrizeResponseModel>();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<List<PrizeResponseModel>>>(result);
+        LoadingManager.hideLoadingIndicator(loadingPanel);
+        if (jsonResponse.Succeed)
         {
-            GameObject newButton = Instantiate(ButtonTemplate) as GameObject;
-            RewardButtonTemplate sampleButton = newButton.GetComponent<RewardButtonTemplate>();
-            sampleButton.PrizeName.text = item.name;
-            if (item.ruby != 0)
+            foreach (var item in jsonResponse.Data)
             {
-                sampleButton.Gem.transform.GetChild(0).gameObject.SetActive(true);
-                sampleButton.Gem.GetComponentInChildren<Text>().text = item.ruby.ToString();
-            }
-            if (item.sapphire != 0)
-            {
-                sampleButton.Gem.transform.GetChild(2).gameObject.SetActive(true);
-                sampleButton.Gem.GetComponentInChildren<Text>().text = item.sapphire.ToString();
-            }
-            if (item.emerald != 0)
-            {
-                sampleButton.Gem.transform.GetChild(1).gameObject.SetActive(true);
-                sampleButton.Gem.GetComponentInChildren<Text>().text = item.emerald.ToString();
-            }
-            if (item.coin != 0)
-            {
-                sampleButton.Coin.SetActive(true);
-                sampleButton.Coin.GetComponentInChildren<Text>().text = item.coin.ToString();
-            }
+                GameObject newButton = Instantiate(ButtonTemplate) as GameObject;
+                RewardButtonTemplate sampleButton = newButton.GetComponent<RewardButtonTemplate>();
+                sampleButton.PrizeName.text = item.Name;
+                if (item.Ruby != 0)
+                {
+                    sampleButton.Gem.transform.GetChild(0).gameObject.SetActive(true);
+                    sampleButton.Gem.GetComponentInChildren<Text>().text = item.Ruby.ToString();
+                }
+                if (item.Sapphire != 0)
+                {
+                    sampleButton.Gem.transform.GetChild(2).gameObject.SetActive(true);
+                    sampleButton.Gem.GetComponentInChildren<Text>().text = item.Sapphire.ToString();
+                }
+                if (item.Citrine != 0)
+                {
+                    sampleButton.Gem.transform.GetChild(1).gameObject.SetActive(true);
+                    sampleButton.Gem.GetComponentInChildren<Text>().text = item.Citrine.ToString();
+                }
+                if (item.Teek != 0)
+                {
+                    sampleButton.Coin.SetActive(true);
+                    sampleButton.Coin.GetComponentInChildren<Text>().text = item.Teek.ToString();
+                }
 
 
 
-            newButton.transform.SetParent(contentPanel.transform, false);
+                newButton.transform.SetParent(contentPanel.transform, false);
+            }
         }
+        else
+        {
+           
+        }
+       
     }
 
     public void FilterCombo()
