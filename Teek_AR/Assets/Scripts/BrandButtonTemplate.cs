@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class BrandButtonTemplate : MonoBehaviour {
-    public Text BrandName;
+    public GameObject Brand;
     public Text BrandAmount;
     public Text BrandCategory;
     public Image BrandLogo;

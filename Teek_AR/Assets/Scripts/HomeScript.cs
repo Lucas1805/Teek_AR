@@ -131,7 +131,7 @@ public class HomeScript : MonoBehaviour {
     {
         HTTPRequest request = new HTTPRequest();
         //request.url = ConstantClass.
-        request.url = "http://localhost:19291/api/organizer/getorganizers";
+        request.url = "http://localhost/teek/api/organizer/getorganizers";
         request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallAPIGetOrganizers);
         UCSS.HTTP.GetString(request);
     }
@@ -148,7 +148,8 @@ public class HomeScript : MonoBehaviour {
             {
                 GameObject newBrandButton = Instantiate(BrandButtonTemplateGO) as GameObject;
                 BrandButtonTemplate sampleBrandButton = newBrandButton.GetComponent<BrandButtonTemplate>();
-                sampleBrandButton.BrandName.text = item.Name;
+                sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = item.Name;
+                sampleBrandButton.Brand.transform.GetChild(0).GetComponent<Text>().text = item.Id.ToString();
                 sampleBrandButton.BrandAmount.text = item.StoreCount.ToString();
                 //sampleBrandButton.BrandCategory.text = item.
                 //sampleBrandButton.BrandLogo
