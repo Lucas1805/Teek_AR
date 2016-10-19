@@ -18,10 +18,12 @@ namespace Assets
 
         //THIS CLASS NAME IS CLASS NAME IN MOBY SHOP
         public const string FireBallItemClassName = "Fireball";
+        public const string IceBallItemClassName = "Iceball";
         public const string CoinItemClassName = "coins";
 
         //USED THESE ID TO LOAD PLAYER INTEMS FROM SERVER
         public const string FireBallItemID = "fireball";
+        public const string IceBallItemID = "iceball";
         public const string CoinItemID = "coinpack1";
 
         //USED THESE TO STORE DATA IN PLAYERSPREFS
@@ -33,7 +35,7 @@ namespace Assets
         
 
         //API LINKS
-        public const string API_HOST_IP = "192.168.1.59";
+        public const string API_HOST_IP = "localhost";
 
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
