@@ -18,10 +18,12 @@ namespace Assets
 
         //THIS CLASS NAME IS CLASS NAME IN MOBY SHOP
         public const string FireBallItemClassName = "Fireball";
+        public const string IceBallItemClassName = "Iceball";
         public const string CoinItemClassName = "coins";
 
         //USED THESE ID TO LOAD PLAYER INTEMS FROM SERVER
         public const string FireBallItemID = "fireball";
+        public const string IceBallItemID = "iceball";
         public const string CoinItemID = "coinpack1";
 
         //USED THESE TO STORE DATA IN PLAYERSPREFS
@@ -29,17 +31,24 @@ namespace Assets
         public const string PP_PasswordKey = "Password"; //MUST ENCRYPT
         public const string PP_UserIDKey = "UserID"; //MUST ENCRYPT
         public const string PP_EventIDKey = "EventID";
+        public const string PP_OrganizerId = "OrganizerID";
         public const string PP_UserParticipationID = "UserParticipationID";
         
 
         //API LINKS
+<<<<<<< HEAD
         public const string API_HOST_IP = "10.5.50.21";
+=======
+        public const string API_HOST_IP = "10.5.50.25";
+>>>>>>> 2f16ad3b57c8845cfae41d8adf1f2a5e1d0cac76
 
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
         public const string API_RedeemCode = "http://" + API_HOST_IP + "/Teek/api/";
         public const string API_GetAllEvents = "http://" + API_HOST_IP + "/Teek/api/event/GetEvents";
         public const string API_GetParticipateEvents = "http://" + API_HOST_IP + "/Teek/api/event/ParticipateEvents";
+        public const string API_LoadStoreList = "http://" + API_HOST_IP + "/Teek/api/store/GetStoresByOrganizerId";
+        public const string API_LoadEventListByOrganizer = "http://" + API_HOST_IP + "/Teek/api/event/GetEventByOrganizer";
 
         public const string API_LoadCoins = "http://" + API_HOST_IP + "/Teek/api/";
         public const string API_LoadTeek = "http://" + API_HOST_IP + "/Teek/api/";
