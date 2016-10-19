@@ -7,6 +7,10 @@ using System.Linq;
 using System;
 using UnityEngine.SceneManagement;
 using Assets;
+using System.Collections.Generic;
+using Ucss;
+using Assets.ResponseModels;
+using LitJson;
 
 public class HomeScript : MonoBehaviour {
 
@@ -16,9 +20,12 @@ public class HomeScript : MonoBehaviour {
     public GameObject AllBrandsPanel;
     public GameObject MyBrandsPanel;
 
+    public GameObject BrandButtonTemplateGO;
+
     // Use this for initialization
     void Start () {
-	
+        CallAPIGetOrganizers();
+        CallAPIGetOrganizersByUserId();
 	}
 	
 	// Update is called once per frame
@@ -118,5 +125,50 @@ public class HomeScript : MonoBehaviour {
                 parent.SetActive(true);
             }
         }
+    }
+
+    public void CallAPIGetOrganizers()
+    {
+        HTTPRequest request = new HTTPRequest();
+        //request.url = ConstantClass.
+        request.url = "http://localhost:19291/api/organizer/getorganizers";
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallAPIGetOrganizers);
+        UCSS.HTTP.GetString(request);
+    }
+
+    public void OnDoneCallAPIGetOrganizers(string result, string transactionId)
+    {
+        ResponseModel<List<OrganizerModel>> jsonResponse = new ResponseModel<List<OrganizerModel>>();
+        jsonResponse.Data = new List<OrganizerModel>();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<List<OrganizerModel>>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            foreach (var item in jsonResponse.Data)
+            {
+                GameObject newBrandButton = Instantiate(BrandButtonTemplateGO) as GameObject;
+                BrandButtonTemplate sampleBrandButton = newBrandButton.GetComponent<BrandButtonTemplate>();
+                sampleBrandButton.BrandName.text = item.Name;
+                sampleBrandButton.BrandAmount.text = item.StoreCount.ToString();
+                //sampleBrandButton.BrandCategory.text = item.
+                //sampleBrandButton.BrandLogo
+                sampleBrandButton.Activities.transform.GetChild(0).gameObject.SetActive(item.HasMultiplier);
+                sampleBrandButton.Activities.transform.GetChild(1).gameObject.SetActive(item.HasARGAME);
+                sampleBrandButton.Activities.transform.GetChild(2).gameObject.SetActive(item.HasVoting);
+
+
+                newBrandButton.transform.SetParent(AllBrandsPanel.transform, false);
+            }
+        }
+    }
+
+    public void CallAPIGetOrganizersByUserId()
+    {
+        HTTPRequest request = new HTTPRequest();
+        //request.url = ConstantClass.
+        request.url = "http://localhost:19291/api/organizer/GetOrganizersByUserId?userid="
+            + Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey));
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallAPIGetOrganizers);
+        UCSS.HTTP.GetString(request);
     }
 }
