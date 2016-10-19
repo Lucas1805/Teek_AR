@@ -1,12 +1,4 @@
 sceneSetups:
-<<<<<<< HEAD
-- path: Assets/Scenes/LoginScene.unity
-=======
-<<<<<<< HEAD
 - path: Assets/Scenes/BrandDetailScene.unity
-=======
-- path: Assets/Scenes/HomeScene.unity
->>>>>>> Teek_AR/Quan
->>>>>>> 2f16ad3b57c8845cfae41d8adf1f2a5e1d0cac76
   isLoaded: 1
   isActive: 1
