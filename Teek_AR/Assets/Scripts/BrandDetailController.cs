@@ -13,6 +13,7 @@ using UnityEngine.SceneManagement;
 public class BrandDetailController : MonoBehaviour {
 
     public static int OrganizerId;
+    public static string OrganizerName;
     public bool OnStoreTab = true;
     public GameObject StoreButtonTemplate;
     public GameObject StoreContentPanel;
