@@ -31,17 +31,20 @@ namespace Assets
         public const string PP_PasswordKey = "Password"; //MUST ENCRYPT
         public const string PP_UserIDKey = "UserID"; //MUST ENCRYPT
         public const string PP_EventIDKey = "EventID";
+        public const string PP_OrganizerId = "OrganizerID";
         public const string PP_UserParticipationID = "UserParticipationID";
         
 
         //API LINKS
-        public const string API_HOST_IP = "localhost";
+        public const string API_HOST_IP = "10.5.50.25";
 
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
         public const string API_RedeemCode = "http://" + API_HOST_IP + "/Teek/api/";
         public const string API_GetAllEvents = "http://" + API_HOST_IP + "/Teek/api/event/GetEvents";
         public const string API_GetParticipateEvents = "http://" + API_HOST_IP + "/Teek/api/event/ParticipateEvents";
+        public const string API_LoadStoreList = "http://" + API_HOST_IP + "/Teek/api/store/GetStoresByOrganizerId";
+        public const string API_LoadEventListByOrganizer = "http://" + API_HOST_IP + "/Teek/api/event/GetEventByOrganizer";
 
         public const string API_LoadCoins = "http://" + API_HOST_IP + "/Teek/api/";
         public const string API_LoadTeek = "http://" + API_HOST_IP + "/Teek/api/";

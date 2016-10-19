@@ -7,10 +7,6 @@ namespace Assets.ResponseModels
 {
     class Utils
     {
-        //public DateTimeOffset GetDateTimeOffset(string inDate)
-        //{
-            
-        //}
 
     }
 }
