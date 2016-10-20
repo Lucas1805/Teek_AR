@@ -129,9 +129,10 @@ public class HomeScript : MonoBehaviour {
 
     public void CallAPIGetOrganizers()
     {
+        LoadingManager.showLoadingIndicator(loadingPanel);
         HTTPRequest request = new HTTPRequest();
         //request.url = ConstantClass.
-        request.url = "http://localhost/teek/api/organizer/getorganizers";
+        request.url = ConstantClass.API_LoadOrganizer;
         request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallAPIGetOrganizers);
         UCSS.HTTP.GetString(request);
     }
@@ -148,7 +149,7 @@ public class HomeScript : MonoBehaviour {
             {
                 GameObject newBrandButton = Instantiate(BrandButtonTemplateGO) as GameObject;
                 BrandButtonTemplate sampleBrandButton = newBrandButton.GetComponent<BrandButtonTemplate>();
-                sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = item.Name;
+                sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = Utils.TruncateLongString(item.Name,18);
                 sampleBrandButton.Brand.transform.GetChild(0).GetComponent<Text>().text = item.Id.ToString();
                 sampleBrandButton.BrandAmount.text = item.StoreCount.ToString();
                 //sampleBrandButton.BrandCategory.text = item.
@@ -161,13 +162,15 @@ public class HomeScript : MonoBehaviour {
                 newBrandButton.transform.SetParent(AllBrandsPanel.transform, false);
             }
         }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     public void CallAPIGetOrganizersByUserId()
     {
+        LoadingManager.showLoadingIndicator(loadingPanel);
         HTTPRequest request = new HTTPRequest();
-        //request.url = ConstantClass.
-        request.url = "http://localhost:19291/api/organizer/GetOrganizersByUserId?userid="
+        request.url = ConstantClass.API_LoadMyBrand + "?userId="
             + Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey));
         request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallAPIGetOrganizers);
         UCSS.HTTP.GetString(request);
