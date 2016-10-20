@@ -225,13 +225,7 @@ public class HomeScript : MonoBehaviour {
                     item.gameObject.SetActive(true);
                 }
             }
-            //else
-            //{
-            //    if (item.GetComponent<BrandButtonTemplate>().Activities.transform.GetChild(0).gameObject.activeSelf)
-            //    {
-            //        item.gameObject.SetActive(false);
-            //    }
-            //}
+
             if (GameToggle.isOn)
             {
                 if (item.GetComponent<BrandButtonTemplate>().Activities.transform.GetChild(1).gameObject.activeSelf)
@@ -248,6 +242,43 @@ public class HomeScript : MonoBehaviour {
                 }
             }
         }
+
+        foreach (Transform item in MyBrandsPanel.transform)
+        {
+            item.gameObject.SetActive(false);
+        }
+
+        foreach (Transform item in MyBrandsPanel.transform)
+        {
+            if (MultiplierToggle.isOn)
+            {
+                if (item.GetComponent<BrandButtonTemplate>().Activities.transform.GetChild(0).gameObject.activeSelf)
+                {
+                    item.gameObject.SetActive(true);
+                }
+            }
+
+            if (GameToggle.isOn)
+            {
+                if (item.GetComponent<BrandButtonTemplate>().Activities.transform.GetChild(1).gameObject.activeSelf)
+                {
+                    item.gameObject.SetActive(true);
+                }
+            }
+
+            if (VotingToggle.isOn)
+            {
+                if (item.GetComponent<BrandButtonTemplate>().Activities.transform.GetChild(2).gameObject.activeSelf)
+                {
+                    item.gameObject.SetActive(true);
+                }
+            }
+        }
+
+        if (!MultiplierToggle.isOn || !GameToggle.isOn || !VotingToggle.isOn)
+        {
+            AllToggle.isOn = false;
+        }
     }
 
     public void FilterAll()
@@ -259,6 +290,11 @@ public class HomeScript : MonoBehaviour {
             VotingToggle.isOn = true;
 
             foreach (Transform item in AllBrandsPanel.transform)
+            {
+                item.gameObject.SetActive(true);
+            }
+
+            foreach (Transform item in MyBrandsPanel.transform)
             {
                 item.gameObject.SetActive(true);
             }
