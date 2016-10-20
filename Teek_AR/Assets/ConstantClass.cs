@@ -49,6 +49,8 @@ namespace Assets
         public const string API_LoadEventListByStore = "http://" + API_HOST_IP + "/Teek/api/event/GetEventByStore";
         public const string API_LoadOrganizer = "http://" + API_HOST_IP + "/Teek/api/organizer/getorganizers";
         public const string API_LoadMyBrand = "http://" + API_HOST_IP + "/Teek/api/organizer/GetOrganizersByUserId";
+        public const string API_LoadPrizeList= "http://" + API_HOST_IP + "/Teek/api/prize/GetPrizes";
+        public const string API_LoadUserInformation = "http://" + API_HOST_IP + "/Teek/api/Customer/GetCustomerInfo";
 
         public const string API_LoadCoins = "http://" + API_HOST_IP + "/Teek/api/";
         public const string API_LoadTeek = "http://" + API_HOST_IP + "/Teek/api/";

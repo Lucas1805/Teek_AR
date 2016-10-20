@@ -27,8 +27,12 @@ public class BrandDetailController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         //TEST VALUE FOR ORGANIZER ID
-        OrganizerId = 39;
         OrganizerNameText.text = Utils.TruncateLongString(OrganizerName, 21);
+
+        //Set OrganizerId to PlayerPrefs
+        PlayerPrefs.SetInt(ConstantClass.PP_OrganizerId, OrganizerId);
+        PlayerPrefs.Save();
+
         LoadStoreList();
         LoadEventListByOrganizer();
 	}
@@ -114,24 +118,31 @@ public class BrandDetailController : MonoBehaviour {
             else
             {
                 //SHOW NO RECORD MESSAGE BY CREATE A EMMPTY BUTTON AND MESSAGE
+                MessageHelper.MessageDialog("This brand has no store yet");
                 Debug.Log("No Store To Show");
             }
+
+            LoadingManager.hideLoadingIndicator(LoadingPanel);
         }
         else
         {
             //Show error message
+            LoadingManager.hideLoadingIndicator(LoadingPanel);
+            MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
 
     private void OnLoadStoreListError(string error, string transactionId)
     {
-        //showRegisterMessage(error);
+        LoadingManager.hideLoadingIndicator(LoadingPanel);
+        MessageHelper.MessageDialog(error);
         Debug.Log("WWW Error: " + error);
     }
 
     private void OnTimeOut(string transactionId)
     {
-        //showLoginMessage(ConstantClass.Msg_TimeOut);
+        LoadingManager.hideLoadingIndicator(LoadingPanel);
+        MessageHelper.MessageDialog(ConstantClass.Msg_TimeOut);
         Debug.Log(ConstantClass.Msg_TimeOut);
     }
     #endregion
@@ -189,18 +200,25 @@ public class BrandDetailController : MonoBehaviour {
             else
             {
                 //SHOW NO RECORD MESSAGE BY CREATE A EMMPTY BUTTON AND MESSAGE
+                LoadingManager.hideLoadingIndicator(LoadingPanel);
+                MessageHelper.MessageDialog("No available event at this time");
                 Debug.Log("No Event To Show");
             }
+
+            LoadingManager.hideLoadingIndicator(LoadingPanel);
         }
         else
         {
             //Show error message
+            LoadingManager.hideLoadingIndicator(LoadingPanel);
+            MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
 
     private void OnLoadEventListError(string error, string transactionId)
     {
         //showRegisterMessage(error);
+        LoadingManager.hideLoadingIndicator(LoadingPanel);
         Debug.Log("WWW Error: " + error);
     }
     #endregion

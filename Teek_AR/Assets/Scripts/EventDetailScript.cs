@@ -31,19 +31,30 @@ public class EventDetailScript : MonoBehaviour
 {
     public GameObject ButtonTemplate;
     public GameObject CouponTemplate;
-    
+
     public List<CouponTemplate> listCoupon;
-    public static int eventId =101;
+    public static int eventId = 101;
+    public int OrganizerId = 39;
 
     public GameObject loadingPanel;
     public GameObject contentPanel;
     public GameObject couponPanel;
-
+    public Text TeekAmountText;
+    public Text RubyAmountText;
+    public Text SapphireAmountText;
+    public Text CitrineAmountText;
 
     // Use this for initialization
     void Start()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        //Get Organizer Id from PlayerPrefs
+        OrganizerId = PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId);
+
+        PlayerPrefs.SetString(ConstantClass.PP_UserIDKey, Encrypt.EncryptString("40efe638-04b6-42aa-81c3-a79b208d75e5"));
+        PlayerPrefs.SetInt(ConstantClass.PP_OrganizerId, 39);
+        PlayerPrefs.Save();
+
+        LoadUserInformation();
         GetPrizeData();
         PopulateCoupon();
     }
@@ -64,7 +75,8 @@ public class EventDetailScript : MonoBehaviour
             if (item.isActive)
             {
                 sampleButton.Yes.SetActive(true);
-            } else
+            }
+            else
             {
                 sampleButton.No.SetActive(true);
             }
@@ -78,13 +90,13 @@ public class EventDetailScript : MonoBehaviour
     {
 
         HTTPRequest request = new HTTPRequest();
-        request.url = "http://10.5.50.21/Teek/api/prize/GetPrizes?eventId=" + eventId;
+        request.url = ConstantClass.API_LoadPrizeList + "?eventId=" + eventId;
 
         request.stringCallback = new EventHandlerHTTPString(this.PopulateDataList);
 
         UCSS.HTTP.GetString(request);
     }
-    private void PopulateDataList(string result,string transactionId)
+    private void PopulateDataList(string result, string transactionId)
     {
         ResponseModel<List<PrizeResponseModel>> jsonResponse = new ResponseModel<List<PrizeResponseModel>>();
         jsonResponse.Data = new List<PrizeResponseModel>();
@@ -125,9 +137,9 @@ public class EventDetailScript : MonoBehaviour
         }
         else
         {
-           
+
         }
-       
+
     }
 
     public void FilterCombo()
@@ -139,16 +151,70 @@ public class EventDetailScript : MonoBehaviour
             {
                 childGameObject.SetActive(false);
             }
-            
+
         }
-        
+
     }
-            
+
 
 
     public void PlayGame()
     {
         SceneManager.LoadSceneAsync(Assets.ConstantClass.GameSceneName);
-       
+
     }
+
+    public void LoadUserInformation()
+    {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        HTTPRequest request = new HTTPRequest();
+        request.url = ConstantClass.API_LoadUserInformation;
+
+        WWWForm form = new WWWForm();
+        form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+        form.AddField("organizerId", PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId));
+
+        request.formData = form;
+
+        request.stringCallback = new EventHandlerHTTPString(this.OnLoadUserInformationRequest);
+        request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
+        request.onError = new EventHandlerServiceError(this.OnLoadUserInformationError);
+
+        UCSS.HTTP.PostForm(request);
+    }
+
+    #region PROCESS LOAD USER INFORMATION REQUEST
+    private void OnLoadUserInformationRequest(string result, string transactionId)
+    {
+        ResponseModel<List<CustomerResponseModel>> jsonResponse = new ResponseModel<List<CustomerResponseModel>>();
+        jsonResponse.Data = new List<CustomerResponseModel>();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<List<CustomerResponseModel>>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            TeekAmountText.text = jsonResponse.Data[0].Teek.ToString() + " Teek";
+            RubyAmountText.text = jsonResponse.Data[0].Ruby.ToString();
+            SapphireAmountText.text = jsonResponse.Data[0].Sapphire.ToString();
+            CitrineAmountText.text = jsonResponse.Data[0].Citrine.ToString();
+        }
+        else
+        {
+            //Show error message
+            LoadingManager.hideLoadingIndicator(loadingPanel);
+            MessageHelper.MessageDialog(jsonResponse.Message);
+        }
+    }
+
+    private void OnLoadUserInformationError(string error, string transactionId)
+    {
+        //showRegisterMessage(error);
+        Debug.Log("WWW Error: " + error);
+    }
+
+    private void OnTimeOut(string transactionId)
+    {
+        //showLoginMessage(ConstantClass.Msg_TimeOut);
+        Debug.Log(ConstantClass.Msg_TimeOut);
+    }
+    #endregion
 }

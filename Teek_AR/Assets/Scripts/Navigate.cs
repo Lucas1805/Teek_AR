@@ -22,4 +22,20 @@ public class Navigate : MonoBehaviour {
         MySceneManager.setLastScene(ConstantClass.HomeSceneName);
         SceneManager.LoadSceneAsync(ConstantClass.BrandDetailSceneName);
     }
+
+    public void NavigateBrandDetailToEventDetailScene(GameObject Event)
+    {
+        EventDetailScript.eventId = int.Parse(Event.transform.GetChild(0).GetComponent<Text>().text);
+
+        MySceneManager.setLastScene(ConstantClass.BrandDetailSceneName);
+        SceneManager.LoadSceneAsync(ConstantClass.EventDetailSceneName);
+    }
+
+    public void NavigateStoreEventSceneToEventDetailScene(GameObject Event)
+    {
+        EventDetailScript.eventId = int.Parse(Event.transform.GetChild(0).GetComponent<Text>().text);
+
+        MySceneManager.setLastScene(ConstantClass.StoreEventSceneName);
+        SceneManager.LoadSceneAsync(ConstantClass.EventDetailSceneName);
+    }
 }
