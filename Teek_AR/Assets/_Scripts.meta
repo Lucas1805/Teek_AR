@@ -1,7 +1,11 @@
 fileFormatVersion: 2
 guid: 36b0f9c6214fd5745b1a4fd611921f17
 folderAsset: yes
+<<<<<<< HEAD:Teek_AR/Assets/_Scripts.meta
 timeCreated: 1476886130
+=======
+timeCreated: 1476931430
+>>>>>>> Teek_AR/Quan:Teek_AR/Assets/_Scripts.meta
 licenseType: Free
 DefaultImporter:
   userData: 
