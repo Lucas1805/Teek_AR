@@ -7,18 +7,18 @@ namespace Assets.ResponseModels
 {
     public partial class CustomerResponseModel
     {
-        public int Id { get; set; }
-        public int OrganizerId { get; set; }
-        public string UserId { get; set; }
-        public System.DateTime JoinDate { get; set; }
-        public bool Active { get; set; }
-        public int Coin { get; set; }
-        public int Teek { get; set; }
-        public int Ruby { get; set; }
-        public int Sapphire { get; set; }
-        public int Citrine { get; set; }
-        public int Fireball { get; set; }
-        public int Iceball { get; set; }
+        public virtual int Id { get; set; }
+        public virtual int OrganizerId { get; set; }
+        public virtual string UserId { get; set; }
+        public virtual string JoinDate { get; set; }
+        public virtual bool Active { get; set; }
+        public int? Coin { get; set; }
+        public virtual Nullable<int> Teek { get; set; }
+        public virtual Nullable<int> Ruby { get; set; }
+        public virtual Nullable<int> Sapphire { get; set; }
+        public virtual Nullable<int> Citrine { get; set; }
+        public virtual Nullable<int> Fireball { get; set; }
+        public virtual Nullable<int> Iceball { get; set; }
 
     }
 }
