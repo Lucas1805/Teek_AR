@@ -30,7 +30,7 @@ public class RedeemScript : MonoBehaviour {
     {
         message.text = "";
 
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
 
         //Get value
         code = inputCodeField.text;
@@ -38,7 +38,7 @@ public class RedeemScript : MonoBehaviour {
         if(code.Length > 0)
         {
             //Show loading indicator
-            LoadingManager.showLoadingIndicator(loadingPanel);
+            MessageHelper.LoadingDialog("Loading data....");
 
             //Create object to sen Http Request
             WWWForm form = new WWWForm();
@@ -77,7 +77,7 @@ public class RedeemScript : MonoBehaviour {
             {
                 //If code is correct
 
-                LoadingManager.hideLoadingIndicator(loadingPanel);
+                MessageHelper.CloseDialog();
             }
             else
             {
@@ -119,14 +119,14 @@ public class RedeemScript : MonoBehaviour {
         redeemCodePanel.SetActive(false);
         messagePanel.SetActive(true);
         message.text = messageString;
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
         resetField();
 
     }
 
     public void loadLastScene()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         MySceneManager.loadPreviousScene();
     }
 }

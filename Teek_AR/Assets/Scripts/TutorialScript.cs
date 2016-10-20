@@ -18,7 +18,7 @@ public class TutorialScript : MonoBehaviour {
 
     public void loadPreviousScene()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         MySceneManager.loadPreviousScene();
     }
 }

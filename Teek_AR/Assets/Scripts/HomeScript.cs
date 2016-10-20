@@ -75,7 +75,7 @@ public class HomeScript : MonoBehaviour {
 
     public void loadPlayerInfoScene()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.HomeSceneName);
         SceneManager.LoadSceneAsync(ConstantClass.PlayerInfoSceneName);
@@ -83,7 +83,7 @@ public class HomeScript : MonoBehaviour {
 
     public void loadRedeemCodeScene()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.HomeSceneName);
         SceneManager.LoadSceneAsync(ConstantClass.RedeemCodeSceneName);
@@ -91,7 +91,7 @@ public class HomeScript : MonoBehaviour {
 
     public void loadTutorialScene()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.HomeSceneName);
         SceneManager.LoadSceneAsync(ConstantClass.TutorialSceneName);
@@ -101,7 +101,7 @@ public class HomeScript : MonoBehaviour {
     {
         PlayerPrefs.SetString(ConstantClass.PP_EventIDKey, eventId.ToString());
 
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.HomeSceneName);
         SceneManager.LoadSceneAsync(ConstantClass.EventDetailSceneName);
@@ -136,7 +136,7 @@ public class HomeScript : MonoBehaviour {
 
     public void CallAPIGetOrganizers()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         HTTPRequest request = new HTTPRequest();
         //request.url = ConstantClass.
         request.url = ConstantClass.API_LoadOrganizer;
@@ -170,12 +170,12 @@ public class HomeScript : MonoBehaviour {
             }
         }
 
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
     }
 
     public void CallAPIGetOrganizersByUserId()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         HTTPRequest request = new HTTPRequest();
         request.url = ConstantClass.API_LoadMyBrand + "?userId="
             + Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey));
@@ -308,6 +308,7 @@ public class HomeScript : MonoBehaviour {
     public void Refresh()
     {
         //Delete Brand List
+        
         foreach (Transform child in AllBrandsPanel.transform)
         {
             GameObject.Destroy(child.gameObject);

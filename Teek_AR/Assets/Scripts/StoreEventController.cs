@@ -35,7 +35,7 @@ public class StoreEventController : MonoBehaviour
 
     public void LoadEventListByStore()
     {
-        LoadingManager.showLoadingIndicator(LoadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
 
         if (StoreId != 0)
         {
@@ -54,7 +54,7 @@ public class StoreEventController : MonoBehaviour
             MessageHelper.MessageDialog("Error, Cannot get store ID");
         }
 
-        LoadingManager.hideLoadingIndicator(LoadingPanel);
+        MessageHelper.CloseDialog();
 
     }
 
@@ -147,10 +147,10 @@ public class StoreEventController : MonoBehaviour
 
     IEnumerator LoadImage(WWW www, Image image)
     {
-        LoadingManager.showLoadingIndicator(LoadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         yield return www;
         image.overrideSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-        LoadingManager.hideLoadingIndicator(LoadingPanel);
+        MessageHelper.CloseDialog();
 
     }
 }

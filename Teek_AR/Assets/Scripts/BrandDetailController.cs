@@ -44,7 +44,7 @@ public class BrandDetailController : MonoBehaviour {
 
     public void LoadStoreList()
     {
-        LoadingManager.showLoadingIndicator(LoadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
 
         if(OrganizerId != 0)
         {
@@ -63,12 +63,12 @@ public class BrandDetailController : MonoBehaviour {
             //Show error message
         }
 
-        LoadingManager.hideLoadingIndicator(LoadingPanel);
+        MessageHelper.CloseDialog();
     }
 
     public void LoadEventListByOrganizer()
     {
-        LoadingManager.showLoadingIndicator(LoadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
 
         if (OrganizerId != 0)
         {
@@ -87,7 +87,7 @@ public class BrandDetailController : MonoBehaviour {
             //Show error message
         }
 
-        LoadingManager.hideLoadingIndicator(LoadingPanel);
+        MessageHelper.CloseDialog();
     }
 
 
@@ -122,26 +122,26 @@ public class BrandDetailController : MonoBehaviour {
                 Debug.Log("No Store To Show");
             }
 
-            LoadingManager.hideLoadingIndicator(LoadingPanel);
+            MessageHelper.CloseDialog();
         }
         else
         {
             //Show error message
-            LoadingManager.hideLoadingIndicator(LoadingPanel);
+            MessageHelper.CloseDialog();
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
 
     private void OnLoadStoreListError(string error, string transactionId)
     {
-        LoadingManager.hideLoadingIndicator(LoadingPanel);
+        MessageHelper.CloseDialog();
         MessageHelper.MessageDialog(error);
         Debug.Log("WWW Error: " + error);
     }
 
     private void OnTimeOut(string transactionId)
     {
-        LoadingManager.hideLoadingIndicator(LoadingPanel);
+        MessageHelper.CloseDialog();
         MessageHelper.MessageDialog(ConstantClass.Msg_TimeOut);
         Debug.Log(ConstantClass.Msg_TimeOut);
     }
@@ -200,17 +200,17 @@ public class BrandDetailController : MonoBehaviour {
             else
             {
                 //SHOW NO RECORD MESSAGE BY CREATE A EMMPTY BUTTON AND MESSAGE
-                LoadingManager.hideLoadingIndicator(LoadingPanel);
+                MessageHelper.CloseDialog();
                 MessageHelper.MessageDialog("No available event at this time");
                 Debug.Log("No Event To Show");
             }
 
-            LoadingManager.hideLoadingIndicator(LoadingPanel);
+            MessageHelper.CloseDialog();
         }
         else
         {
             //Show error message
-            LoadingManager.hideLoadingIndicator(LoadingPanel);
+            MessageHelper.CloseDialog();
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
@@ -218,7 +218,7 @@ public class BrandDetailController : MonoBehaviour {
     private void OnLoadEventListError(string error, string transactionId)
     {
         //showRegisterMessage(error);
-        LoadingManager.hideLoadingIndicator(LoadingPanel);
+        MessageHelper.CloseDialog();
         Debug.Log("WWW Error: " + error);
     }
     #endregion
@@ -247,10 +247,10 @@ public class BrandDetailController : MonoBehaviour {
 
     IEnumerator LoadImage(WWW www, Image image)
     {
-        LoadingManager.showLoadingIndicator(LoadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         yield return www;
         image.overrideSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-        LoadingManager.hideLoadingIndicator(LoadingPanel);
+        MessageHelper.CloseDialog();
         
     }
 }

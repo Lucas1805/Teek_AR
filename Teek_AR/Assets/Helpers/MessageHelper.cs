@@ -117,16 +117,23 @@ public class MessageHelper : MonoBehaviour {
     {
         dialogResult = DialogResult.NULL;
 
+        GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+        GameObject ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+        ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+
         GameObject DialogBoxTemplate = Resources.Load("prefabs/Dialog Box") as GameObject;
         GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
         DialogBoxTemplate sampleButton = DialogBox.GetComponent<DialogBoxTemplate>();
         sampleButton.Title.text = "";
         sampleButton.Message.text = message;
-        sampleButton.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        sampleButton.transform.SetParent(ShadePanel.transform, false);
 
         GameObject OKButtonTemplate = Resources.Load("prefabs/OKButton") as GameObject;
 
         GameObject OKButton = Instantiate(OKButtonTemplate) as GameObject;
+        OKButton.GetComponent<Button>().onClick.AddListener(() => {
+            Destroy(GameObject.Find("ShadePanel(Clone)"));
+        });
         OKButton.transform.SetParent(sampleButton.Buttons.transform, false);
 
     }

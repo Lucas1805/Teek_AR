@@ -60,7 +60,7 @@ public class LoginScene : MonoBehaviour
 
     public void checkLogin()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
 
         //Reset message text
         loginMessage.text = "";
@@ -104,7 +104,7 @@ public class LoginScene : MonoBehaviour
 
     private void checkLoginWithSession()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
 
         //Get username and pass from PlayerPrefs and decrypted it
         username = Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UsernameKey)));
@@ -130,7 +130,7 @@ public class LoginScene : MonoBehaviour
     public void doRegister()
     {
         //Enable loading indicator
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
 
         //Reset message
         registerMessage.text = "";
@@ -183,7 +183,7 @@ public class LoginScene : MonoBehaviour
         loginPanel.SetActive(false);
         loginMessage.text = messageString;
         loginMessagePanel.SetActive(true);
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
     }
 
     public void showRegisterMessage(string messageString)
@@ -191,7 +191,7 @@ public class LoginScene : MonoBehaviour
         registerPanel.SetActive(false);
         registerMessagePanel.SetActive(true);
         registerMessage.text = messageString;
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
     }
 
     private bool validateEmail(string email)

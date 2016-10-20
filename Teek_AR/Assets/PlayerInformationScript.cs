@@ -40,14 +40,14 @@ public class PlayerInformationScript : MonoBehaviour {
 
     public void loadPreviousScene()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         MySceneManager.loadPreviousScene();
     }
 
     private void loadPlayerInfo()
     {
         //Show loading indicator
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
 
         if(userId != null && userId.Length >0)
         {
@@ -105,7 +105,7 @@ public class PlayerInformationScript : MonoBehaviour {
             }
             else {
                 //showMessage(www.error);
-                LoadingManager.hideLoadingIndicator(loadingPanel);
+                MessageHelper.CloseDialog();
                 Debug.Log("WWW Error: " + www.error);
             }
         }
@@ -115,13 +115,13 @@ public class PlayerInformationScript : MonoBehaviour {
     {
         yield return www;
 
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         if(www.isDone)
         {
             if(www.error == null)
             {
                 profileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-                LoadingManager.hideLoadingIndicator(loadingPanel);
+                MessageHelper.CloseDialog();
             }
         }
     }

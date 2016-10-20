@@ -84,7 +84,7 @@ public class ShopController : MonoBehaviour {
     void OnProductBought( MobyShop.BoughtOrRestored state, MobyShop.ProductInfo product, int amount)
     {
         //Show loading
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         justBoughtProduct = product;
 
         //CALL API TO UPDATE VALUE OF PRODUCT IN SERVER DATABASE
@@ -144,7 +144,7 @@ public class ShopController : MonoBehaviour {
 
     void loadCoin()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         //Create object to sen Http Request
         HTTPRequest request = new HTTPRequest();
         WWWForm form = new WWWForm();
@@ -162,7 +162,7 @@ public class ShopController : MonoBehaviour {
 
     void loadFireball()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         //Create object to sen Http Request
         HTTPRequest request = new HTTPRequest();
         WWWForm form = new WWWForm();
@@ -204,7 +204,7 @@ public class ShopController : MonoBehaviour {
             //showLoginMessage(www.error);
             Debug.Log(error);
         }
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
     }
 
     private void OnBuyItemError(string error, string transactionId)
@@ -215,7 +215,7 @@ public class ShopController : MonoBehaviour {
         restorePurchase(justBoughtProduct, justBoughtProduct.IncrementOnBuy);
 
         Debug.Log(error);
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
     }
     #endregion
     
@@ -234,14 +234,14 @@ public class ShopController : MonoBehaviour {
         {
             MessageHelper.MessageDialog("Cannot Load Coin");
         }
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
     }
 
     private void OnLoadCoinError(string error, string transactionId)
     {
         MessageHelper.MessageDialog(error);
         Debug.Log(error);
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
     }
     #endregion
 
@@ -260,14 +260,14 @@ public class ShopController : MonoBehaviour {
         {
             MessageHelper.MessageDialog("Cannot Load Fireball");
         }
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
     }
 
     private void OnLoadFireballError(string error, string transactionId)
     {
         MessageHelper.MessageDialog(error);
         Debug.Log(error);
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
     }
     #endregion
 
@@ -286,14 +286,14 @@ public class ShopController : MonoBehaviour {
         {
             MessageHelper.MessageDialog("Cannot Load Teek");
         }
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
     }
 
     private void OnLoadTeekError(string error, string transactionId)
     {
         MessageHelper.MessageDialog(error);
         Debug.Log(error);
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
     }
 
     #endregion
@@ -303,14 +303,14 @@ public class ShopController : MonoBehaviour {
         //showLoginMessage(ConstantClass.Msg_TimeOut);
         MessageHelper.MessageDialog(ConstantClass.Msg_TimeOut);
         Debug.Log(ConstantClass.Msg_TimeOut);
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
     }
 
     #region LOAD OTHER SCENE
 
     public void loadRedeemCodeScene()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.GameSceneName);
 
@@ -319,7 +319,7 @@ public class ShopController : MonoBehaviour {
 
     public void loadHomeScene()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.GameSceneName);
 
@@ -328,7 +328,7 @@ public class ShopController : MonoBehaviour {
 
     public void loadInventoryScene()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.GameSceneName);
 

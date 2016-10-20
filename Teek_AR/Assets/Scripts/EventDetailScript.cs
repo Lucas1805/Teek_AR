@@ -75,7 +75,7 @@ public class EventDetailScript : MonoBehaviour
         ResponseModel<List<PrizeResponseModel>> jsonResponse = new ResponseModel<List<PrizeResponseModel>>();
         jsonResponse.Data = new List<PrizeResponseModel>();
         jsonResponse = JsonMapper.ToObject<ResponseModel<List<PrizeResponseModel>>>(result);
-        LoadingManager.hideLoadingIndicator(loadingPanel);
+        MessageHelper.CloseDialog();
         if (jsonResponse.Succeed)
         {
             foreach (var item in jsonResponse.Data)
@@ -140,7 +140,7 @@ public class EventDetailScript : MonoBehaviour
 
     public void LoadUserInformation()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         HTTPRequest request = new HTTPRequest();
         request.url = ConstantClass.API_LoadUserInformation;
 
@@ -159,7 +159,7 @@ public class EventDetailScript : MonoBehaviour
 
     public void LoadPrizeCode()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         HTTPRequest request = new HTTPRequest();
         request.url = ConstantClass.API_LoadPrizeCode;
 
@@ -193,7 +193,7 @@ public class EventDetailScript : MonoBehaviour
         else
         {
             //Show error message
-            LoadingManager.hideLoadingIndicator(loadingPanel);
+            MessageHelper.CloseDialog();
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
@@ -263,7 +263,7 @@ public class EventDetailScript : MonoBehaviour
         else
         {
             //Show error message
-            LoadingManager.hideLoadingIndicator(loadingPanel);
+            MessageHelper.CloseDialog();
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
@@ -302,7 +302,7 @@ public class EventDetailScript : MonoBehaviour
 
     public void LoadPreviouseScene()
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
+        MessageHelper.LoadingDialog("Loading data....");
         MySceneManager.loadPreviousScene();
     }
 
