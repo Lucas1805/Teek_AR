@@ -38,8 +38,7 @@ namespace Assets
         
 
         //API LINKS
-        public const string API_HOST_IP = "localhost";
-
+        public const string API_HOST_IP = "10.5.50.5";
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
         public const string API_RedeemCode = "http://" + API_HOST_IP + "/Teek/api/";
@@ -48,6 +47,8 @@ namespace Assets
         public const string API_LoadStoreList = "http://" + API_HOST_IP + "/Teek/api/store/GetStoresByOrganizerId";
         public const string API_LoadEventListByOrganizer = "http://" + API_HOST_IP + "/Teek/api/event/GetEventByOrganizer";
         public const string API_LoadEventListByStore = "http://" + API_HOST_IP + "/Teek/api/event/GetEventByStore";
+        public const string API_LoadOrganizer = "http://" + API_HOST_IP + "/Teek/api/organizer/getorganizers";
+        public const string API_LoadMyBrand = "http://" + API_HOST_IP + "/Teek/api/organizer/GetOrganizersByUserId";
 
         public const string API_LoadCoins = "http://" + API_HOST_IP + "/Teek/api/";
         public const string API_LoadTeek = "http://" + API_HOST_IP + "/Teek/api/";

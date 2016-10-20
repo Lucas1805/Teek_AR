@@ -8,22 +8,22 @@ namespace Assets
 {
     public static class MySceneManager
     {
-        private static string lastScene;
+        private static Stack<string> LastSceneStack = new Stack<string>();
 
         public static void setLastScene(string sceneName)
         {
-            lastScene = sceneName;
+            LastSceneStack.Push(sceneName);
         }
 
         public static string getLastScene()
         {
-            return lastScene;
+            return LastSceneStack.Pop();
         }
 
         public static void loadPreviousScene()
         {
-            if(lastScene != null && lastScene.Length > 0)
-                SceneManager.LoadSceneAsync(lastScene);
+            if(LastSceneStack.Peek() != null && LastSceneStack.Peek().Length > 0)
+                SceneManager.LoadSceneAsync(LastSceneStack.Pop());
         }
     }
 }
