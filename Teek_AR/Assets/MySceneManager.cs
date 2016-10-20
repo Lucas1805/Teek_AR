@@ -12,7 +12,20 @@ namespace Assets
 
         public static void setLastScene(string sceneName)
         {
+            if(LastSceneStack.Count > 0)
+            {
+                if (LastSceneStack.Peek() != sceneName)
+                {
+                    LastSceneStack.Push(sceneName);
+                    return;
+                }
+                else
+                {
+                    return;
+                }
+            }
             LastSceneStack.Push(sceneName);
+
         }
 
         public static string getLastScene()

@@ -11,6 +11,7 @@ namespace Assets.ResponseModels
         public  int PrizeId { get; set; }
         public  int UserParticipationId { get; set; }
         public  bool Status { get; set; }
-        public  DateTime Date { get; set; }
+        public  string Date { get; set; }
+        public string PrizeName { get; set; }
     }
 }
