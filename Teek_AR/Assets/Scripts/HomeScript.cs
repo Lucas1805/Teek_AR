@@ -30,7 +30,10 @@ public class HomeScript : MonoBehaviour {
     void Start () {
         CallAPIGetOrganizers();
         CallAPIGetOrganizersByUserId();
-	}
+
+        PlayerPrefs.SetString(ConstantClass.PP_UserIDKey, Encrypt.EncryptString("40efe638-04b6-42aa-81c3-a79b208d75e5"));
+        PlayerPrefs.Save();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -285,6 +288,7 @@ public class HomeScript : MonoBehaviour {
     {
         if (AllToggle.isOn)
         {
+            AllToggle.isOn = true;
             MultiplierToggle.isOn = true;
             GameToggle.isOn = true;
             VotingToggle.isOn = true;
@@ -299,5 +303,23 @@ public class HomeScript : MonoBehaviour {
                 item.gameObject.SetActive(true);
             }
         }
+    }
+
+    public void Refresh()
+    {
+        //Delete Brand List
+        foreach (Transform child in AllBrandsPanel.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+        CallAPIGetOrganizers();
+
+        //Delete My Brand List
+        foreach (Transform child in MyBrandsPanel.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+        CallAPIGetOrganizersByUserId();
+
     }
 }
