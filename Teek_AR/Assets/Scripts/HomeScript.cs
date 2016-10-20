@@ -21,6 +21,10 @@ public class HomeScript : MonoBehaviour {
     public GameObject MyBrandsPanel;
 
     public GameObject BrandButtonTemplateGO;
+    public Toggle AllToggle;
+    public Toggle MultiplierToggle;
+    public Toggle GameToggle;
+    public Toggle VotingToggle;
 
     // Use this for initialization
     void Start () {
@@ -174,5 +178,90 @@ public class HomeScript : MonoBehaviour {
             + Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey));
         request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallAPIGetOrganizers);
         UCSS.HTTP.GetString(request);
+    }
+
+    public void OnDoneCallAPIGetOrganizersByUserId(string result, string transactionId)
+    {
+        ResponseModel<List<OrganizerModel>> jsonResponse = new ResponseModel<List<OrganizerModel>>();
+        jsonResponse.Data = new List<OrganizerModel>();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<List<OrganizerModel>>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            foreach (var item in jsonResponse.Data)
+            {
+                //if (item.HasARGAME || item.HasMultiplier || item.HasVoting)
+                {
+                    GameObject newBrandButton = Instantiate(BrandButtonTemplateGO) as GameObject;
+                    BrandButtonTemplate sampleBrandButton = newBrandButton.GetComponent<BrandButtonTemplate>();
+                    sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = Utils.TruncateLongString(item.Name, 18);
+                    sampleBrandButton.Brand.transform.GetChild(0).GetComponent<Text>().text = item.Id.ToString();
+                    sampleBrandButton.BrandAmount.text = item.StoreCount.ToString();
+                    //sampleBrandButton.BrandCategory.text = item.
+                    //sampleBrandButton.BrandLogo
+                    sampleBrandButton.Activities.transform.GetChild(0).gameObject.SetActive(item.HasMultiplier);
+                    sampleBrandButton.Activities.transform.GetChild(1).gameObject.SetActive(item.HasARGAME);
+                    sampleBrandButton.Activities.transform.GetChild(2).gameObject.SetActive(item.HasVoting);
+
+                    newBrandButton.transform.SetParent(MyBrandsPanel.transform, false);
+                }
+            }
+        }
+    }
+
+    public void FilterCheck()
+    {
+        foreach (Transform item in AllBrandsPanel.transform)
+        {
+            item.gameObject.SetActive(false);
+        }
+
+        foreach (Transform item in AllBrandsPanel.transform)
+        {
+            if (MultiplierToggle.isOn)
+            {
+                if (item.GetComponent<BrandButtonTemplate>().Activities.transform.GetChild(0).gameObject.activeSelf)
+                {
+                    item.gameObject.SetActive(true);
+                }
+            }
+            //else
+            //{
+            //    if (item.GetComponent<BrandButtonTemplate>().Activities.transform.GetChild(0).gameObject.activeSelf)
+            //    {
+            //        item.gameObject.SetActive(false);
+            //    }
+            //}
+            if (GameToggle.isOn)
+            {
+                if (item.GetComponent<BrandButtonTemplate>().Activities.transform.GetChild(1).gameObject.activeSelf)
+                {
+                    item.gameObject.SetActive(true);
+                }
+            }
+
+            if (VotingToggle.isOn)
+            {
+                if (item.GetComponent<BrandButtonTemplate>().Activities.transform.GetChild(2).gameObject.activeSelf)
+                {
+                    item.gameObject.SetActive(true);
+                }
+            }
+        }
+    }
+
+    public void FilterAll()
+    {
+        if (AllToggle.isOn)
+        {
+            MultiplierToggle.isOn = true;
+            GameToggle.isOn = true;
+            VotingToggle.isOn = true;
+
+            foreach (Transform item in AllBrandsPanel.transform)
+            {
+                item.gameObject.SetActive(true);
+            }
+        }
     }
 }
