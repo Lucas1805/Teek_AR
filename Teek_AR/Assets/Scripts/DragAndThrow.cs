@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using MobyShop;
 using Assets;
+using System.Collections.Generic;
 
 public class DragAndThrow : MonoBehaviour
 {
@@ -34,7 +35,6 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
     public GameObject healthPanel;
     public Slider health;
     public GameObject resultPanel;
-    public GameObject milk;
 
     Animator anim;
     private double timeCounterDragonDead;
@@ -54,6 +54,11 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
     public GameObject hitSound;
     
     private int ballAmount;
+
+    public List<GameObject> listDropItem;
+    private bool isShowDropItemListAlready = false;
+
+    public Button resultOKButton;
 
     void Start()
     {
@@ -89,6 +94,9 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         //else Debug.Log("Cannot get product object. Please check for product ID");
 
         timeCounter += Time.deltaTime;
+
+        // moi vo test thu cai khung hien ket qua drop item
+        //ShowDropItem();
     }
     void OnMouseDown()
     {
@@ -141,6 +149,8 @@ speedCounter / 6;
     // Update is called once per frame
     void Update()
     {
+        displayText.text = Vector3.Distance(dragon.transform.position, transform.position).ToString();
+
         ballAmount = Shop.GetProductClassAmount(ConstantClass.FireBallItemClassName);
         if (isThrow)
         {
@@ -197,12 +207,18 @@ rayPoint, Speed * Time.deltaTime);
         }
         if (timeCounterDragonDead >= 2)
         {
-            dragon.SetActive(false);
+            if (!isShowDropItemListAlready)
+            {
+                dragon.SetActive(false);
+                healthPanel.SetActive(false);
+                resultPanel.SetActive(true);
+                //transform.position = new Vector3(0, Screen.height * 2, 0);
 
-            healthPanel.SetActive(false);
+                isShowDropItemListAlready = true;
+                ShowDropItem();
 
-            resultPanel.SetActive(true);
-            milk.SetActive(true);
+                resultOKButton.gameObject.SetActive(true);
+            }
 
             transform.position = new Vector3(0, Screen.height * 2, 0);
         }
@@ -254,5 +270,124 @@ rayPoint, Speed * Time.deltaTime);
             }
             isHit = true;
         }
+    }
+
+    public void ShowDropItem()
+    {
+        List<string> listItem = new List<string>();
+        listItem.Add("Ruby");
+        listItem.Add("Sapphire");
+        listItem.Add("Citrine");
+
+        List<string> listItemClone = new List<string>();
+
+        foreach (var item in listItem)
+        {
+            listItemClone.Add(item);
+        }
+
+        float percent1Item = 1;
+        float percent2Item = 1;
+        //float percent3Item = 98;
+
+        int ranNumPercent = Random.Range(1, 101);
+        int ranNumInListItem = 0;
+        int rubyCount = 0;
+        int sapphireCount = 0;
+        int citrineCount = 0;
+
+        if (ranNumPercent <= percent1Item)
+        {
+            ranNumInListItem = Random.Range(0, listItemClone.Count);
+            listDropItem[ranNumInListItem].transform.GetChild(1).GetComponent<Text>().text = "x 1";
+            listDropItem[ranNumInListItem].SetActive(true);
+        }
+        else if (percent1Item < ranNumPercent && ranNumPercent <= (percent1Item + percent2Item))
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                switch (Random.Range(0, listItemClone.Count))
+                {
+                    case 0:
+                        rubyCount++;
+                        break;
+                    case 1:
+                        sapphireCount++;
+                        break;
+                    case 2:
+                        citrineCount++;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (rubyCount > 0)
+            {
+                listDropItem[0].transform.GetChild(1).GetComponent<Text>().text = "x " + rubyCount;
+                listDropItem[0].SetActive(true);
+            }
+
+            if (sapphireCount > 0)
+            {
+                listDropItem[1].transform.GetChild(1).GetComponent<Text>().text = "x " + sapphireCount;
+                listDropItem[1].SetActive(true);
+            }
+
+            if (citrineCount > 0)
+            {
+                listDropItem[2].transform.GetChild(1).GetComponent<Text>().text = "x " + citrineCount;
+                listDropItem[2].SetActive(true);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                switch (Random.Range(0, listItemClone.Count))
+                {
+                    case 0:
+                        rubyCount++;
+                        break;
+                    case 1:
+                        sapphireCount++;
+                        break;
+                    case 2:
+                        citrineCount++;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (rubyCount > 0)
+            {
+                listDropItem[0].transform.GetChild(1).GetComponent<Text>().text = "x " + rubyCount;
+                listDropItem[0].SetActive(true);
+            }
+
+            if (sapphireCount > 0)
+            {
+                listDropItem[1].transform.GetChild(1).GetComponent<Text>().text = "x " + sapphireCount;
+                listDropItem[1].SetActive(true);
+            }
+
+            if (citrineCount > 0)
+            {
+                listDropItem[2].transform.GetChild(1).GetComponent<Text>().text = "x " + citrineCount;
+                listDropItem[2].SetActive(true);
+            }
+        }
+    }
+
+    public void ClickResultOKButton()
+    {
+        health.value = 100;
+        isDead = false;
+        timeCounterDragonDead = 0;
+
+        dragon.SetActive(true);
+        healthPanel.SetActive(true);
+        resultPanel.SetActive(false);
     }
 }
