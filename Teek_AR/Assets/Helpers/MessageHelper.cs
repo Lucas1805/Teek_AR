@@ -4,15 +4,6 @@ using UnityEngine.UI;
 
 public class MessageHelper : MonoBehaviour {
 
-    //// Use this for initialization
-    //void Start () {
-
-    //}
-
-    //// Update is called once per frame
-    //void Update () {
-
-    //}
     public enum DialogResult
     {
         YES,
@@ -22,91 +13,73 @@ public class MessageHelper : MonoBehaviour {
 
     static DialogResult dialogResult;
 
-    static public void ConfirmDialog(string content)
+    static public void ConfirmDialog(string title,string message)
     {
         dialogResult = DialogResult.NULL;
 
-        GameObject confirmDialogBackgroundPanel = new GameObject("ConfirmDialogBackgroundPanel");
-        confirmDialogBackgroundPanel.AddComponent<CanvasRenderer>();
-        confirmDialogBackgroundPanel.AddComponent<Image>().color = new Color32(0, 0, 0, 100);
-        confirmDialogBackgroundPanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
-        confirmDialogBackgroundPanel.AddComponent<RectTransform>();
-        confirmDialogBackgroundPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
+        GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+        GameObject ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+        ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
 
-        GameObject confirmDialogPanel = new GameObject("ConfirmDialogPanel");
-        confirmDialogPanel.AddComponent<CanvasRenderer>();
-        confirmDialogPanel.AddComponent<Image>().color = Color.black;
-        confirmDialogPanel.transform.SetParent(confirmDialogBackgroundPanel.transform, false);
-        confirmDialogPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(700, 500);
-        //dialogPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(50, 50);
+        GameObject DialogBoxTemplate = Resources.Load("prefabs/Dialog Box") as GameObject;
+        GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
+        DialogBoxTemplate sampleButton = DialogBox.GetComponent<DialogBoxTemplate>();
+        sampleButton.Title.text = title;
+        sampleButton.Message.text = message;
 
-        GameObject contentText = new GameObject("ContentText");
-        contentText.AddComponent<CanvasRenderer>();
-        contentText.transform.SetParent(confirmDialogPanel.transform, false);
-        //contentText.AddComponent<Image>().color = Color.black;
-        contentText.AddComponent<RectTransform>();
-        contentText.GetComponent<RectTransform>().sizeDelta = new Vector2(600, 300);
-        Text contentTextText = contentText.AddComponent<Text>();
-        contentTextText.text = content;
-        contentTextText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        contentTextText.color = Color.white;
-        contentTextText.fontSize = 55;
-        contentTextText.alignment = TextAnchor.MiddleCenter;
+        sampleButton.transform.SetParent(ShadePanel.transform, false);
 
-        GameObject yesButton = new GameObject("YesButton");
-        yesButton.AddComponent<CanvasRenderer>();
-        yesButton.AddComponent<Image>().color = Color.gray;
-        yesButton.transform.SetParent(confirmDialogPanel.transform, false);
-        yesButton.AddComponent<RectTransform>();
-        yesButton.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 100);
-        yesButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(-150, -180);
-        GameObject yesButtonText = new GameObject("YesButtonText");
-        yesButtonText.AddComponent<CanvasRenderer>();
-        yesButtonText.transform.SetParent(yesButton.transform, false);
-        yesButtonText.AddComponent<RectTransform>();
-        yesButtonText.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 100);
-        Text yesButtonTextText = yesButtonText.AddComponent<Text>();
-        yesButtonTextText.text = "Yes";
-        yesButtonTextText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        yesButtonTextText.color = Color.white;
-        yesButtonTextText.fontSize = 55;
-        yesButtonTextText.alignment = TextAnchor.MiddleCenter;
-        Button buttonForYesButton = yesButton.AddComponent<Button>();
-        buttonForYesButton.onClick.AddListener(() => ClickYesButton());
+        GameObject YesButtonTemplate = Resources.Load("prefabs/YesButton") as GameObject;
 
-        GameObject noButton = new GameObject("NoButton");
-        noButton.AddComponent<CanvasRenderer>();
-        noButton.AddComponent<Image>().color = Color.gray;
-        noButton.transform.SetParent(confirmDialogPanel.transform, false);
-        noButton.AddComponent<RectTransform>();
-        noButton.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 100);
-        noButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(150, -180);
-        GameObject noButtonText = new GameObject("NoButtonText");
-        noButtonText.AddComponent<CanvasRenderer>();
-        noButtonText.transform.SetParent(noButton.transform, false);
-        noButtonText.AddComponent<RectTransform>();
-        noButtonText.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 100);
-        Text noButtonTextText = noButtonText.AddComponent<Text>();
-        noButtonTextText.text = "No";
-        noButtonTextText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        noButtonTextText.color = Color.white;
-        noButtonTextText.fontSize = 55;
-        noButtonTextText.alignment = TextAnchor.MiddleCenter;
-        Button buttonForNoButton = noButton.AddComponent<Button>();
-        buttonForNoButton.onClick.AddListener(() => ClickNoButton());
+        GameObject YesButton = Instantiate(YesButtonTemplate) as GameObject;
 
-        //return resultText;
+        YesButton.GetComponent<Button>().onClick.AddListener(() => ClickYesButton());
+        YesButton.transform.SetParent(sampleButton.Buttons.transform, false);
+
+
+        GameObject NoButtonTemplate = Resources.Load("prefabs/NoButton") as GameObject;
+        GameObject NoButton = Instantiate(NoButtonTemplate) as GameObject;
+        NoButton.GetComponent<Button>().onClick.AddListener(() => ClickNoButton());
+        NoButton.transform.SetParent(sampleButton.Buttons.transform, false);
+    }
+    static public void ConfirmDialog(string message)
+    {
+        dialogResult = DialogResult.NULL;
+
+        GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+        GameObject ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+        ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+
+        GameObject DialogBoxTemplate = Resources.Load("prefabs/Dialog Box") as GameObject;
+        GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
+        DialogBoxTemplate sampleButton = DialogBox.GetComponent<DialogBoxTemplate>();
+        sampleButton.Message.text = message;
+
+        sampleButton.transform.SetParent(ShadePanel.transform, false);
+
+        GameObject YesButtonTemplate = Resources.Load("prefabs/YesButton") as GameObject;
+
+        GameObject YesButton = Instantiate(YesButtonTemplate) as GameObject;
+
+        YesButton.GetComponent<Button>().onClick.AddListener(() => ClickYesButton());
+        YesButton.transform.SetParent(sampleButton.Buttons.transform, false);
+
+
+        GameObject NoButtonTemplate = Resources.Load("prefabs/NoButton") as GameObject;
+        GameObject NoButton = Instantiate(NoButtonTemplate) as GameObject;
+        NoButton.GetComponent<Button>().onClick.AddListener(() => ClickNoButton());
+        NoButton.transform.SetParent(sampleButton.Buttons.transform, false);
     }
 
     static void ClickYesButton()
     {
-        Destroy(GameObject.Find("ConfirmDialogBackgroundPanel"));
+        Destroy(GameObject.Find("ShadePanel(Clone)"));
         dialogResult = DialogResult.YES;
     }
 
     static void ClickNoButton()
     {
-        Destroy(GameObject.Find("ConfirmDialogBackgroundPanel"));
+        Destroy(GameObject.Find("ShadePanel(Clone)"));
         dialogResult = DialogResult.NO;
     }
 
@@ -115,56 +88,66 @@ public class MessageHelper : MonoBehaviour {
         return dialogResult;
     }
 
-    static public void MessageDialog(string content)
+    static public void MessageDialog(string title,string message)
     {
         dialogResult = DialogResult.NULL;
 
-        GameObject messageDialogBackgroundPanel = new GameObject("MessageDialogBackgroundPanel");
-        messageDialogBackgroundPanel.AddComponent<CanvasRenderer>();
-        messageDialogBackgroundPanel.AddComponent<Image>().color = new Color32(0, 0, 0, 100);
-        messageDialogBackgroundPanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
-        messageDialogBackgroundPanel.AddComponent<RectTransform>();
-        messageDialogBackgroundPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
+        GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+        GameObject ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+        ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
 
-        GameObject messageDialogPanel = new GameObject("MessageDialogPanel");
-        messageDialogPanel.AddComponent<CanvasRenderer>();
-        messageDialogPanel.AddComponent<Image>().color = Color.black;
-        messageDialogPanel.transform.SetParent(messageDialogBackgroundPanel.transform, false);
-        messageDialogPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(700, 500);
-        //dialogPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(50, 50);
 
-        GameObject contentText = new GameObject("ContentText");
-        contentText.AddComponent<CanvasRenderer>();
-        contentText.transform.SetParent(messageDialogPanel.transform, false);
-        //contentText.AddComponent<Image>().color = Color.black;
-        contentText.AddComponent<RectTransform>();
-        contentText.GetComponent<RectTransform>().sizeDelta = new Vector2(600, 300);
-        Text contentTextText = contentText.AddComponent<Text>();
-        contentTextText.text = content;
-        contentTextText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        contentTextText.color = Color.white;
-        contentTextText.fontSize = 55;
-        contentTextText.alignment = TextAnchor.MiddleCenter;
+        GameObject DialogBoxTemplate = Resources.Load("prefabs/Dialog Box") as GameObject;
+        GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
+        DialogBoxTemplate sampleButton = DialogBox.GetComponent<DialogBoxTemplate>();
+        sampleButton.Title.text = title;
+        sampleButton.Message.text = message;
+        sampleButton.transform.SetParent(ShadePanel.transform, false);
 
-        GameObject oKButton = new GameObject("OKButton");
-        oKButton.AddComponent<CanvasRenderer>();
-        oKButton.AddComponent<Image>().color = Color.gray;
-        oKButton.transform.SetParent(messageDialogPanel.transform, false);
-        oKButton.AddComponent<RectTransform>();
-        oKButton.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 100);
-        oKButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -180);
-        GameObject oKButtonText = new GameObject("OKButtonText");
-        oKButtonText.AddComponent<CanvasRenderer>();
-        oKButtonText.transform.SetParent(oKButton.transform, false);
-        oKButtonText.AddComponent<RectTransform>();
-        oKButtonText.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 100);
-        Text oKButtonTextText = oKButtonText.AddComponent<Text>();
-        oKButtonTextText.text = "OK";
-        oKButtonTextText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        oKButtonTextText.color = Color.white;
-        oKButtonTextText.fontSize = 55;
-        oKButtonTextText.alignment = TextAnchor.MiddleCenter;
-        Button buttonForOKButton = oKButton.AddComponent<Button>();
-        buttonForOKButton.onClick.AddListener(() => Destroy(messageDialogBackgroundPanel));
+        GameObject OKButtonTemplate = Resources.Load("prefabs/OKButton") as GameObject;
+
+        GameObject OKButton = Instantiate(OKButtonTemplate) as GameObject;
+        OKButton.GetComponent<Button>().onClick.AddListener(() => {
+            Destroy(GameObject.Find("ShadePanel(Clone)"));
+        });
+        OKButton.transform.SetParent(sampleButton.Buttons.transform, false);
+    }
+
+    static public void MessageDialog(string message)
+    {
+        dialogResult = DialogResult.NULL;
+
+        GameObject DialogBoxTemplate = Resources.Load("prefabs/Dialog Box") as GameObject;
+        GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
+        DialogBoxTemplate sampleButton = DialogBox.GetComponent<DialogBoxTemplate>();
+        sampleButton.Title.text = "";
+        sampleButton.Message.text = message;
+        sampleButton.transform.SetParent(GameObject.Find("Canvas").transform, false);
+
+        GameObject OKButtonTemplate = Resources.Load("prefabs/OKButton") as GameObject;
+
+        GameObject OKButton = Instantiate(OKButtonTemplate) as GameObject;
+        OKButton.transform.SetParent(sampleButton.Buttons.transform, false);
+
+    }
+
+
+    static public void LoadingDialog(string message)
+    {
+
+        GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+        GameObject ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+        ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+
+        GameObject LoadingBoxTemplate = Resources.Load("prefabs/Loading Box") as GameObject;
+        GameObject LoadingBox = Instantiate(LoadingBoxTemplate) as GameObject;
+        LoadingBoxTemplate sampleButton = LoadingBox.GetComponent<LoadingBoxTemplate>();
+        sampleButton.transform.SetParent(ShadePanel.transform, false);
+
+    }
+
+    static public void CloseDialog()
+    {
+        Destroy(GameObject.Find("ShadePanel(Clone)"));
     }
 }
