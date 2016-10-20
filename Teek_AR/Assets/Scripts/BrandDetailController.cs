@@ -63,7 +63,7 @@ public class BrandDetailController : MonoBehaviour {
             //Show error message
         }
 
-        MessageHelper.CloseDialog();
+        
     }
 
     public void LoadEventListByOrganizer()
@@ -87,13 +87,14 @@ public class BrandDetailController : MonoBehaviour {
             //Show error message
         }
 
-        MessageHelper.CloseDialog();
+        
     }
 
 
     #region PROCESS LOAD STORE REQUEST
     private void OnDoneCallLoadStoreListRequest(string result, string transactionId)
     {
+        MessageHelper.CloseDialog();
         ResponseModel<List<StoreModel>> jsonResponse = new ResponseModel<List<StoreModel>>();
         jsonResponse.Data = new List<StoreModel>();
         jsonResponse = JsonMapper.ToObject<ResponseModel<List<StoreModel>>>(result);
@@ -150,6 +151,7 @@ public class BrandDetailController : MonoBehaviour {
     #region PROCESS LOAD EVENT LIST BY ORGANIZER REQUEST
     private void OnDoneCallLoadEventListByOrganizerRequest(string result, string transactionId)
     {
+        MessageHelper.CloseDialog();
         ResponseModel<List<EventModel>> jsonResponse = new ResponseModel<List<EventModel>>();
         jsonResponse.Data = new List<EventModel>();
         jsonResponse = JsonMapper.ToObject<ResponseModel<List<EventModel>>>(result);

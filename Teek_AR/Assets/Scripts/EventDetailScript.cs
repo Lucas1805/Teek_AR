@@ -234,7 +234,7 @@ public class EventDetailScript : MonoBehaviour
         ResponseModel<List<PrizeCodeModel>> jsonResponse = new ResponseModel<List<PrizeCodeModel>>();
         jsonResponse.Data = new List<PrizeCodeModel>();
         jsonResponse = JsonMapper.ToObject<ResponseModel<List<PrizeCodeModel>>>(result);
-
+        MessageHelper.CloseDialog();
         if (jsonResponse.Succeed)
         {
             if(jsonResponse.Data != null)
@@ -263,7 +263,7 @@ public class EventDetailScript : MonoBehaviour
         else
         {
             //Show error message
-            MessageHelper.CloseDialog();
+            
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
@@ -302,7 +302,7 @@ public class EventDetailScript : MonoBehaviour
 
     public void LoadPreviouseScene()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        
         MySceneManager.loadPreviousScene();
     }
 

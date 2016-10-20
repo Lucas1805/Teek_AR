@@ -159,8 +159,7 @@ public class HomeScript : MonoBehaviour {
                 sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = Utils.TruncateLongString(item.Name,18);
                 sampleBrandButton.Brand.transform.GetChild(0).GetComponent<Text>().text = item.Id.ToString();
                 sampleBrandButton.BrandAmount.text = item.StoreCount.ToString();
-                //sampleBrandButton.BrandCategory.text = item.
-                //sampleBrandButton.BrandLogo
+               
                 sampleBrandButton.Activities.transform.GetChild(0).gameObject.SetActive(item.HasMultiplier);
                 sampleBrandButton.Activities.transform.GetChild(1).gameObject.SetActive(item.HasARGAME);
                 sampleBrandButton.Activities.transform.GetChild(2).gameObject.SetActive(item.HasVoting);

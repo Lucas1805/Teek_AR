@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class MessageHelper : MonoBehaviour {
 
+    
+
     public enum DialogResult
     {
         YES,
@@ -15,11 +17,18 @@ public class MessageHelper : MonoBehaviour {
 
     static public void ConfirmDialog(string title,string message)
     {
+
         dialogResult = DialogResult.NULL;
 
-        GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
-        GameObject ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
-        ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        GameObject ShadePanel = GameObject.Find("ShadePanel(Clone)");
+        if (ShadePanel == null)
+        {
+            GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+            ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+            ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        }
+
+       
 
         GameObject DialogBoxTemplate = Resources.Load("prefabs/Dialog Box") as GameObject;
         GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
@@ -46,9 +55,15 @@ public class MessageHelper : MonoBehaviour {
     {
         dialogResult = DialogResult.NULL;
 
-        GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
-        GameObject ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
-        ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        GameObject ShadePanel = GameObject.Find("ShadePanel(Clone)");
+        if (ShadePanel == null)
+        {
+            GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+            ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+            ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        }
+
+
 
         GameObject DialogBoxTemplate = Resources.Load("prefabs/Dialog Box") as GameObject;
         GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
@@ -92,10 +107,13 @@ public class MessageHelper : MonoBehaviour {
     {
         dialogResult = DialogResult.NULL;
 
-        GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
-        GameObject ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
-        ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
-
+        GameObject ShadePanel = GameObject.Find("ShadePanel(Clone)");
+        if (ShadePanel == null)
+        {
+            GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+            ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+            ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        }
 
         GameObject DialogBoxTemplate = Resources.Load("prefabs/Dialog Box") as GameObject;
         GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
@@ -117,10 +135,13 @@ public class MessageHelper : MonoBehaviour {
     {
         dialogResult = DialogResult.NULL;
 
-        GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
-        GameObject ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
-        ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
-
+        GameObject ShadePanel = GameObject.Find("ShadePanel(Clone)");
+        if (ShadePanel == null)
+        {
+            GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+            ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+            ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        }
         GameObject DialogBoxTemplate = Resources.Load("prefabs/Dialog Box") as GameObject;
         GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
         DialogBoxTemplate sampleButton = DialogBox.GetComponent<DialogBoxTemplate>();
@@ -142,10 +163,13 @@ public class MessageHelper : MonoBehaviour {
     static public void LoadingDialog(string message)
     {
 
-        GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
-        GameObject ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
-        ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
-
+        GameObject ShadePanel = GameObject.Find("ShadePanel(Clone)");
+        if (ShadePanel == null)
+        {
+            GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+            ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+            ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        }
         GameObject LoadingBoxTemplate = Resources.Load("prefabs/Loading Box") as GameObject;
         GameObject LoadingBox = Instantiate(LoadingBoxTemplate) as GameObject;
         LoadingBoxTemplate sampleButton = LoadingBox.GetComponent<LoadingBoxTemplate>();
