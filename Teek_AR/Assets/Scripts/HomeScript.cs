@@ -25,6 +25,8 @@ public class HomeScript : MonoBehaviour {
     public Toggle GameToggle;
     public Toggle VotingToggle;
 
+    private bool isFilterAll;
+
     // Use this for initialization
     void Start () {
         CallAPIGetOrganizers();
@@ -251,7 +253,7 @@ public class HomeScript : MonoBehaviour {
             }
         }
 
-        if (!MultiplierToggle.isOn || !GameToggle.isOn || !VotingToggle.isOn)
+        if ((!MultiplierToggle.isOn || !GameToggle.isOn || !VotingToggle.isOn) && !isFilterAll)
         {
             AllToggle.isOn = false;
         }
@@ -259,6 +261,7 @@ public class HomeScript : MonoBehaviour {
 
     public void FilterAll()
     {
+        isFilterAll = true;
         if (AllToggle.isOn)
         {
             AllToggle.isOn = true;
@@ -276,6 +279,7 @@ public class HomeScript : MonoBehaviour {
                 item.gameObject.SetActive(true);
             }
         }
+        isFilterAll = false;
     }
 
     public void Refresh()
