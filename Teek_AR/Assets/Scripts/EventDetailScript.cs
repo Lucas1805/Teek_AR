@@ -9,8 +9,7 @@ using Ucss;
 using Assets.ResponseModels;
 using LitJson;
 using Assets;
-
-
+using System;
 
 public class EventDetailScript : MonoBehaviour
 {
@@ -82,22 +81,23 @@ public class EventDetailScript : MonoBehaviour
                 GameObject newButton = Instantiate(ButtonTemplate) as GameObject;
                 RewardButtonTemplate sampleButton = newButton.GetComponent<RewardButtonTemplate>();
                 sampleButton.PrizeName.text = item.Name;
-                sampleButton.GetComponent<Button>().onClick.AddListener(() => ShowRedeemPrizePanel(item));
+                sampleButton.PrizeId.text = item.Id.ToString();
+                sampleButton.GetComponent<Button>().onClick.AddListener(() => ShowRedeemPrizePanel(sampleButton));
 
                 if (item.Ruby != 0)
                 {
                     sampleButton.Gem.transform.GetChild(0).gameObject.SetActive(true);
-                    sampleButton.Gem.GetComponentInChildren<Text>().text = item.Ruby.ToString();
+                    sampleButton.Gem.transform.GetChild(0).gameObject.GetComponentInChildren<Text>().text = item.Ruby.ToString();
                 }
                 if (item.Sapphire != 0)
                 {
                     sampleButton.Gem.transform.GetChild(2).gameObject.SetActive(true);
-                    sampleButton.Gem.GetComponentInChildren<Text>().text = item.Sapphire.ToString();
+                    sampleButton.Gem.transform.GetChild(2).gameObject.GetComponentInChildren<Text>().text = item.Sapphire.ToString();
                 }
                 if (item.Citrine != 0)
                 {
                     sampleButton.Gem.transform.GetChild(1).gameObject.SetActive(true);
-                    sampleButton.Gem.GetComponentInChildren<Text>().text = item.Citrine.ToString();
+                    sampleButton.Gem.transform.GetChild(1).gameObject.GetComponentInChildren<Text>().text = item.Citrine.ToString();
                 }
                 if (item.Teek != 0)
                 {
@@ -378,9 +378,27 @@ public class EventDetailScript : MonoBehaviour
     #endregion
 
     #region PROCESS REDEEM PRIZE REQUEST
-    public void ShowRedeemPrizePanel(PrizeResponseModel RewardObject)
+    public void ShowRedeemPrizePanel(RewardButtonTemplate RewardObject)
     {
-        Debug.Log(RewardObject.Name);
+        Debug.Log(RewardObject.transform.GetChild(0).GetComponent<Text>().text);
+        try
+        {
+            int PrizeId = int.Parse(RewardObject.transform.GetChild(0).GetComponent<Text>().text);
+            int Teek = int.Parse(RewardObject.Coin.GetComponentInChildren<Text>().text);
+            int Ruby = int.Parse(RewardObject.Gem.transform.GetChild(0).gameObject.GetComponentInChildren<Text>().text);
+            int Sapphire = int.Parse(RewardObject.Gem.transform.GetChild(2).gameObject.GetComponentInChildren<Text>().text);
+            int Citrine = int.Parse(RewardObject.Gem.transform.GetChild(1).gameObject.GetComponentInChildren<Text>().text);
+            Debug.Log(Ruby);
+            Debug.Log(Sapphire);
+            Debug.Log(Citrine);
+            Debug.Log(Teek);
+        }
+        catch(Exception e)
+        {
+            Debug.Log("Parse error in EventDetailScript with message: " + e.Message);
+        }
+        //If prize can redeem by both Teek and Gem, default select is Teek
+
         RedeemPrizePanel.SetActive(true);
     }
     #endregion
