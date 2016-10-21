@@ -9,7 +9,8 @@ namespace Assets
     {
         #region SCENE NAME
         public const string HomeSceneName = "HomeScene";
-        public const string PlayerInfoSceneName = "PlayerInfoScene";
+        public const string ProfileSceneName = "ProfileScene";
+        public const string CouponSceneName = "CouponScene";
         public const string LoginSceneName = "LoginScene";
         public const string GameSceneName = "GameScene";
         public const string RedeemCodeSceneName = "RedeemCodeScene";
@@ -40,9 +41,10 @@ namespace Assets
         public const string PP_OrganizerId = "OrganizerID";
         public const string PP_UserParticipationID = "UserParticipationID";
         #endregion
-
+        
         #region API LINKS
-        public const string API_HOST_IP = "10.5.50.18";
+        //API LINKS
+        public const string API_HOST_IP = "10.5.50.23";
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
         public const string API_RedeemPrizeCode = "http://" + API_HOST_IP + "/Teek/api/Prize/ReedemPrize";
