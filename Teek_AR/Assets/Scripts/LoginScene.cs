@@ -45,6 +45,7 @@ public class LoginScene : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        PlayerPrefs.DeleteKey(ConstantClass.PP_UsernameKey);
         //Check if Player has Login Info (Login Session) in PlayerPrefs. If YES auto login
         if (PlayerPrefs.HasKey(ConstantClass.PP_UsernameKey) && PlayerPrefs.HasKey(ConstantClass.PP_PasswordKey))
         {

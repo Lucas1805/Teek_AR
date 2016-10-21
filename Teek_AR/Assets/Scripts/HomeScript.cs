@@ -30,9 +30,8 @@ public class HomeScript : MonoBehaviour {
     void Start () {
         CallAPIGetOrganizers();
         CallAPIGetOrganizersByUserId();
-
-        PlayerPrefs.SetString(ConstantClass.PP_UserIDKey, Encrypt.EncryptString("40efe638-04b6-42aa-81c3-a79b208d75e5"));
-        PlayerPrefs.Save();
+        //PlayerPrefs.SetString(ConstantClass.PP_UserIDKey, Encrypt.EncryptString("40efe638-04b6-42aa-81c3-a79b208d75e5"));
+        //PlayerPrefs.Save();
     }
 	
 	// Update is called once per frame
@@ -72,41 +71,9 @@ public class HomeScript : MonoBehaviour {
     {
         //mac.text = getBSSID();
     }
-
-    public void loadPlayerInfoScene()
-    {
-        MessageHelper.LoadingDialog("Loading data....");
-        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
-        MySceneManager.setLastScene(ConstantClass.HomeSceneName);
-        SceneManager.LoadSceneAsync(ConstantClass.PlayerInfoSceneName);
-    }
-
-    public void loadRedeemCodeScene()
-    {
-        MessageHelper.LoadingDialog("Loading data....");
-        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
-        MySceneManager.setLastScene(ConstantClass.HomeSceneName);
-        SceneManager.LoadSceneAsync(ConstantClass.RedeemCodeSceneName);
-    }
-
-    public void loadTutorialScene()
-    {
-        MessageHelper.LoadingDialog("Loading data....");
-        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
-        MySceneManager.setLastScene(ConstantClass.HomeSceneName);
-        SceneManager.LoadSceneAsync(ConstantClass.TutorialSceneName);
-    }
-
-    public void loadEventDetailScene(int eventId)
-    {
-        PlayerPrefs.SetString(ConstantClass.PP_EventIDKey, eventId.ToString());
-
-        MessageHelper.LoadingDialog("Loading data....");
-        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
-        MySceneManager.setLastScene(ConstantClass.HomeSceneName);
-        SceneManager.LoadSceneAsync(ConstantClass.EventDetailSceneName);
-    }
-
+    
+    
+    
     public void SearchByName()
     {
         foreach (Transform item in AllBrandsPanel.transform)
@@ -178,7 +145,7 @@ public class HomeScript : MonoBehaviour {
         HTTPRequest request = new HTTPRequest();
         request.url = ConstantClass.API_LoadMyBrand + "?userId="
             + Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey));
-        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallAPIGetOrganizers);
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallAPIGetOrganizersByUserId);
         UCSS.HTTP.GetString(request);
     }
 
@@ -209,6 +176,8 @@ public class HomeScript : MonoBehaviour {
                 }
             }
         }
+
+        MessageHelper.CloseDialog();
     }
 
     public void FilterCheck()
