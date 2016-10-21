@@ -16,21 +16,13 @@ public class StoreEventController : MonoBehaviour
 
     public GameObject EventButtonTemplate;
     public GameObject EventContentPanel;
-    public GameObject LoadingPanel;
     public Text StoreNameText;
 
     // Use this for initialization
     void Start()
     {
         StoreNameText.text = Utils.TruncateLongString(StoreName,21);
-        //TEST VALUE
         LoadEventListByStore();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void LoadEventListByStore()
@@ -102,10 +94,12 @@ public class StoreEventController : MonoBehaviour
 
                     newButton.transform.SetParent(EventContentPanel.transform, false);
                 }
+                MessageHelper.CloseDialog();
             }
             else
             {
-                //SHOW NO RECORD MESSAGE BY CREATE A EMMPTY BUTTON AND MESSAGE
+                //SHOW NO RECORD MESSAGE
+                MessageHelper.CloseDialog();
                 MessageHelper.MessageDialog("This store has no event now");
                 Debug.Log("No Event To Show");
             }
@@ -113,18 +107,21 @@ public class StoreEventController : MonoBehaviour
         else
         {
             //Show error message
+            MessageHelper.CloseDialog();
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
 
     private void OnLoadEventListError(string error, string transactionId)
     {
+        MessageHelper.CloseDialog();
         MessageHelper.MessageDialog(error);
         Debug.Log("WWW Error: " + error);
     }
 
     private void OnTimeOut(string transactionId)
     {
+        MessageHelper.CloseDialog();
         MessageHelper.MessageDialog(ConstantClass.Msg_TimeOut);
         Debug.Log(ConstantClass.Msg_TimeOut);
     }
@@ -151,7 +148,6 @@ public class StoreEventController : MonoBehaviour
         yield return www;
         image.overrideSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
         MessageHelper.CloseDialog();
-
     }
 }
 

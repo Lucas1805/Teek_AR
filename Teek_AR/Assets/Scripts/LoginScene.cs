@@ -17,11 +17,7 @@ public class LoginScene : MonoBehaviour
     //VARIABLE FOR LOGIN
     public UnityEngine.UI.InputField usernameField;
     public UnityEngine.UI.InputField passwordField;
-    public Text loginMessage;
-    public GameObject loginMessagePanel;
     public GameObject loginPanel;
-    public GameObject loadingPanel;
-
 
     private string username = "";
     private string password = "";
@@ -33,8 +29,6 @@ public class LoginScene : MonoBehaviour
     public UnityEngine.UI.InputField rg_passwordField;
     public UnityEngine.UI.InputField rg_passwordAgainField;
     public GameObject registerPanel;
-    public GameObject registerMessagePanel;
-    public Text registerMessage;
 
     string rg_fullname;
     string rg_username;
@@ -45,7 +39,7 @@ public class LoginScene : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        PlayerPrefs.DeleteKey(ConstantClass.PP_UsernameKey);
+        //PlayerPrefs.DeleteKey(ConstantClass.PP_UsernameKey);
         //Check if Player has Login Info (Login Session) in PlayerPrefs. If YES auto login
         if (PlayerPrefs.HasKey(ConstantClass.PP_UsernameKey) && PlayerPrefs.HasKey(ConstantClass.PP_PasswordKey))
         {
@@ -53,19 +47,10 @@ public class LoginScene : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void checkLogin()
     {
         MessageHelper.LoadingDialog("Loading data....");
-
-        //Reset message text
-        loginMessage.text = "";
-
+        
         //Get value from input fields
         username = usernameField.text;
         password = passwordField.text;
@@ -99,7 +84,7 @@ public class LoginScene : MonoBehaviour
         }
         else
         {
-            showLoginMessage("Please enter username and password");
+            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Please enter username and password");
         }
     }
 
@@ -132,10 +117,7 @@ public class LoginScene : MonoBehaviour
     {
         //Enable loading indicator
         MessageHelper.LoadingDialog("Loading data....");
-
-        //Reset message
-        registerMessage.text = "";
-
+        
         //Get values
         rg_fullname = rg_fullnameField.text;
         rg_email = rg_emailField.text;
@@ -179,22 +161,6 @@ public class LoginScene : MonoBehaviour
         rg_passwordAgainField.text = "";
     }
 
-    public void showLoginMessage(string messageString)
-    {
-        loginPanel.SetActive(false);
-        loginMessage.text = messageString;
-        loginMessagePanel.SetActive(true);
-        MessageHelper.CloseDialog();
-    }
-
-    public void showRegisterMessage(string messageString)
-    {
-        registerPanel.SetActive(false);
-        registerMessagePanel.SetActive(true);
-        registerMessage.text = messageString;
-        MessageHelper.CloseDialog();
-    }
-
     private bool validateEmail(string email)
     {
         var regex = new Regex(@"[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
@@ -207,44 +173,44 @@ public class LoginScene : MonoBehaviour
         if (rg_fullname.Length <= 0)
         {
             result = false;
-            showRegisterMessage("Please enter fullname");
+            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Please enter fullname");
             resetPasswordFields();
         }
         else if (rg_email.Length <= 0)
         {
             result = false;
-            showRegisterMessage("Please enter email");
+            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle, "Please enter email");
             resetPasswordFields();
         }
         else if (rg_email.Length > 0 && !validateEmail(rg_email))
         {
             result = false;
-            showRegisterMessage("Email format is not valid");
+            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Email format is not valid");
             resetPasswordFields();
 
         }
         else if (rg_username.Length <= 0)
         {
             result = false;
-            showRegisterMessage("Please enter your username");
+            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Please enter your username");
             resetPasswordFields();
         }
         else if (rg_password.Length <= 0)
         {
             result = false;
-            showRegisterMessage("Please enter your password");
+            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Please enter your password");
             resetPasswordFields();
         }
         else if (rg_password.Length < 8)
         {
             result = false;
-            showRegisterMessage("Password must be at least 8 characters");
+            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Password must be at least 8 characters");
             resetPasswordFields();
         }
         else if (!rg_password.Equals(rg_passwordAgain))
         {
             result = false;
-            showRegisterMessage("Re-enter Password is not match");
+            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Re-enter Password is not match");
             resetPasswordFields();
         }
         return result;
@@ -285,7 +251,8 @@ public class LoginScene : MonoBehaviour
             PlayerPrefs.DeleteKey(ConstantClass.PP_UserIDKey);
 
             //Show error message
-            showLoginMessage(jsonResponse.Message);
+            MessageHelper.CloseDialog();
+            MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message);
             resetLoginField();
         }
     }
@@ -309,31 +276,35 @@ public class LoginScene : MonoBehaviour
         else
         {
             //Show error message
+            MessageHelper.CloseDialog();
             if (jsonResponse.Errors != null)
-                showRegisterMessage(jsonResponse.Message + " " + jsonResponse.Errors[0]);
+                MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message + " " + jsonResponse.Errors[0]);
             else
-                showRegisterMessage(jsonResponse.Message);
+                MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message);
             resetPasswordFields();
         }
     }
 
     private void OnLoginError(string error, string transactionId)
     {
-        showLoginMessage(error);
-        Debug.Log(error);
+        MessageHelper.CloseDialog();
+        MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
+        Debug.Log("Login WWW error: " + error);
         resetLoginField();
     }
 
     private void OnRegisterError(string error, string transactionId)
     {
-        showRegisterMessage(error);
-        Debug.Log("WWW Error: " + error);
+        MessageHelper.CloseDialog();
+        MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
+        Debug.Log("Regiser WWW Error: " + error);
         resetPasswordFields();
     }
 
     private void OnTimeOut(string transactionId)
     {
-        showLoginMessage(ConstantClass.Msg_TimeOut);
+        MessageHelper.CloseDialog();
+        MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, ConstantClass.Msg_TimeOut);
         Debug.Log(ConstantClass.Msg_TimeOut);
     }
 }

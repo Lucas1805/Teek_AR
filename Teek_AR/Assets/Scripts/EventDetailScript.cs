@@ -35,6 +35,7 @@ public class EventDetailScript : MonoBehaviour
     public GameObject PrizeCodePanel;
     public GameObject ActivityPanel;
     public GameObject RedeemCodePanel;
+    public Text MasterCodeText;
 
     private int PrizeCodeId;
 
@@ -44,8 +45,8 @@ public class EventDetailScript : MonoBehaviour
         //Get Organizer Id from PlayerPrefs
         OrganizerId = PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId);
 
-        PlayerPrefs.SetString(ConstantClass.PP_UserIDKey, Encrypt.EncryptString("40efe638-04b6-42aa-81c3-a79b208d75e5"));
-        //PlayerPrefs.SetInt(ConstantClass.PP_OrganizerId, 39);
+        //Set Eventid To PlayerPrefs
+        PlayerPrefs.SetInt(ConstantClass.PP_EventIDKey, EventId);
         PlayerPrefs.Save();
 
 
@@ -55,11 +56,6 @@ public class EventDetailScript : MonoBehaviour
         LoadPrizeCode();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     public void GetPrizeData()
     {
 
@@ -224,7 +220,7 @@ public class EventDetailScript : MonoBehaviour
         
         if(EventImage != null)
         {
-            EventImageObject = EventImage;
+            EventImageObject.sprite = EventImage.sprite;
         }
     }
 
@@ -311,4 +307,57 @@ public class EventDetailScript : MonoBehaviour
         this.PrizeCodeId = PrizeCodeId;
         RedeemCodePanel.SetActive(true);
     }
+
+    public void RedeemPrizeCode()
+    {
+        MessageHelper.LoadingDialog("Loading...");
+
+        if(MasterCodeText.text.Length > 0)
+        {
+            if(PrizeCodeId != 0)
+            {
+                //SEND REDEEM PRIZE CODE REQUEST
+                HTTPRequest request = new HTTPRequest();
+                WWWForm form = new WWWForm();
+                form.AddField("prizeCodeId", PrizeCodeId);
+                form.AddField("masterCode", MasterCodeText.text);
+                request.url = ConstantClass.API_RedeemPrizeCode;
+                request.formData = form;
+
+                request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallRedeemPrizeCodeRequest);
+                request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
+                request.onError = new EventHandlerServiceError(this.OnRedeemPrizeCodeError);
+
+                UCSS.HTTP.PostForm(request);
+            }
+        }
+    }
+
+    #region PROCESS REDEEM PRIZE CODE REQUEST
+    private void OnDoneCallRedeemPrizeCodeRequest(string result, string transactionId)
+    {
+        ResponseModel<PrizeCodeModel> jsonResponse = new ResponseModel<PrizeCodeModel>();
+        jsonResponse.Data = new PrizeCodeModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<PrizeCodeModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            //Load Prize Code Again
+            LoadPrizeCode();
+        }
+        else
+        {
+            //Show message
+            MessageHelper.CloseDialog();
+            MessageHelper.MessageDialog(jsonResponse.Message);
+        }
+    }
+
+    private void OnRedeemPrizeCodeError(string error, string transactionId)
+    {
+        MessageHelper.CloseDialog();
+        MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
+        Debug.Log("Login WWW error: " + error);
+    }
+    #endregion
 }

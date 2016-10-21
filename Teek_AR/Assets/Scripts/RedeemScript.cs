@@ -28,32 +28,7 @@ public class RedeemScript : MonoBehaviour {
 
     public void redeemCode()
     {
-        message.text = "";
-
-        MessageHelper.LoadingDialog("Loading data....");
-
-        //Get value
-        code = inputCodeField.text;
-
-        if(code.Length > 0)
-        {
-            //Show loading indicator
-            MessageHelper.LoadingDialog("Loading data....");
-
-            //Create object to sen Http Request
-            WWWForm form = new WWWForm();
-            form.AddField("RedeemCode", code);
-
-            //SEND POST REQUEST
-
-            WWW www = new WWW(ConstantClass.API_RedeemCode, form);
-
-            StartCoroutine(WaitForRequest(www));
-        }
-        else
-        {
-            showMessage("Please enter code");
-        }
+        
     }
 
     public void resetField()

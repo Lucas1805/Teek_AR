@@ -14,8 +14,7 @@ public class BrandDetailController : MonoBehaviour {
 
     public static int OrganizerId;
     public static string OrganizerName = "";
-
-    public bool OnStoreTab = true;
+    
     public GameObject StoreButtonTemplate;
     public GameObject StoreContentPanel;
     public GameObject EventButtonTemplate;
@@ -37,11 +36,6 @@ public class BrandDetailController : MonoBehaviour {
         LoadEventListByOrganizer();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
     public void LoadStoreList()
     {
         MessageHelper.LoadingDialog("Loading data....");
@@ -57,13 +51,7 @@ public class BrandDetailController : MonoBehaviour {
             
 
             UCSS.HTTP.GetString(request);
-        }
-        else
-        {
-            //Show error message
-        }
-
-        
+        }        
     }
 
     public void LoadEventListByOrganizer()
@@ -82,19 +70,12 @@ public class BrandDetailController : MonoBehaviour {
 
             UCSS.HTTP.GetString(request);
         }
-        else
-        {
-            //Show error message
-        }
-
-        
     }
 
 
     #region PROCESS LOAD STORE REQUEST
     private void OnDoneCallLoadStoreListRequest(string result, string transactionId)
     {
-        MessageHelper.CloseDialog();
         ResponseModel<List<StoreModel>> jsonResponse = new ResponseModel<List<StoreModel>>();
         jsonResponse.Data = new List<StoreModel>();
         jsonResponse = JsonMapper.ToObject<ResponseModel<List<StoreModel>>>(result);
@@ -115,15 +96,14 @@ public class BrandDetailController : MonoBehaviour {
 
                     newButton.transform.SetParent(StoreContentPanel.transform, false);
                 }
+                MessageHelper.CloseDialog();
             }
             else
             {
-                //SHOW NO RECORD MESSAGE BY CREATE A EMMPTY BUTTON AND MESSAGE
+                //SHOW NO RECORD MESSAGE
                 MessageHelper.MessageDialog("This brand has no store yet");
-                Debug.Log("No Store To Show");
+                Debug.Log("No Store To Show On Organizer: " + OrganizerId);
             }
-
-            MessageHelper.CloseDialog();
         }
         else
         {
@@ -151,7 +131,6 @@ public class BrandDetailController : MonoBehaviour {
     #region PROCESS LOAD EVENT LIST BY ORGANIZER REQUEST
     private void OnDoneCallLoadEventListByOrganizerRequest(string result, string transactionId)
     {
-        MessageHelper.CloseDialog();
         ResponseModel<List<EventModel>> jsonResponse = new ResponseModel<List<EventModel>>();
         jsonResponse.Data = new List<EventModel>();
         jsonResponse = JsonMapper.ToObject<ResponseModel<List<EventModel>>>(result);
@@ -166,7 +145,7 @@ public class BrandDetailController : MonoBehaviour {
                     EventButtonTemplate sampleButton = newButton.GetComponent<EventButtonTemplate>();
 
                     sampleButton.EventId.text = item.Id.ToString();
-                    sampleButton.EventName.text = item.Name;
+                    sampleButton.EventName.text = Utils.TruncateLongString(item.Name, 23);
                     sampleButton.Time.text = item.StartDate;
 
                     //Load event image
@@ -183,11 +162,11 @@ public class BrandDetailController : MonoBehaviour {
                         {
                             if (activity != null)
                             {
-                                if (activity.GameId != null || activity.GameId != 0)
+                                if (activity.GameId != null && activity.GameId != 0)
                                 {
                                     sampleButton.Activities.transform.GetChild(0).gameObject.SetActive(true);
                                 }
-                                if (activity.SurveyId != null || activity.SurveyId != 0)
+                                if (activity.SurveyId != null && activity.SurveyId != 0)
                                 {
                                     sampleButton.Activities.transform.GetChild(2).gameObject.SetActive(true);
                                 }
@@ -195,19 +174,16 @@ public class BrandDetailController : MonoBehaviour {
                         }
                     }
                     
-
                     newButton.transform.SetParent(EventContentPanel.transform, false);
                 }
+                MessageHelper.CloseDialog();
             }
             else
             {
-                //SHOW NO RECORD MESSAGE BY CREATE A EMMPTY BUTTON AND MESSAGE
-                MessageHelper.CloseDialog();
+                //SHOW NO RECORD MESSAGE
                 MessageHelper.MessageDialog("No available event at this time");
                 Debug.Log("No Event To Show");
             }
-
-            MessageHelper.CloseDialog();
         }
         else
         {
@@ -219,7 +195,6 @@ public class BrandDetailController : MonoBehaviour {
 
     private void OnLoadEventListError(string error, string transactionId)
     {
-        //showRegisterMessage(error);
         MessageHelper.CloseDialog();
         Debug.Log("WWW Error: " + error);
     }

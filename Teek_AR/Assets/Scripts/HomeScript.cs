@@ -15,7 +15,6 @@ using LitJson;
 public class HomeScript : MonoBehaviour {
 
     //public Text mac;
-    public GameObject loadingPanel;
     public InputField searchInput;
     public GameObject AllBrandsPanel;
     public GameObject MyBrandsPanel;
@@ -125,7 +124,7 @@ public class HomeScript : MonoBehaviour {
                 BrandButtonTemplate sampleBrandButton = newBrandButton.GetComponent<BrandButtonTemplate>();
                 sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = Utils.TruncateLongString(item.Name,18);
                 sampleBrandButton.Brand.transform.GetChild(0).GetComponent<Text>().text = item.Id.ToString();
-                sampleBrandButton.BrandAmount.text = item.StoreCount.ToString();
+                sampleBrandButton.BrandAmount.text = item.StoreCount.ToString() + " store(s)";
                
                 sampleBrandButton.Activities.transform.GetChild(0).gameObject.SetActive(item.HasMultiplier);
                 sampleBrandButton.Activities.transform.GetChild(1).gameObject.SetActive(item.HasARGAME);
@@ -134,9 +133,12 @@ public class HomeScript : MonoBehaviour {
 
                 newBrandButton.transform.SetParent(AllBrandsPanel.transform, false);
             }
+            MessageHelper.CloseDialog();
         }
-
-        MessageHelper.CloseDialog();
+        else
+        {
+            MessageHelper.MessageDialog(jsonResponse.Message);
+        }
     }
 
     public void CallAPIGetOrganizersByUserId()
@@ -175,9 +177,12 @@ public class HomeScript : MonoBehaviour {
                     newBrandButton.transform.SetParent(MyBrandsPanel.transform, false);
                 }
             }
+            MessageHelper.CloseDialog();
         }
-
-        MessageHelper.CloseDialog();
+        else
+        {
+            MessageHelper.MessageDialog(jsonResponse.Message);
+        }        
     }
 
     public void FilterCheck()
