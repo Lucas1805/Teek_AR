@@ -16,7 +16,8 @@ public class ShopController : MonoBehaviour {
 
     //private const int FIREBALL_DEFAULT_NUMBER = 20;
     private int coinNumber = 666;
-    private int fireballNumber = 6;
+    private int fireballNumber = 5;
+    private int iceballNumber = 2;
 
     private bool error = false; //Check if loading data from server before playing is error or not
     private ProductInfo justBoughtProduct;
@@ -49,10 +50,12 @@ public class ShopController : MonoBehaviour {
 
         ProductInfo fireball = Shop.GetProduct(ConstantClass.FireBallItemID);
         ProductInfo coin = Shop.GetProduct(ConstantClass.CoinItemID);
+        ProductInfo iceball = Shop.GetProduct(ConstantClass.IceBallItemID);
 
         //SET VALUE
         fireball.Value = fireballNumber;
         coin.Value = coinNumber;
+        iceball.Value = iceballNumber;
 
     }
 

@@ -53,16 +53,31 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
     public GameObject shootSound;
     public GameObject hitSound;
     
-    private int ballAmount;
+    private int fireballAmount;
+    private int iceballAmount;
 
     public List<GameObject> listDropItem;
     private bool isShowDropItemListAlready = false;
 
     public Button resultOKButton;
 
+    public Material fireballMaterial;
+    public Material iceballMaterial;
+
+    private float firstTimeDistance;
+
     void Start()
     {
-        ballAmount = Shop.GetProductClassAmount(ConstantClass.FireBallItemClassName);
+        firstTimeDistance = Vector3.Distance(dragon.transform.position, Camera.main.transform.position);
+
+        //fireballMaterial = Resources.Load("FireParticleMeteor2Material", typeof(Material)) as Material;
+        //iceballMaterial = Resources.Load("FireParticleSparkMaterial", typeof(Material)) as Material;
+
+        //gameObject.transform.GetChild(0).GetComponent<Renderer>().material = iceballMaterial;
+        //gameObject.transform.GetChild(0).GetComponent<Renderer>().material = fireballMaterial;
+
+        fireballAmount = Shop.GetProductClassAmount(ConstantClass.FireBallItemClassName);
+        iceballAmount = Shop.GetProductClassAmount(ConstantClass.IceBallItemClassName);
 
         // lay so banh hien tai
         //Shop.IncrementProductClassAmount(ConstantClass.FireBallItemClassName, -ballAmount + 1); // tang so banh them 1
@@ -82,7 +97,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
         //if (ball != null)
         {
-            if (ballAmount <= 0)
+            if (fireballAmount <= 0)
             {
                 hideBall();
             }
@@ -133,12 +148,21 @@ speedCounter / 6;
         //ProductInfo fireball = Shop.GetProduct("fireball");
         //if (ball != null)
         {
-            if (ballAmount > 0)
+            if (CurrentMaterialName()==fireballMaterial.name)
             {
-                Shop.IncrementProductClassAmount(ConstantClass.FireBallItemClassName, -1);
-                ballAmount = Shop.GetProductClassAmount
-
-(ConstantClass.FireBallItemClassName);
+                if (fireballAmount > 0)
+                {
+                    Shop.IncrementProductClassAmount(ConstantClass.FireBallItemClassName, -1);
+                    fireballAmount = Shop.GetProductClassAmount(ConstantClass.FireBallItemClassName);
+                }
+            }
+            if(CurrentMaterialName()==iceballMaterial.name)
+            {
+                if (iceballAmount > 0)
+                {
+                    Shop.IncrementProductClassAmount(ConstantClass.IceBallItemClassName, -1);
+                    iceballAmount = Shop.GetProductClassAmount(ConstantClass.IceBallItemClassName);
+                }
             }
         }
         //else Debug.Log("Cannot get product object. Please check for product ID");
@@ -149,14 +173,20 @@ speedCounter / 6;
     // Update is called once per frame
     void Update()
     {
-        displayText.text = Vector3.Distance(dragon.transform.position, transform.position).ToString();
+        //displayText.text = Vector3.Distance(dragon.transform.position, Camera.main.transform.position).ToString();
+        //displayText.text = CurrentMaterialName()
+        //    + "\n" + fireballMaterial.name
+        //    + "\n" + iceballMaterial.name;
 
-        ballAmount = Shop.GetProductClassAmount(ConstantClass.FireBallItemClassName);
+        CheckDistanceCameraAndPattern();
+
+        fireballAmount = Shop.GetProductClassAmount(ConstantClass.FireBallItemClassName);
+        iceballAmount = Shop.GetProductClassAmount(ConstantClass.IceBallItemClassName);
         if (isThrow)
         {
             //ProductInfo fireball = Shop.GetProduct("fireball");
 
-            if (ballAmount > 0)
+            if (fireballAmount+iceballAmount > 0)
             {
                 if (!isSpawned)
                 {
@@ -169,7 +199,7 @@ speedCounter / 6;
         {
             if (!dragging)
             {
-                if (ballAmount <= 0)
+                if (fireballAmount+iceballAmount <= 0)
                 {
                     hideBall();
                 }
@@ -222,6 +252,15 @@ rayPoint, Speed * Time.deltaTime);
 
             transform.position = new Vector3(0, Screen.height * 2, 0);
         }
+
+        if (!isThrow && fireballAmount <= 0 && CurrentMaterialName() == fireballMaterial.name)
+        {
+            SwitchBall();
+        }
+        if (!isThrow && iceballAmount <= 0 && CurrentMaterialName() == iceballMaterial.name)
+        {
+            SwitchBall();
+        }
     }
 
     void createBall()
@@ -252,7 +291,15 @@ rayPoint, Speed * Time.deltaTime);
 
         if (other.gameObject.CompareTag("Dragon"))
         {
-            health.value -= 10;
+            if (CurrentMaterialName()==fireballMaterial.name)
+            {
+                health.value -= 10;
+            }
+            else
+            {
+                health.value -= 10 * 2.5f;
+            }
+
             anim.SetTrigger("Dead");
             //anim.SetTrigger("IsDamaged");
 
@@ -389,5 +436,42 @@ rayPoint, Speed * Time.deltaTime);
         dragon.SetActive(true);
         healthPanel.SetActive(true);
         resultPanel.SetActive(false);
+    }
+
+    public void CheckDistanceCameraAndPattern()
+    {
+        float distance = Vector3.Distance(dragon.transform.position, Camera.main.transform.position);
+        if (distance != firstTimeDistance && !isDead)
+        {
+            if (distance < 50)
+            {
+                dragon.SetActive(false);
+                healthPanel.SetActive(false);
+            }
+            else
+            {
+                dragon.SetActive(true);
+                healthPanel.SetActive(true);
+            }
+        }
+    }
+
+    public void SwitchBall()
+    {
+        if (CurrentMaterialName()==fireballMaterial.name)
+        {
+            gameObject.transform.GetChild(0).GetComponent<Renderer>().material = iceballMaterial;
+            return;
+        }
+        if (CurrentMaterialName() == iceballMaterial.name)
+        {
+            gameObject.transform.GetChild(0).GetComponent<Renderer>().material = fireballMaterial;
+            return;
+        }
+    }
+
+    public string CurrentMaterialName()
+    {
+        return gameObject.transform.GetChild(0).GetComponent<Renderer>().material.name.Replace(" (Instance)","");
     }
 }
