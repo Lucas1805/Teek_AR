@@ -47,16 +47,4 @@ public class Navigate : MonoBehaviour {
         SceneManager.LoadSceneAsync(ConstantClass.GameSceneName);
     }
 
-    public void NavigateProfileScene()
-    {
-        SceneManager.LoadSceneAsync(ConstantClass.ProfileSceneName);
-    }
-    public void NavigateHomeScene()
-    {
-        SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
-    }
-    public void NavigateCouponScene()
-    {
-        SceneManager.LoadSceneAsync(ConstantClass.CouponSceneName);
-    }
 }

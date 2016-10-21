@@ -30,13 +30,7 @@ public class PlayerInformationScript : MonoBehaviour {
 	    
 	}
 
-    public void Logout()
-    {
-        PlayerPrefs.DeleteKey(ConstantClass.PP_UsernameKey);
-        PlayerPrefs.DeleteKey(ConstantClass.PP_PasswordKey);
-        PlayerPrefs.DeleteKey(ConstantClass.PP_UserIDKey);
-        SceneManager.LoadSceneAsync(ConstantClass.LoginSceneName);
-    }
+   
 
     public void loadPreviousScene()
     {
