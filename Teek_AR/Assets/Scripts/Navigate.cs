@@ -46,4 +46,17 @@ public class Navigate : MonoBehaviour {
         EventDetailScript.EventId = int.Parse(Event.transform.GetChild(0).GetComponent<Text>().text);
         SceneManager.LoadSceneAsync(ConstantClass.GameSceneName);
     }
+
+    public void NavigateProfileScene()
+    {
+        SceneManager.LoadSceneAsync(ConstantClass.ProfileSceneName);
+    }
+    public void NavigateHomeScene()
+    {
+        SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
+    }
+    public void NavigateCouponScene()
+    {
+        SceneManager.LoadSceneAsync(ConstantClass.CouponSceneName);
+    }
 }

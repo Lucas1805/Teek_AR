@@ -8,7 +8,8 @@ namespace Assets
     class ConstantClass 
     {
         public const string HomeSceneName = "HomeScene";
-        public const string PlayerInfoSceneName = "PlayerInfoScene";
+        public const string ProfileSceneName = "ProfileScene";
+        public const string CouponSceneName = "CouponScene";
         public const string LoginSceneName = "LoginScene";
         public const string GameSceneName = "GameScene";
         public const string RedeemCodeSceneName = "RedeemCodeScene";
@@ -38,7 +39,7 @@ namespace Assets
         
 
         //API LINKS
-        public const string API_HOST_IP = "10.5.50.18";
+        public const string API_HOST_IP = "10.5.50.23";
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
         public const string API_RedeemCode = "http://" + API_HOST_IP + "/Teek/api/";
