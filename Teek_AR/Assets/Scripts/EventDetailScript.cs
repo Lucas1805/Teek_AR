@@ -35,7 +35,10 @@ public class EventDetailScript : MonoBehaviour
     public GameObject PrizeCodePanel;
     public GameObject ActivityPanel;
     public GameObject RedeemCodePanel;
-    public Text MasterCodeText;
+    public InputField MasterCodeText;
+    public GameObject RedeemPrizePanel;
+    public Toggle TeekToggleButton;
+    public Toggle GemToggleButton;
 
     private int PrizeCodeId;
 
@@ -79,6 +82,8 @@ public class EventDetailScript : MonoBehaviour
                 GameObject newButton = Instantiate(ButtonTemplate) as GameObject;
                 RewardButtonTemplate sampleButton = newButton.GetComponent<RewardButtonTemplate>();
                 sampleButton.PrizeName.text = item.Name;
+                sampleButton.GetComponent<Button>().onClick.AddListener(() => ShowRedeemPrizePanel(item));
+
                 if (item.Ruby != 0)
                 {
                     sampleButton.Gem.transform.GetChild(0).gameObject.SetActive(true);
@@ -241,7 +246,7 @@ public class EventDetailScript : MonoBehaviour
                     CouponButtonTemplate sampleButton = newButton.GetComponent<CouponButtonTemplate>();
                     sampleButton.PrizeName.text = item.PrizeName;
                     sampleButton.CouponId.text = item.Id.ToString();
-                    sampleButton.Yes.GetComponent<Button>().onClick.AddListener(() => ShowRedeemPrizeCodePanel(item.Id));
+                    sampleButton.Yes.GetComponent<Button>().onClick.AddListener(() => ShowRedeemPrizeCodePanel(int.Parse(sampleButton.CouponId.text)));
 
                     if (item.Status)
                     {
@@ -304,6 +309,7 @@ public class EventDetailScript : MonoBehaviour
 
     void ShowRedeemPrizeCodePanel(int PrizeCodeId)
     {
+        MasterCodeText.text = "";
         this.PrizeCodeId = PrizeCodeId;
         RedeemCodePanel.SetActive(true);
     }
@@ -342,6 +348,14 @@ public class EventDetailScript : MonoBehaviour
 
         if (jsonResponse.Succeed)
         {
+            //Hide RedeemCode Panel
+            RedeemCodePanel.SetActive(false);
+
+            //Clear PrizeCodeList
+            foreach (Transform child in PrizeCodePanel.transform)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
             //Load Prize Code Again
             LoadPrizeCode();
         }
@@ -349,6 +363,8 @@ public class EventDetailScript : MonoBehaviour
         {
             //Show message
             MessageHelper.CloseDialog();
+            //Close redeem prize code panel
+            RedeemCodePanel.SetActive(false);
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
@@ -358,6 +374,14 @@ public class EventDetailScript : MonoBehaviour
         MessageHelper.CloseDialog();
         MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
         Debug.Log("Login WWW error: " + error);
+    }
+    #endregion
+
+    #region PROCESS REDEEM PRIZE REQUEST
+    public void ShowRedeemPrizePanel(PrizeResponseModel RewardObject)
+    {
+        Debug.Log(RewardObject.Name);
+        RedeemPrizePanel.SetActive(true);
     }
     #endregion
 }
