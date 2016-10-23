@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using Assets;
 
 public class MessageHelper : MonoBehaviour {
 
@@ -27,7 +28,10 @@ public class MessageHelper : MonoBehaviour {
             ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
             ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
         }
-
+        else
+        {
+            Destroy(ShadePanel.transform.GetChild(0));
+        }
        
 
         GameObject DialogBoxTemplate = Resources.Load("prefabs/Dialog Box") as GameObject;
@@ -62,7 +66,10 @@ public class MessageHelper : MonoBehaviour {
             ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
             ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
         }
-
+        else
+        {
+            Destroy(ShadePanel.transform.GetChild(0).gameObject);
+        }
 
 
         GameObject DialogBoxTemplate = Resources.Load("prefabs/Dialog Box") as GameObject;
@@ -114,7 +121,10 @@ public class MessageHelper : MonoBehaviour {
             ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
             ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
         }
-
+        else
+        {
+            Destroy(ShadePanel.transform.GetChild(0).gameObject);
+        }
         GameObject DialogBoxTemplate = Resources.Load("prefabs/Dialog Box") as GameObject;
         GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
         DialogBoxTemplate sampleButton = DialogBox.GetComponent<DialogBoxTemplate>();
@@ -141,6 +151,10 @@ public class MessageHelper : MonoBehaviour {
             GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
             ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
             ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        }
+        else
+        {
+            Destroy(ShadePanel.transform.GetChild(0).gameObject);
         }
         GameObject DialogBoxTemplate = Resources.Load("prefabs/Dialog Box") as GameObject;
         GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
@@ -170,6 +184,10 @@ public class MessageHelper : MonoBehaviour {
             ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
             ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
         }
+        else
+        {
+            Destroy(ShadePanel.transform.GetChild(0).gameObject);
+        }
         GameObject LoadingBoxTemplate = Resources.Load("prefabs/Loading Box") as GameObject;
         GameObject LoadingBox = Instantiate(LoadingBoxTemplate) as GameObject;
         LoadingBoxTemplate sampleButton = LoadingBox.GetComponent<LoadingBoxTemplate>();
@@ -180,5 +198,16 @@ public class MessageHelper : MonoBehaviour {
     static public void CloseDialog()
     {
         Destroy(GameObject.Find("ShadePanel(Clone)"));
+    }
+    public static void OnError(string error, string transactionId)
+    {
+        MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
+        Debug.Log("WWW Error: cc");
+    }
+    public static void OnTimeOut(string transactionId)
+    {
+        
+        MessageHelper.MessageDialog(ConstantClass.Msg_TimeOut);
+        Debug.Log(ConstantClass.Msg_TimeOut);
     }
 }

@@ -34,7 +34,7 @@ public class BrandDetailController : MonoBehaviour {
 
         LoadStoreList();
         LoadEventListByOrganizer();
-	}
+    }
 	
     public void LoadStoreList()
     {
@@ -46,9 +46,9 @@ public class BrandDetailController : MonoBehaviour {
             request.url = ConstantClass.API_LoadStoreList + "?organizerId=" + OrganizerId;
 
             request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallLoadStoreListRequest);
-            request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
-            request.onError = new EventHandlerServiceError(this.OnLoadStoreListError);
-            
+            //request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+            request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+
 
             UCSS.HTTP.GetString(request);
         }        
@@ -64,8 +64,8 @@ public class BrandDetailController : MonoBehaviour {
             request.url = ConstantClass.API_LoadEventListByOrganizer + "?organizerId=" + OrganizerId;
 
             request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallLoadEventListByOrganizerRequest);
-            request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
-            request.onError = new EventHandlerServiceError(this.OnLoadEventListError);
+            request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+            request.onError = new EventHandlerServiceError(MessageHelper.OnError);
 
 
             UCSS.HTTP.GetString(request);
@@ -96,36 +96,23 @@ public class BrandDetailController : MonoBehaviour {
 
                     newButton.transform.SetParent(StoreContentPanel.transform, false);
                 }
-                MessageHelper.CloseDialog();
+                
             }
             else
             {
                 //SHOW NO RECORD MESSAGE
-                MessageHelper.MessageDialog("This brand has no store yet");
-                Debug.Log("No Store To Show On Organizer: " + OrganizerId);
+                //MessageHelper.MessageDialog("This brand has no store yet");
+                //Debug.Log("No Store To Show On Organizer: " + OrganizerId);
             }
+            MessageHelper.CloseDialog();
         }
         else
         {
             //Show error message
-            MessageHelper.CloseDialog();
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
 
-    private void OnLoadStoreListError(string error, string transactionId)
-    {
-        MessageHelper.CloseDialog();
-        MessageHelper.MessageDialog(error);
-        Debug.Log("WWW Error: " + error);
-    }
-
-    private void OnTimeOut(string transactionId)
-    {
-        MessageHelper.CloseDialog();
-        MessageHelper.MessageDialog(ConstantClass.Msg_TimeOut);
-        Debug.Log(ConstantClass.Msg_TimeOut);
-    }
     #endregion
 
     #region PROCESS LOAD EVENT LIST BY ORGANIZER REQUEST
@@ -176,28 +163,24 @@ public class BrandDetailController : MonoBehaviour {
                     
                     newButton.transform.SetParent(EventContentPanel.transform, false);
                 }
-                MessageHelper.CloseDialog();
+                
             }
             else
             {
                 //SHOW NO RECORD MESSAGE
-                MessageHelper.MessageDialog("No available event at this time");
-                Debug.Log("No Event To Show");
+                //MessageHelper.MessageDialog("No available event at this time");
+                //Debug.Log("No Event To Show");
             }
+            MessageHelper.CloseDialog();
         }
         else
         {
             //Show error message
-            MessageHelper.CloseDialog();
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
 
-    private void OnLoadEventListError(string error, string transactionId)
-    {
-        MessageHelper.CloseDialog();
-        Debug.Log("WWW Error: " + error);
-    }
+
     #endregion
 
     public void Refresh()
@@ -227,7 +210,7 @@ public class BrandDetailController : MonoBehaviour {
         MessageHelper.LoadingDialog("Loading data....");
         yield return www;
         image.overrideSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-        MessageHelper.CloseDialog();
+        
         
     }
 }

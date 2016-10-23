@@ -71,7 +71,7 @@ namespace Assets
         #region OTHERS
         public const string Msg_TimeOut = "Connection Timeout!!!";
         public const string Msg_MessageTitle = "Message";
-        public const string Msg_ErrorTitle = "Error";
+        public const string Msg_ErrorTitle = "Connection Error!";
         public const string Msg_ConfirmTitle = "Confirm";
 
         //TEST LOGIN INFO

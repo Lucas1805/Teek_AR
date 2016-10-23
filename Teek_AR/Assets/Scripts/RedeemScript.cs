@@ -52,7 +52,7 @@ public class RedeemScript : MonoBehaviour {
             {
                 //If code is correct
 
-                MessageHelper.CloseDialog();
+                
             }
             else
             {
@@ -94,7 +94,7 @@ public class RedeemScript : MonoBehaviour {
         redeemCodePanel.SetActive(false);
         messagePanel.SetActive(true);
         message.text = messageString;
-        MessageHelper.CloseDialog();
+        
         resetField();
 
     }

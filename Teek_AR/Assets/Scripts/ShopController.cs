@@ -207,7 +207,7 @@ public class ShopController : MonoBehaviour {
             //showLoginMessage(www.error);
             Debug.Log(error);
         }
-        MessageHelper.CloseDialog();
+        
     }
 
     private void OnBuyItemError(string error, string transactionId)
@@ -218,7 +218,7 @@ public class ShopController : MonoBehaviour {
         restorePurchase(justBoughtProduct, justBoughtProduct.IncrementOnBuy);
 
         Debug.Log(error);
-        MessageHelper.CloseDialog();
+        
     }
     #endregion
     
@@ -237,14 +237,14 @@ public class ShopController : MonoBehaviour {
         {
             MessageHelper.MessageDialog("Cannot Load Coin");
         }
-        MessageHelper.CloseDialog();
+        
     }
 
     private void OnLoadCoinError(string error, string transactionId)
     {
         MessageHelper.MessageDialog(error);
         Debug.Log(error);
-        MessageHelper.CloseDialog();
+        
     }
     #endregion
 
@@ -263,14 +263,14 @@ public class ShopController : MonoBehaviour {
         {
             MessageHelper.MessageDialog("Cannot Load Fireball");
         }
-        MessageHelper.CloseDialog();
+        
     }
 
     private void OnLoadFireballError(string error, string transactionId)
     {
         MessageHelper.MessageDialog(error);
         Debug.Log(error);
-        MessageHelper.CloseDialog();
+        
     }
     #endregion
 
@@ -289,14 +289,14 @@ public class ShopController : MonoBehaviour {
         {
             MessageHelper.MessageDialog("Cannot Load Teek");
         }
-        MessageHelper.CloseDialog();
+        
     }
 
     private void OnLoadTeekError(string error, string transactionId)
     {
         MessageHelper.MessageDialog(error);
         Debug.Log(error);
-        MessageHelper.CloseDialog();
+        
     }
 
     #endregion
@@ -306,7 +306,7 @@ public class ShopController : MonoBehaviour {
         //showLoginMessage(ConstantClass.Msg_TimeOut);
         MessageHelper.MessageDialog(ConstantClass.Msg_TimeOut);
         Debug.Log(ConstantClass.Msg_TimeOut);
-        MessageHelper.CloseDialog();
+        
     }
 
     #region LOAD OTHER SCENE

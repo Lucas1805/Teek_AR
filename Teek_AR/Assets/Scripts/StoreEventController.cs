@@ -35,8 +35,8 @@ public class StoreEventController : MonoBehaviour
             request.url = ConstantClass.API_LoadEventListByStore + "?storeId=" + StoreId;
 
             request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallLoadEventListByStoreRequest);
-            request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
-            request.onError = new EventHandlerServiceError(this.OnLoadEventListError);
+            request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+            request.onError = new EventHandlerServiceError(MessageHelper.OnError);
 
 
             UCSS.HTTP.GetString(request);
@@ -46,7 +46,7 @@ public class StoreEventController : MonoBehaviour
             MessageHelper.MessageDialog("Error, Cannot get store ID");
         }
 
-        MessageHelper.CloseDialog();
+        
 
     }
 
@@ -94,37 +94,26 @@ public class StoreEventController : MonoBehaviour
 
                     newButton.transform.SetParent(EventContentPanel.transform, false);
                 }
-                MessageHelper.CloseDialog();
+                
             }
             else
             {
                 //SHOW NO RECORD MESSAGE
-                MessageHelper.CloseDialog();
-                MessageHelper.MessageDialog("This store has no event now");
-                Debug.Log("No Event To Show");
+                
+                //MessageHelper.MessageDialog("This store has no event now");
+                //Debug.Log("No Event To Show");
             }
+            MessageHelper.CloseDialog();
         }
         else
         {
             //Show error message
-            MessageHelper.CloseDialog();
+            
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
 
-    private void OnLoadEventListError(string error, string transactionId)
-    {
-        MessageHelper.CloseDialog();
-        MessageHelper.MessageDialog(error);
-        Debug.Log("WWW Error: " + error);
-    }
-
-    private void OnTimeOut(string transactionId)
-    {
-        MessageHelper.CloseDialog();
-        MessageHelper.MessageDialog(ConstantClass.Msg_TimeOut);
-        Debug.Log(ConstantClass.Msg_TimeOut);
-    }
+    
     #endregion
 
     public void Refresh()
@@ -147,7 +136,7 @@ public class StoreEventController : MonoBehaviour
         MessageHelper.LoadingDialog("Loading data....");
         yield return www;
         image.overrideSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-        MessageHelper.CloseDialog();
+        
     }
 }
 

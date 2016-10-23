@@ -31,8 +31,8 @@ public class HomeScript : MonoBehaviour {
     void Start () {
         CallAPIGetOrganizers();
         CallAPIGetOrganizersByUserId();
-        //PlayerPrefs.SetString(ConstantClass.PP_UserIDKey, Encrypt.EncryptString("40efe638-04b6-42aa-81c3-a79b208d75e5"));
-        //PlayerPrefs.Save();
+        PlayerPrefs.SetString(ConstantClass.PP_UserIDKey, Encrypt.EncryptString("40efe638-04b6-42aa-81c3-a79b208d75e5"));
+        PlayerPrefs.Save();
     }
 	
 	// Update is called once per frame
@@ -109,6 +109,8 @@ public class HomeScript : MonoBehaviour {
         //request.url = ConstantClass.
         request.url = ConstantClass.API_LoadOrganizer;
         request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallAPIGetOrganizers);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
         UCSS.HTTP.GetString(request);
     }
 
@@ -150,6 +152,8 @@ public class HomeScript : MonoBehaviour {
         request.url = ConstantClass.API_LoadMyBrand + "?userId="
             + Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey));
         request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallAPIGetOrganizersByUserId);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
         UCSS.HTTP.GetString(request);
     }
 
@@ -163,19 +167,15 @@ public class HomeScript : MonoBehaviour {
         {
             foreach (var item in jsonResponse.Data)
             {
-                //if (item.HasARGAME || item.HasMultiplier || item.HasVoting)
                 {
                     GameObject newBrandButton = Instantiate(BrandButtonTemplateGO) as GameObject;
                     BrandButtonTemplate sampleBrandButton = newBrandButton.GetComponent<BrandButtonTemplate>();
                     sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = Utils.TruncateLongString(item.Name, 18);
                     sampleBrandButton.Brand.transform.GetChild(0).GetComponent<Text>().text = item.Id.ToString();
                     sampleBrandButton.BrandAmount.text = item.StoreCount.ToString();
-                    //sampleBrandButton.BrandCategory.text = item.
-                    //sampleBrandButton.BrandLogo
                     sampleBrandButton.Activities.transform.GetChild(0).gameObject.SetActive(item.HasMultiplier);
                     sampleBrandButton.Activities.transform.GetChild(1).gameObject.SetActive(item.HasARGAME);
                     sampleBrandButton.Activities.transform.GetChild(2).gameObject.SetActive(item.HasVoting);
-
                     newBrandButton.transform.SetParent(MyBrandsPanel.transform, false);
                 }
             }

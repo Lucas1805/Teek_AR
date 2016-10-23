@@ -251,7 +251,7 @@ public class LoginScene : MonoBehaviour
             PlayerPrefs.DeleteKey(ConstantClass.PP_UserIDKey);
 
             //Show error message
-            MessageHelper.CloseDialog();
+            
             MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message);
             resetLoginField();
         }
@@ -276,7 +276,7 @@ public class LoginScene : MonoBehaviour
         else
         {
             //Show error message
-            MessageHelper.CloseDialog();
+            
             if (jsonResponse.Errors != null)
                 MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message + " " + jsonResponse.Errors[0]);
             else
@@ -287,7 +287,7 @@ public class LoginScene : MonoBehaviour
 
     private void OnLoginError(string error, string transactionId)
     {
-        MessageHelper.CloseDialog();
+        
         MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
         Debug.Log("Login WWW error: " + error);
         resetLoginField();
@@ -295,7 +295,7 @@ public class LoginScene : MonoBehaviour
 
     private void OnRegisterError(string error, string transactionId)
     {
-        MessageHelper.CloseDialog();
+        
         MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
         Debug.Log("Regiser WWW Error: " + error);
         resetPasswordFields();
@@ -303,7 +303,7 @@ public class LoginScene : MonoBehaviour
 
     private void OnTimeOut(string transactionId)
     {
-        MessageHelper.CloseDialog();
+        
         MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, ConstantClass.Msg_TimeOut);
         Debug.Log(ConstantClass.Msg_TimeOut);
     }

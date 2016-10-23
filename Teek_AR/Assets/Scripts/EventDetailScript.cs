@@ -65,7 +65,8 @@ public class EventDetailScript : MonoBehaviour
         request.url = ConstantClass.API_LoadPrizeList + "?EventId=" + EventId;
 
         request.stringCallback = new EventHandlerHTTPString(this.PopulateDataList);
-
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
         UCSS.HTTP.GetString(request);
     }
     private void PopulateDataList(string result, string transactionId)
@@ -73,7 +74,7 @@ public class EventDetailScript : MonoBehaviour
         ResponseModel<List<PrizeResponseModel>> jsonResponse = new ResponseModel<List<PrizeResponseModel>>();
         jsonResponse.Data = new List<PrizeResponseModel>();
         jsonResponse = JsonMapper.ToObject<ResponseModel<List<PrizeResponseModel>>>(result);
-        MessageHelper.CloseDialog();
+        
         if (jsonResponse.Succeed)
         {
             foreach (var item in jsonResponse.Data)
@@ -109,6 +110,7 @@ public class EventDetailScript : MonoBehaviour
 
                 newButton.transform.SetParent(contentPanel.transform, false);
             }
+            MessageHelper.CloseDialog();
         }
         else
         {
@@ -152,8 +154,8 @@ public class EventDetailScript : MonoBehaviour
         request.formData = form;
 
         request.stringCallback = new EventHandlerHTTPString(this.OnLoadUserInformationRequest);
-        request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
-        request.onError = new EventHandlerServiceError(this.OnLoadUserInformationError);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
 
         UCSS.HTTP.PostForm(request);
     }
@@ -171,8 +173,8 @@ public class EventDetailScript : MonoBehaviour
         request.formData = form;
 
         request.stringCallback = new EventHandlerHTTPString(this.OnLoadPrizeCodeRequest);
-        request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
-        request.onError = new EventHandlerServiceError(this.OnLoadPrizeCodeError);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
 
         UCSS.HTTP.PostForm(request);
     }
@@ -190,26 +192,17 @@ public class EventDetailScript : MonoBehaviour
             RubyAmountText.text = jsonResponse.Data[0].Ruby.ToString();
             SapphireAmountText.text = jsonResponse.Data[0].Sapphire.ToString();
             CitrineAmountText.text = jsonResponse.Data[0].Citrine.ToString();
+            MessageHelper.CloseDialog();
         }
         else
         {
             //Show error message
-            MessageHelper.CloseDialog();
+            
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
 
-    private void OnLoadUserInformationError(string error, string transactionId)
-    {
-        MessageHelper.MessageDialog(error);
-        Debug.Log("WWW Error: " + error);
-    }
-
-    private void OnTimeOut(string transactionId)
-    {
-        MessageHelper.MessageDialog(ConstantClass.Msg_TimeOut);
-        Debug.Log(ConstantClass.Msg_TimeOut);
-    }
+ 
     #endregion
 
     void LoadEventInfo()
@@ -235,7 +228,7 @@ public class EventDetailScript : MonoBehaviour
         ResponseModel<List<PrizeCodeModel>> jsonResponse = new ResponseModel<List<PrizeCodeModel>>();
         jsonResponse.Data = new List<PrizeCodeModel>();
         jsonResponse = JsonMapper.ToObject<ResponseModel<List<PrizeCodeModel>>>(result);
-        MessageHelper.CloseDialog();
+        
         if (jsonResponse.Succeed)
         {
             if(jsonResponse.Data != null)
@@ -260,6 +253,7 @@ public class EventDetailScript : MonoBehaviour
                     newButton.transform.SetParent(couponPanel.transform, false);
                 }
             }
+            MessageHelper.CloseDialog();
         }
         else
         {
@@ -268,12 +262,7 @@ public class EventDetailScript : MonoBehaviour
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
-
-    private void OnLoadPrizeCodeError(string error, string transactionId)
-    {
-        MessageHelper.MessageDialog(error);
-        Debug.Log("WWW Error: " + error);
-    }
+    
     #endregion
 
     public void Refresh()
@@ -331,8 +320,8 @@ public class EventDetailScript : MonoBehaviour
                 request.formData = form;
 
                 request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallRedeemPrizeCodeRequest);
-                request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
-                request.onError = new EventHandlerServiceError(this.OnRedeemPrizeCodeError);
+                request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+                request.onError = new EventHandlerServiceError(MessageHelper.OnError);
 
                 UCSS.HTTP.PostForm(request);
             }
@@ -362,19 +351,13 @@ public class EventDetailScript : MonoBehaviour
         else
         {
             //Show message
-            MessageHelper.CloseDialog();
+            
             //Close redeem prize code panel
             RedeemCodePanel.SetActive(false);
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
-
-    private void OnRedeemPrizeCodeError(string error, string transactionId)
-    {
-        MessageHelper.CloseDialog();
-        MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
-        Debug.Log("Login WWW error: " + error);
-    }
+    
     #endregion
 
     #region PROCESS REDEEM PRIZE REQUEST
