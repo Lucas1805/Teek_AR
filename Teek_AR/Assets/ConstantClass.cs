@@ -70,6 +70,8 @@ namespace Assets
         public const string API_UseFireball = "http://" + API_HOST_IP + "/Teek/api/";
 
         public const string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
+
+        public const string API_UpdateGemAmount = "http://" + API_HOST_IP + "/Teek/Api/Customer/UpdateGemAmount";
         #endregion
 
         #region OTHERS
