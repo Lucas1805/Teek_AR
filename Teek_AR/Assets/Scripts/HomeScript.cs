@@ -19,6 +19,7 @@ public class HomeScript : MonoBehaviour {
     public GameObject AllBrandsPanel;
     public GameObject MyBrandsPanel;
 
+    public GameObject loadingPanel;
     public GameObject BrandButtonTemplateGO;
     public Toggle AllToggle;
     public Toggle MultiplierToggle;
@@ -105,7 +106,7 @@ public class HomeScript : MonoBehaviour {
 
     public void CallAPIGetOrganizers()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
         HTTPRequest request = new HTTPRequest();
         //request.url = ConstantClass.
         request.url = ConstantClass.API_LoadOrganizer;
@@ -137,7 +138,7 @@ public class HomeScript : MonoBehaviour {
 
                 newBrandButton.transform.SetParent(AllBrandsPanel.transform, false);
             }
-            MessageHelper.CloseDialog();
+            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
@@ -147,7 +148,7 @@ public class HomeScript : MonoBehaviour {
 
     public void CallAPIGetOrganizersByUserId()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
         HTTPRequest request = new HTTPRequest();
         request.url = ConstantClass.API_LoadMyBrand + "?userId="
             + Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey));
@@ -179,7 +180,7 @@ public class HomeScript : MonoBehaviour {
                     newBrandButton.transform.SetParent(MyBrandsPanel.transform, false);
                 }
             }
-            MessageHelper.CloseDialog();
+            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
@@ -284,7 +285,7 @@ public class HomeScript : MonoBehaviour {
 
     public void LoadUserInformation()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
         string UserID = Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey));
 
         if (UserID != null)
@@ -314,7 +315,7 @@ public class HomeScript : MonoBehaviour {
             WWW www_loadImage = new WWW(jsonResponse.Data.ImageURL);
             //StartCoroutine(loadProfileImage(www_loadImage));
 
-            MessageHelper.CloseDialog();
+            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
@@ -327,13 +328,13 @@ public class HomeScript : MonoBehaviour {
     {
         yield return www;
 
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
         if (www.isDone)
         {
             if (www.error == null)
             {
                 ProfileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-                MessageHelper.CloseDialog();
+                LoadingManager.hideLoadingIndicator(loadingPanel);
             }
         }
     }

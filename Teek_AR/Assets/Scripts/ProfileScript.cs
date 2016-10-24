@@ -16,6 +16,7 @@ public class ProfileScript : MonoBehaviour {
     public Text EmailText;
     public Text PhoneText;
     public Image ProfileImage;
+    public GameObject loadingPanel;
 
     // Use this for initialization
     void Start () {
@@ -29,7 +30,7 @@ public class ProfileScript : MonoBehaviour {
 
     public void LoadUserInformation()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
         string UserID = Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey));
 
         if(UserID !=null)
@@ -65,7 +66,7 @@ public class ProfileScript : MonoBehaviour {
             WWW www_loadImage = new WWW(jsonResponse.Data.ImageURL);
             StartCoroutine(loadProfileImage(www_loadImage));
 
-            MessageHelper.CloseDialog();
+            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
@@ -78,13 +79,13 @@ public class ProfileScript : MonoBehaviour {
     {
         yield return www;
 
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
         if (www.isDone)
         {
             if (www.error == null)
             {
                 ProfileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-                MessageHelper.CloseDialog();
+                LoadingManager.hideLoadingIndicator(loadingPanel);
             }
         }
     }

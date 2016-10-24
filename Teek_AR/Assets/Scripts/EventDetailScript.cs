@@ -21,6 +21,7 @@ public class EventDetailScript : MonoBehaviour
     public static Image EventImage;
     public int OrganizerId;
 
+    public GameObject loadingPanel;
     public GameObject contentPanel;
     public GameObject couponPanel;
     public Text TeekAmountText;
@@ -110,7 +111,7 @@ public class EventDetailScript : MonoBehaviour
 
                 newButton.transform.SetParent(contentPanel.transform, false);
             }
-            MessageHelper.CloseDialog();
+            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
@@ -143,7 +144,7 @@ public class EventDetailScript : MonoBehaviour
 
     public void LoadUserInformation()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
         HTTPRequest request = new HTTPRequest();
         request.url = ConstantClass.API_LoadCustomerInformation;
 
@@ -162,7 +163,7 @@ public class EventDetailScript : MonoBehaviour
 
     public void LoadPrizeCode()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
         HTTPRequest request = new HTTPRequest();
         request.url = ConstantClass.API_LoadPrizeCode;
 
@@ -192,7 +193,7 @@ public class EventDetailScript : MonoBehaviour
             RubyAmountText.text = jsonResponse.Data[0].Ruby.ToString();
             SapphireAmountText.text = jsonResponse.Data[0].Sapphire.ToString();
             CitrineAmountText.text = jsonResponse.Data[0].Citrine.ToString();
-            MessageHelper.CloseDialog();
+            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
@@ -256,7 +257,7 @@ public class EventDetailScript : MonoBehaviour
                     newButton.transform.SetParent(couponPanel.transform, false);
                 }
             }
-            MessageHelper.CloseDialog();
+            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
@@ -307,9 +308,9 @@ public class EventDetailScript : MonoBehaviour
 
     public void RedeemPrizeCode()
     {
-        MessageHelper.LoadingDialog("Loading...");
+        LoadingManager.showLoadingIndicator(loadingPanel);
 
-        if(MasterCodeText.text.Length > 0)
+        if (MasterCodeText.text.Length > 0)
         {
             if(PrizeCodeId != 0)
             {
@@ -447,7 +448,7 @@ public class EventDetailScript : MonoBehaviour
 
     public void RedeemPrize(GameObject ToggleGroup)
     {
-        MessageHelper.LoadingDialog("Processing...");
+        LoadingManager.showLoadingIndicator(loadingPanel);
 
         //Check if user select Teek of Gem
         Toggle TeekToggleButton;

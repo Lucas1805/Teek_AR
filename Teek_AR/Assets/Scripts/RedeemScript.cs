@@ -101,7 +101,6 @@ public class RedeemScript : MonoBehaviour {
 
     public void loadLastScene()
     {
-        MessageHelper.LoadingDialog("Loading data....");
         MySceneManager.loadPreviousScene();
     }
 }

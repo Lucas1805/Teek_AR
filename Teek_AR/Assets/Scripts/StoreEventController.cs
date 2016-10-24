@@ -14,6 +14,7 @@ public class StoreEventController : MonoBehaviour
     public static int StoreId;
     public static string StoreName = "";
 
+    public GameObject loadingPanel;
     public GameObject EventButtonTemplate;
     public GameObject EventContentPanel;
     public Text StoreNameText;
@@ -27,7 +28,7 @@ public class StoreEventController : MonoBehaviour
 
     public void LoadEventListByStore()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
 
         if (StoreId != 0)
         {
@@ -103,7 +104,7 @@ public class StoreEventController : MonoBehaviour
                 //MessageHelper.MessageDialog("This store has no event now");
                 //Debug.Log("No Event To Show");
             }
-            MessageHelper.CloseDialog();
+            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
@@ -133,7 +134,7 @@ public class StoreEventController : MonoBehaviour
 
     IEnumerator LoadImage(WWW www, Image image)
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
         yield return www;
         image.overrideSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
         

@@ -19,7 +19,7 @@ public class BrandDetailController : MonoBehaviour {
     public GameObject StoreContentPanel;
     public GameObject EventButtonTemplate;
     public GameObject EventContentPanel;
-    public GameObject LoadingPanel;
+    public GameObject loadingPanel;
     public Text OrganizerNameText;
 
 
@@ -37,9 +37,9 @@ public class BrandDetailController : MonoBehaviour {
 	
     public void LoadStoreList()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
 
-        if(OrganizerId != 0)
+        if (OrganizerId != 0)
         {
             HTTPRequest request = new HTTPRequest();
             request.url = ConstantClass.API_LoadStoreList + "?organizerId=" + OrganizerId;
@@ -55,7 +55,7 @@ public class BrandDetailController : MonoBehaviour {
 
     public void LoadEventListByOrganizer()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
 
         if (OrganizerId != 0)
         {
@@ -101,7 +101,7 @@ public class BrandDetailController : MonoBehaviour {
                 //MessageHelper.MessageDialog("This brand has no store yet");
                 //Debug.Log("No Store To Show On Organizer: " + OrganizerId);
             }
-            MessageHelper.CloseDialog();
+            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
@@ -168,7 +168,7 @@ public class BrandDetailController : MonoBehaviour {
                 //MessageHelper.MessageDialog("No available event at this time");
                 //Debug.Log("No Event To Show");
             }
-            MessageHelper.CloseDialog();
+            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
@@ -204,7 +204,7 @@ public class BrandDetailController : MonoBehaviour {
 
     IEnumerator LoadImage(WWW www, Image image)
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
         yield return www;
         image.overrideSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
     }

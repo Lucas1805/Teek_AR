@@ -18,6 +18,7 @@ public class LoginScene : MonoBehaviour
     public UnityEngine.UI.InputField usernameField;
     public UnityEngine.UI.InputField passwordField;
     public GameObject loginPanel;
+    public GameObject loadingPanel;
 
     private string username = "";
     private string password = "";
@@ -49,8 +50,8 @@ public class LoginScene : MonoBehaviour
 
     public void checkLogin()
     {
-        MessageHelper.LoadingDialog("Loading data....");
-        
+        LoadingManager.showLoadingIndicator(loadingPanel);
+
         //Get value from input fields
         username = usernameField.text;
         password = passwordField.text;
@@ -90,7 +91,7 @@ public class LoginScene : MonoBehaviour
 
     private void checkLoginWithSession()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
 
         //Get username and pass from PlayerPrefs and decrypted it
         username = Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UsernameKey)));
@@ -116,8 +117,8 @@ public class LoginScene : MonoBehaviour
     public void doRegister()
     {
         //Enable loading indicator
-        MessageHelper.LoadingDialog("Loading data....");
-        
+        LoadingManager.showLoadingIndicator(loadingPanel);
+
         //Get values
         rg_fullname = rg_fullnameField.text;
         rg_email = rg_emailField.text;

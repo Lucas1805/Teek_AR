@@ -87,7 +87,7 @@ public class ShopController : MonoBehaviour {
     void OnProductBought( MobyShop.BoughtOrRestored state, MobyShop.ProductInfo product, int amount)
     {
         //Show loading
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
         justBoughtProduct = product;
 
         //CALL API TO UPDATE VALUE OF PRODUCT IN SERVER DATABASE
@@ -147,7 +147,7 @@ public class ShopController : MonoBehaviour {
 
     void loadCoin()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
         //Create object to sen Http Request
         HTTPRequest request = new HTTPRequest();
         WWWForm form = new WWWForm();
@@ -165,7 +165,7 @@ public class ShopController : MonoBehaviour {
 
     void loadFireball()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        LoadingManager.showLoadingIndicator(loadingPanel);
         //Create object to sen Http Request
         HTTPRequest request = new HTTPRequest();
         WWWForm form = new WWWForm();
@@ -313,7 +313,7 @@ public class ShopController : MonoBehaviour {
 
     public void loadRedeemCodeScene()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.GameSceneName);
 
@@ -322,7 +322,7 @@ public class ShopController : MonoBehaviour {
 
     public void loadHomeScene()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.GameSceneName);
 
@@ -331,7 +331,7 @@ public class ShopController : MonoBehaviour {
 
     public void loadInventoryScene()
     {
-        MessageHelper.LoadingDialog("Loading data....");
+        
         //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
         MySceneManager.setLastScene(ConstantClass.GameSceneName);
 
