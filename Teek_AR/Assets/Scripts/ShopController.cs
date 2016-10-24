@@ -16,8 +16,8 @@ public class ShopController : MonoBehaviour {
 
     //private const int FIREBALL_DEFAULT_NUMBER = 20;
     private int coinNumber = 666;
-    private int fireballNumber = 5;
-    private int iceballNumber = 2;
+    private int fireballNumber = 13;
+    private int iceballNumber = 13;
 
     private bool error = false; //Check if loading data from server before playing is error or not
     private ProductInfo justBoughtProduct;
