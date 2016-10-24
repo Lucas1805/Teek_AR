@@ -66,8 +66,14 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
     private float firstTimeDistance;
 
+    private bool isFirstTimeDragonAppear = false;
+    private float timeCountdownDragonRespawn;
+    private float timeDragonRespawnInMinute = 20f;
+
     void Start()
     {
+        timeCountdownDragonRespawn = timeDragonRespawnInMinute * 60;
+
         firstTimeDistance = Vector3.Distance(dragon.transform.position, Camera.main.transform.position);
 
         //fireballMaterial = Resources.Load("FireParticleMeteor2Material", typeof(Material)) as Material;
@@ -115,9 +121,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
     }
     void OnMouseDown()
     {
-        distance = Vector3.Distance(transform.position,
-
-        Camera.main.transform.position);
+        distance = Vector3.Distance(transform.position,Camera.main.transform.position);
         dragging = true;
 
     }
@@ -131,17 +135,15 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
             isThrow = true;
             return;
         }
-        speedCounter = Vector3.Distance(Input.mousePosition,
-
-initialPosition) / dragTotalTime / 100;
+        speedCounter = Vector3.Distance(Input.mousePosition,initialPosition) / dragTotalTime / 100;
         dragTotalTime = 0;
         this.GetComponent<Rigidbody>().useGravity = true;
-        this.GetComponent<Rigidbody>().velocity +=
+        this.GetComponent<Rigidbody>().velocity +=this.transform.forward * speedCounter;
+        this.GetComponent<Rigidbody>().velocity += this.transform.up *speedCounter / 6;
 
-this.transform.forward * speedCounter;
-        this.GetComponent<Rigidbody>().velocity += this.transform.up *
-
-speedCounter / 6;
+        float angle = Input.mousePosition.x - Screen.width/2;
+        this.GetComponent<Rigidbody>().velocity += this.transform.right * angle / 30;
+        
         dragging = false;
         isThrow = true;
 
@@ -177,8 +179,11 @@ speedCounter / 6;
         //displayText.text = CurrentMaterialName()
         //    + "\n" + fireballMaterial.name
         //    + "\n" + iceballMaterial.name;
-
+        //displayText.text = "initialPosition: \n" + initialPosition.ToString()
+        //    +"\nmousePosition: \n" + Input.mousePosition.ToString();
         CheckDistanceCameraAndPattern();
+
+        CountdownDragonRespawn();
 
         fireballAmount = Shop.GetProductClassAmount(ConstantClass.FireBallItemClassName);
         iceballAmount = Shop.GetProductClassAmount(ConstantClass.IceBallItemClassName);
@@ -212,13 +217,9 @@ speedCounter / 6;
 
         if (dragging)
         {
-            Ray ray = Camera.main.ScreenPointToRay
-
-(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Vector3 rayPoint = ray.GetPoint(distance);
-            transform.position = Vector3.Lerp(this.transform.position,
-
-rayPoint, Speed * Time.deltaTime);
+            transform.position = Vector3.Lerp(this.transform.position,rayPoint, Speed * Time.deltaTime);
 
             dragTotalTime += Time.deltaTime;
 
@@ -436,6 +437,9 @@ rayPoint, Speed * Time.deltaTime);
         dragon.SetActive(true);
         healthPanel.SetActive(true);
         resultPanel.SetActive(false);
+
+        isFirstTimeDragonAppear = false;
+        timeCountdownDragonRespawn = timeDragonRespawnInMinute * 60;
     }
 
     public void CheckDistanceCameraAndPattern()
@@ -473,5 +477,25 @@ rayPoint, Speed * Time.deltaTime);
     public string CurrentMaterialName()
     {
         return gameObject.transform.GetChild(0).GetComponent<Renderer>().material.name.Replace(" (Instance)","");
+    }
+
+    public void CountdownDragonRespawn()
+    {
+        float distance = Vector3.Distance(dragon.transform.position, Camera.main.transform.position);
+        if (firstTimeDistance != distance && dragon.activeSelf)
+        {
+            isFirstTimeDragonAppear = true;
+        }
+
+        if (isFirstTimeDragonAppear)
+        {
+            timeCountdownDragonRespawn -= Time.deltaTime;
+            //displayText.text = timeCountdownDragonRespawn.ToString();
+        }
+
+        if (timeCountdownDragonRespawn <= 0)
+        {
+            ClickResultOKButton();
+        }
     }
 }
