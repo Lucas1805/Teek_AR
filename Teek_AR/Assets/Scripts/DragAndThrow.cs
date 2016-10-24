@@ -4,6 +4,9 @@ using UnityEngine.UI;
 using MobyShop;
 using Assets;
 using System.Collections.Generic;
+using Ucss;
+using Assets.ResponseModels;
+using LitJson;
 
 public class DragAndThrow : MonoBehaviour
 {
@@ -58,6 +61,9 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
     public List<GameObject> listDropItem;
     private bool isShowDropItemListAlready = false;
+    private int rubyCount = 0;
+    private int sapphireCount = 0;
+    private int citrineCount = 0;
 
     public Button resultOKButton;
 
@@ -340,9 +346,6 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
         int ranNumPercent = Random.Range(1, 101);
         int ranNumInListItem = 0;
-        int rubyCount = 0;
-        int sapphireCount = 0;
-        int citrineCount = 0;
 
         if (ranNumPercent <= percent1Item)
         {
@@ -428,7 +431,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         }
     }
 
-    public void ClickResultOKButton()
+    public void ResetGame()
     {
         health.value = 100;
         isDead = false;
@@ -495,7 +498,54 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
         if (timeCountdownDragonRespawn <= 0)
         {
-            ClickResultOKButton();
+            ResetGame();
+        }
+    }
+
+    public void CallAPIUpdateGemAmount()
+    {
+        HTTPRequest request = new HTTPRequest();
+        WWWForm form = new WWWForm();
+        //form.AddField("userId", "40efe638-04b6-42aa-81c3-a79b208d75e5");
+        //form.AddField("organizerId", 39);
+        form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+        form.AddField("organizerId", PlayerPrefs.GetString(ConstantClass.PP_OrganizerId));
+        form.AddField("rubyAmount", rubyCount);
+        form.AddField("sapphireAmount", sapphireCount);
+        form.AddField("citrineAmount", citrineCount);
+        request.url = ConstantClass.API_UpdateGemAmount;
+
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallAPIUpdateGemAmount);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+
+        request.formData = form;
+
+        UCSS.HTTP.PostForm(request);
+    }
+
+    public void OnDoneCallAPIUpdateGemAmount(string result, string transactionId)
+    {
+        ResponseModel<CustomerResponseModel> jsonResponse = new ResponseModel<CustomerResponseModel>();
+        jsonResponse.Data = new CustomerResponseModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<CustomerResponseModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            ResetGame();
+
+            rubyCount = 0;
+            sapphireCount = 0;
+            citrineCount = 0;
+        }
+
+        else
+        {
+            //Show error message
+            if (jsonResponse.Errors != null)
+                MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message + " " + jsonResponse.Errors[0]);
+            else
+                MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message);
         }
     }
 }
