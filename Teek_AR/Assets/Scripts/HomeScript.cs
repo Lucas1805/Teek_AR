@@ -24,6 +24,8 @@ public class HomeScript : MonoBehaviour {
     public Toggle MultiplierToggle;
     public Toggle GameToggle;
     public Toggle VotingToggle;
+    public Text UsernameText;
+    public Image ProfileImage;
 
     private bool isFilterAll;
 
@@ -31,6 +33,7 @@ public class HomeScript : MonoBehaviour {
     void Start () {
         CallAPIGetOrganizers();
         CallAPIGetOrganizersByUserId();
+        LoadUserInformation();
     }
 	
 	// Update is called once per frame
@@ -131,7 +134,6 @@ public class HomeScript : MonoBehaviour {
                 sampleBrandButton.Activities.transform.GetChild(0).gameObject.SetActive(item.HasMultiplier);
                 sampleBrandButton.Activities.transform.GetChild(1).gameObject.SetActive(item.HasARGAME);
                 sampleBrandButton.Activities.transform.GetChild(2).gameObject.SetActive(item.HasVoting);
-
 
                 newBrandButton.transform.SetParent(AllBrandsPanel.transform, false);
             }
@@ -280,6 +282,62 @@ public class HomeScript : MonoBehaviour {
         isFilterAll = false;
     }
 
+    public void LoadUserInformation()
+    {
+        MessageHelper.LoadingDialog("Loading data....");
+        string UserID = Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey));
+
+        if (UserID != null)
+        {
+            //CREATE GET REQUEST AND SEND
+            HTTPRequest request = new HTTPRequest();
+            request.url = ConstantClass.API_LoadUserProfile + "?userId=" + UserID;
+
+            request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallLoadUserInformationRequest);
+            request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+            request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+            UCSS.HTTP.GetString(request);
+        }
+    }
+
+    #region PROCESS LOAD USER PROFILE REQUEST
+    public void OnDoneCallLoadUserInformationRequest(string result, string transactionId)
+    {
+        ResponseModel<UserInfoModel> jsonResponse = new ResponseModel<UserInfoModel>();
+        jsonResponse.Data = new UserInfoModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<UserInfoModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            UsernameText.text = jsonResponse.Data.Username;
+
+            WWW www_loadImage = new WWW(jsonResponse.Data.ImageURL);
+            //StartCoroutine(loadProfileImage(www_loadImage));
+
+            MessageHelper.CloseDialog();
+        }
+        else
+        {
+            MessageHelper.MessageDialog(jsonResponse.Message);
+        }
+    }
+    #endregion
+
+    IEnumerator loadProfileImage(WWW www)
+    {
+        yield return www;
+
+        MessageHelper.LoadingDialog("Loading data....");
+        if (www.isDone)
+        {
+            if (www.error == null)
+            {
+                ProfileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                MessageHelper.CloseDialog();
+            }
+        }
+    }
+
     public void Refresh()
     {
         //Delete Brand List
@@ -296,6 +354,8 @@ public class HomeScript : MonoBehaviour {
             GameObject.Destroy(child.gameObject);
         }
         CallAPIGetOrganizersByUserId();
+
+        LoadUserInformation();
 
     }
 }

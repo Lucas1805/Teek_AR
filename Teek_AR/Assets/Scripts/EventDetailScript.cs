@@ -238,6 +238,10 @@ public class EventDetailScript : MonoBehaviour
                     CouponButtonTemplate sampleButton = newButton.GetComponent<CouponButtonTemplate>();
                     sampleButton.PrizeName.text = item.PrizeName;
                     sampleButton.CouponId.text = item.Id.ToString();
+                    if(item.Status == false && item.Date != null)
+                    {
+                        sampleButton.RedeemDate.text = Utils.JsonDateToDateTimeLongString(item.Date);
+                    }
                     sampleButton.Yes.GetComponent<Button>().onClick.AddListener(() => ShowRedeemPrizeCodePanel(int.Parse(sampleButton.CouponId.text)));
 
                     if (item.Status)

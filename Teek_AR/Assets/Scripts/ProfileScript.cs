@@ -63,7 +63,7 @@ public class ProfileScript : MonoBehaviour {
             PhoneText.text = jsonResponse.Data.Phone;
 
             WWW www_loadImage = new WWW(jsonResponse.Data.ImageURL);
-            //StartCoroutine(loadProfileImage(www_loadImage));
+            StartCoroutine(loadProfileImage(www_loadImage));
 
             MessageHelper.CloseDialog();
         }
