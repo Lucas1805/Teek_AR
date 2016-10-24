@@ -92,8 +92,6 @@ public class BrandDetailController : MonoBehaviour {
                     sampleButton.StoreId.text = item.Id.ToString();
                     sampleButton.StoreName.text = item.Name;
                     sampleButton.Address.text = item.Address;
-
-
                     newButton.transform.SetParent(StoreContentPanel.transform, false);
                 }
                 
@@ -210,7 +208,5 @@ public class BrandDetailController : MonoBehaviour {
         MessageHelper.LoadingDialog("Loading data....");
         yield return www;
         image.overrideSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-        
-        
     }
 }

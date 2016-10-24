@@ -40,8 +40,9 @@ namespace Assets
         public const string PP_EventIDKey = "EventID";
         public const string PP_OrganizerId = "OrganizerID";
         public const string PP_UserParticipationID = "UserParticipationID";
+        public const string PP_CustomerId = "CustomerID";
         #endregion
-        
+
         #region API LINKS
         //API LINKS
         public const string API_HOST_IP = "localhost";
@@ -58,6 +59,8 @@ namespace Assets
         public const string API_LoadPrizeList= "http://" + API_HOST_IP + "/Teek/api/prize/GetPrizes";
         public const string API_LoadUserInformation = "http://" + API_HOST_IP + "/Teek/api/Customer/GetCustomerInfo";
         public const string API_LoadPrizeCode = "http://" + API_HOST_IP + "/Teek/api/Prize/GetPrizeCode";
+        public const string API_RedeemPrizeByTeek = "http://" + API_HOST_IP + "/Teek/api/Prize/RedeemPrizeByTeek";
+        public const string API_RedeemPrizeByGem = "http://" + API_HOST_IP + "/Teek/api/Prize/RedeemPrizeByGem";
 
         public const string API_LoadCoins = "http://" + API_HOST_IP + "/Teek/api/";
         public const string API_LoadTeek = "http://" + API_HOST_IP + "/Teek/api/";

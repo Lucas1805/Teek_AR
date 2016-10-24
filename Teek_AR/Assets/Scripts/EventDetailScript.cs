@@ -21,7 +21,6 @@ public class EventDetailScript : MonoBehaviour
     public static Image EventImage;
     public int OrganizerId;
 
-    public GameObject loadingPanel;
     public GameObject contentPanel;
     public GameObject couponPanel;
     public Text TeekAmountText;
@@ -40,6 +39,7 @@ public class EventDetailScript : MonoBehaviour
     public Toggle GemToggleButton;
 
     private int PrizeCodeId;
+    private int PrizeId;
 
     // Use this for initialization
     void Start()
@@ -51,11 +51,11 @@ public class EventDetailScript : MonoBehaviour
         PlayerPrefs.SetInt(ConstantClass.PP_EventIDKey, EventId);
         PlayerPrefs.Save();
 
-
         LoadUserInformation();
         LoadEventInfo();
         GetPrizeData();
         LoadPrizeCode();
+        
     }
 
     public void GetPrizeData()
@@ -366,15 +366,77 @@ public class EventDetailScript : MonoBehaviour
         Debug.Log(RewardObject.transform.GetChild(0).GetComponent<Text>().text);
         try
         {
-            int PrizeId = int.Parse(RewardObject.transform.GetChild(0).GetComponent<Text>().text);
-            int Teek = int.Parse(RewardObject.Coin.GetComponentInChildren<Text>().text);
-            int Ruby = int.Parse(RewardObject.Gem.transform.GetChild(0).gameObject.GetComponentInChildren<Text>().text);
-            int Sapphire = int.Parse(RewardObject.Gem.transform.GetChild(2).gameObject.GetComponentInChildren<Text>().text);
-            int Citrine = int.Parse(RewardObject.Gem.transform.GetChild(1).gameObject.GetComponentInChildren<Text>().text);
-            Debug.Log(Ruby);
-            Debug.Log(Sapphire);
-            Debug.Log(Citrine);
-            Debug.Log(Teek);
+            int PrizeIdTemp = int.Parse(RewardObject.transform.GetChild(0).GetComponent<Text>().text);
+            int Teek;
+            int Ruby;
+            int Sapphire;
+            int Citrine;
+
+            string TeekText = RewardObject.Coin.GetComponentInChildren<Text>().text;
+            string RubyText = RewardObject.Gem.transform.GetChild(0).gameObject.GetComponentInChildren<Text>().text;
+            string SapphireText = RewardObject.Gem.transform.GetChild(2).gameObject.GetComponentInChildren<Text>().text;
+            string CitrineText = RewardObject.Gem.transform.GetChild(1).gameObject.GetComponentInChildren<Text>().text;
+
+            //Get teek value
+            if (TeekText != null && TeekText.Length > 0)
+            {
+                Teek = int.Parse(TeekText);
+            }
+            else
+            {
+                Teek = 0;
+            }
+
+            //Get Ruby value
+            if (RubyText != null && RubyText.Length > 0)
+            {
+                Ruby = int.Parse(RubyText);
+            }
+            else
+            {
+                Ruby = 0;
+            }
+
+            //Get Saphhire value
+            if (SapphireText != null && SapphireText.Length > 0)
+            {
+                Sapphire = int.Parse(SapphireText);
+            }
+            else
+            {
+                Sapphire = 0;
+            }
+
+            //Get Citrine value
+            if (CitrineText != null && CitrineText.Length > 0)
+            {
+                Citrine = int.Parse(CitrineText);
+            }
+            else
+            {
+                Citrine = 0;
+            }
+            
+            this.PrizeId = PrizeIdTemp;
+
+            if (Teek > 0 && (Ruby > 0 || Sapphire > 0 || Citrine > 0)) //If can claim by both Teek and Gem, default select is Teek
+            {
+                TeekToggleButton.isOn = true;
+                TeekToggleButton.interactable = true;
+                GemToggleButton.interactable = true;
+            }
+            else if(Teek <= 0 && (Ruby > 0 || Sapphire > 0 || Citrine > 0)) //If only can claim by Gem, disable Teek Toggle Button and selcect gem button for default
+            {
+                TeekToggleButton.interactable = false;
+                GemToggleButton.isOn = true;
+                TeekToggleButton.isOn = false;
+            }
+            else if(Teek > 0 && (Ruby == 0 && Sapphire == 0 && Citrine == 0)) //If only can claim by Teek, disable Gem Toggle Button and selcect teek button for default
+            {
+                GemToggleButton.interactable = false;
+                TeekToggleButton.isOn = true;
+                GemToggleButton.isOn = false;
+            }
         }
         catch(Exception e)
         {
@@ -383,6 +445,88 @@ public class EventDetailScript : MonoBehaviour
         //If prize can redeem by both Teek and Gem, default select is Teek
 
         RedeemPrizePanel.SetActive(true);
+    }
+
+    public void RedeemPrize(GameObject ToggleGroup)
+    {
+        MessageHelper.LoadingDialog("Processing...");
+
+        //Check if user select Teek of Gem
+        Toggle TeekToggleButton;
+        Toggle GemToggleButton;
+
+        GemToggleButton = ToggleGroup.transform.GetChild(0).GetComponent<Toggle>();
+        TeekToggleButton = ToggleGroup.transform.GetChild(1).GetComponent<Toggle>();
+        
+        //Prepare object to create request
+        HTTPRequest request = new HTTPRequest();
+        WWWForm form = new WWWForm();
+        form.AddField("prizeId", PrizeId);
+        form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+        form.AddField("organizerId", PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId));
+        form.AddField("eventId", PlayerPrefs.GetInt(ConstantClass.PP_EventIDKey));
+
+        request.formData = form;
+
+        if (TeekToggleButton.isOn) //If user choose to redeem by teek
+        {
+            Debug.Log("Redeem by teek");
+            request.url = ConstantClass.API_RedeemPrizeByTeek;
+
+            request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallRedeemPrizeByTeek);
+            request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+            request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+
+            UCSS.HTTP.PostForm(request);
+
+        }
+        else if(GemToggleButton.isOn) //If user choose to redeem by gem
+        {
+            Debug.Log("Redeem by gem");
+            request.url = ConstantClass.API_RedeemPrizeByGem;
+
+            request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallRedeemPrizeByGem);
+            request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+            request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+
+            UCSS.HTTP.PostForm(request);
+        }
+    }
+
+    private void OnDoneCallRedeemPrizeByTeek(string result, string transactionId)
+    {
+        ResponseModel<PrizeCodeModel> jsonResponse = new ResponseModel<PrizeCodeModel>();
+        jsonResponse.Data = new PrizeCodeModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<PrizeCodeModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            MessageHelper.MessageDialog("Claim prize successfully");
+            Refresh();
+        }
+        else
+        {
+            MessageHelper.MessageDialog(jsonResponse.Message);
+            Debug.Log(jsonResponse.Message);
+        }
+    }
+
+    private void OnDoneCallRedeemPrizeByGem(string result, string transactionId)
+    {
+        ResponseModel<PrizeCodeModel> jsonResponse = new ResponseModel<PrizeCodeModel>();
+        jsonResponse.Data = new PrizeCodeModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<PrizeCodeModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            MessageHelper.MessageDialog("Claim prize successfully");
+            Refresh();
+        }
+        else
+        {
+            MessageHelper.MessageDialog(jsonResponse.Message);
+            Debug.Log(jsonResponse.Message);
+        }
     }
     #endregion
 }

@@ -202,7 +202,7 @@ public class MessageHelper : MonoBehaviour {
     public static void OnError(string error, string transactionId)
     {
         MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
-        Debug.Log("WWW Error: cc");
+        Debug.Log("WWW Error: " + error);
     }
     public static void OnTimeOut(string transactionId)
     {

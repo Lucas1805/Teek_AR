@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Assets.ResponseModels
 {
@@ -17,6 +18,34 @@ namespace Assets.ResponseModels
                 result = result + "...";
             }
 
+            return result;
+        }
+
+        public static string JsonDateToDateTimeLongString(string JsonDateString)
+        {
+            string result = "";
+            try
+            {
+                if(JsonDateString != null && JsonDateString.Length > 0)
+                {
+                    JsonDateString.Replace("Date", "");
+                    JsonDateString.Replace("(", "");
+                    JsonDateString.Replace(")", "");
+                    JsonDateString.Replace("/", "");
+
+                    DateTime d = new DateTime(long.Parse(JsonDateString));
+                    result = d.ToLongDateString();
+                }
+                else
+                {
+                    result = "Unavailable!!";
+                }
+            }
+            catch(Exception e)
+            {
+                result = "Parse error!!!";
+                Debug.Log("Parse Error In JsonDateToDateTimeLongString: " + e.Message);
+            }
             return result;
         }
 
