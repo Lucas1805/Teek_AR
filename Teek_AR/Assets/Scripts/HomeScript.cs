@@ -31,8 +31,6 @@ public class HomeScript : MonoBehaviour {
     void Start () {
         CallAPIGetOrganizers();
         CallAPIGetOrganizersByUserId();
-        PlayerPrefs.SetString(ConstantClass.PP_UserIDKey, Encrypt.EncryptString("40efe638-04b6-42aa-81c3-a79b208d75e5"));
-        PlayerPrefs.Save();
     }
 	
 	// Update is called once per frame

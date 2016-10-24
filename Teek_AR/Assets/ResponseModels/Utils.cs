@@ -28,13 +28,16 @@ namespace Assets.ResponseModels
             {
                 if(JsonDateString != null && JsonDateString.Length > 0)
                 {
-                    JsonDateString.Replace("Date", "");
-                    JsonDateString.Replace("(", "");
-                    JsonDateString.Replace(")", "");
-                    JsonDateString.Replace("/", "");
+                    JsonDateString = JsonDateString.Replace("Date", "");
+                    JsonDateString = JsonDateString.Replace("(", "");
+                    JsonDateString = JsonDateString.Replace(")", "");
+                    JsonDateString = JsonDateString.Replace("/", "");
 
-                    DateTime d = new DateTime(long.Parse(JsonDateString));
-                    result = d.ToLongDateString();
+                    TimeSpan time = TimeSpan.FromMilliseconds(double.Parse(JsonDateString));
+
+                    DateTime startdate = new DateTime(1970, 1, 1) + time;
+                    
+                    result = startdate.ToString("dd/MM/yyyy HH:mm");
                 }
                 else
                 {

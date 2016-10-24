@@ -114,7 +114,7 @@ public class EventDetailScript : MonoBehaviour
         }
         else
         {
-
+            MessageHelper.MessageDialog(jsonResponse.Message);
         }
 
     }
@@ -145,7 +145,7 @@ public class EventDetailScript : MonoBehaviour
     {
         MessageHelper.LoadingDialog("Loading data....");
         HTTPRequest request = new HTTPRequest();
-        request.url = ConstantClass.API_LoadUserInformation;
+        request.url = ConstantClass.API_LoadCustomerInformation;
 
         WWWForm form = new WWWForm();
         form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
@@ -197,7 +197,6 @@ public class EventDetailScript : MonoBehaviour
         else
         {
             //Show error message
-            
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
@@ -258,7 +257,6 @@ public class EventDetailScript : MonoBehaviour
         else
         {
             //Show error message
-            
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
@@ -337,9 +335,7 @@ public class EventDetailScript : MonoBehaviour
 
         if (jsonResponse.Succeed)
         {
-            //Hide RedeemCode Panel
-            RedeemCodePanel.SetActive(false);
-
+            
             //Clear PrizeCodeList
             foreach (Transform child in PrizeCodePanel.transform)
             {
@@ -351,9 +347,6 @@ public class EventDetailScript : MonoBehaviour
         else
         {
             //Show message
-            
-            //Close redeem prize code panel
-            RedeemCodePanel.SetActive(false);
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
     }
@@ -422,6 +415,7 @@ public class EventDetailScript : MonoBehaviour
             if (Teek > 0 && (Ruby > 0 || Sapphire > 0 || Citrine > 0)) //If can claim by both Teek and Gem, default select is Teek
             {
                 TeekToggleButton.isOn = true;
+                GemToggleButton.isOn = false;
                 TeekToggleButton.interactable = true;
                 GemToggleButton.interactable = true;
             }
@@ -501,8 +495,8 @@ public class EventDetailScript : MonoBehaviour
 
         if (jsonResponse.Succeed)
         {
-            MessageHelper.MessageDialog("Claim prize successfully");
             Refresh();
+            MessageHelper.MessageDialog("Claim prize successfully");
         }
         else
         {
@@ -519,8 +513,8 @@ public class EventDetailScript : MonoBehaviour
 
         if (jsonResponse.Succeed)
         {
-            MessageHelper.MessageDialog("Claim prize successfully");
             Refresh();
+            MessageHelper.MessageDialog("Claim prize successfully");
         }
         else
         {
