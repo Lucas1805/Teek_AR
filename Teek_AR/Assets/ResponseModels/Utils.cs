@@ -33,8 +33,11 @@ namespace Assets.ResponseModels
                     JsonDateString = JsonDateString.Replace(")", "");
                     JsonDateString = JsonDateString.Replace("/", "");
 
-                    DateTime d = new DateTime(long.Parse(JsonDateString));
-                    result = d.ToString("dd/MM/yyyy HH:mm");
+                    TimeSpan time = TimeSpan.FromMilliseconds(double.Parse(JsonDateString));
+
+                    DateTime startdate = new DateTime(1970, 1, 1) + time;
+                    
+                    result = startdate.ToString("dd/MM/yyyy HH:mm");
                 }
                 else
                 {

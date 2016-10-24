@@ -145,7 +145,7 @@ public class EventDetailScript : MonoBehaviour
     {
         MessageHelper.LoadingDialog("Loading data....");
         HTTPRequest request = new HTTPRequest();
-        request.url = ConstantClass.API_LoadUserInformation;
+        request.url = ConstantClass.API_LoadCustomerInformation;
 
         WWWForm form = new WWWForm();
         form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
