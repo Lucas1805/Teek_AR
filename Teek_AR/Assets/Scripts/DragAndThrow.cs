@@ -144,8 +144,9 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         speedCounter = Vector3.Distance(Input.mousePosition,initialPosition) / dragTotalTime / 100;
         dragTotalTime = 0;
         this.GetComponent<Rigidbody>().useGravity = true;
-        this.GetComponent<Rigidbody>().velocity +=this.transform.forward * speedCounter;
-        this.GetComponent<Rigidbody>().velocity += this.transform.up *speedCounter / 6;
+        Physics.gravity = new Vector3(0, -50, 0);
+        this.GetComponent<Rigidbody>().velocity += this.transform.forward * speedCounter/2;
+        this.GetComponent<Rigidbody>().velocity += this.transform.up *speedCounter / 3;
 
         float angle = Input.mousePosition.x - Screen.width/2;
         this.GetComponent<Rigidbody>().velocity += this.transform.right * angle / 30;
@@ -187,6 +188,8 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         //    + "\n" + iceballMaterial.name;
         //displayText.text = "initialPosition: \n" + initialPosition.ToString()
         //    +"\nmousePosition: \n" + Input.mousePosition.ToString();
+        displayText.text = transform.position.ToString();
+
         CheckDistanceCameraAndPattern();
 
         CountdownDragonRespawn();
