@@ -13,24 +13,18 @@ public class ShopController : MonoBehaviour {
     public ShopUIBase mobyShop;
     public GameObject loadingPanel;
     public GameObject menuGroupButtonPanel;
-
-    //private const int FIREBALL_DEFAULT_NUMBER = 20;
+    
     private int coinNumber = 666;
     private int fireballNumber = 13;
     private int iceballNumber = 13;
-
-    private bool error = false; //Check if loading data from server before playing is error or not
+    
     private ProductInfo justBoughtProduct;
 
     // Use this for initialization
     void Start () {
 
         //CALL AIP TO GET NUMBER OF ITEM OF USER TO LOAD
-        //loadCoin();
-        //loadFireball();
-
-        //SET VALUE TO SHOP
-        setValueToShop();
+        LoadCustomerInformation();
         Shop.OnProductBought += this.OnProductBought;
     }
 	
@@ -58,32 +52,7 @@ public class ShopController : MonoBehaviour {
         iceball.Value = iceballNumber;
 
     }
-
-
-    [System.Serializable]
-    public class JSONResponseObject
-    {
-
-        public bool Succeed { get; set; }
-
-        public string Message { get; set; }
-
-        public string Errors { get; set; }
-        public Data Data { get; set; }
-
-    }
-
-    public class Data
-    {
-        public string Id { get; set; }
-        public string Role { get; set; }
-        public string Email { get; set; }
-        public string Username { get; set; }
-        public string ImageUrl { get; set; }
-        public string PhoneNumber { get; set; }
-        public string FullName { get; set; }
-    }
-    
+        
     void OnProductBought( MobyShop.BoughtOrRestored state, MobyShop.ProductInfo product, int amount)
     {
         //Show loading
@@ -94,14 +63,40 @@ public class ShopController : MonoBehaviour {
         //Create object to send Http Request
         HTTPRequest request = new HTTPRequest();
         WWWForm form = new WWWForm();
-        form.AddField("userParticipationID",PlayerPrefs.GetInt(ConstantClass.PP_UserParticipationID));
-        form.AddField("productClass", product.ProductClass);
-        form.AddField("amount", product.IncrementOnBuy);
-        form.AddField("price", product.price);
+        
+        if (product.ProductClass.Equals(ConstantClass.CoinItemClassName))
+        {
+            form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+            form.AddField("coinAmount", product.IncrementOnBuy);
 
-        request.url = ConstantClass.API_BuyItem;
+            request.url = ConstantClass.API_UpdateCoinItem;
 
-        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallBuyItemRequest);
+            request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallBuyCoinRequest);
+        }
+        else
+        {
+            form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+            form.AddField("organizerId", PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId));
+            form.AddField("price", product.price);
+
+            request.url = ConstantClass.API_UpdateBallItem;
+
+            if (product.ProductClass.Equals(ConstantClass.FireBallItemClassName)) //If player buy Fireball
+            {
+                form.AddField("fireballAmount", product.IncrementOnBuy);
+                form.AddField("iceballAmount", 0);
+            }
+
+            if (product.ProductClass.Equals(ConstantClass.IceBallItemClassName)) //If player buy Iceball
+            {
+                form.AddField("fireballAmount", 0);
+                form.AddField("iceballAmount", product.IncrementOnBuy);
+            }
+
+            request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallBuyItemRequest);
+            
+        }
+
         request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
         request.onError = new EventHandlerServiceError(this.OnBuyItemError);
 
@@ -127,87 +122,51 @@ public class ShopController : MonoBehaviour {
             menuGroupButtonPanel.SetActive(true);        
     }
 
-    void loadTeek()
-    {
-        //Create object to sen Http Request
-        HTTPRequest request = new HTTPRequest();
-        WWWForm form = new WWWForm();
-        form.AddField("UserId", Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UserIDKey))));
-        form.AddField("OrganizerId", ""); 
-        request.url = ConstantClass.API_LoadTeek;
-
-        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallLoadTeekRequest);
-        request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
-        request.onError = new EventHandlerServiceError(this.OnLoadTeekError);
-
-        request.formData = form;
-
-        UCSS.HTTP.PostForm(request);
-    }
-
-    void loadCoin()
-    {
-        LoadingManager.showLoadingIndicator(loadingPanel);
-        //Create object to sen Http Request
-        HTTPRequest request = new HTTPRequest();
-        WWWForm form = new WWWForm();
-        form.AddField("UserId", Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UserIDKey))));
-        request.url = ConstantClass.API_LoadCoins;
-
-        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallLoadCoinRequest);
-        request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
-        request.onError = new EventHandlerServiceError(this.OnLoadCoinError);
-
-        request.formData = form;
-
-        UCSS.HTTP.PostForm(request);
-    }
-
-    void loadFireball()
-    {
-        LoadingManager.showLoadingIndicator(loadingPanel);
-        //Create object to sen Http Request
-        HTTPRequest request = new HTTPRequest();
-        WWWForm form = new WWWForm();
-        form.AddField("UserId", Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UserIDKey))));
-        request.url = ConstantClass.API_LoadCoins;
-
-        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallLoadFireballRequest);
-        request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
-        request.onError = new EventHandlerServiceError(this.OnLoadFireballError);
-
-        request.formData = form;
-
-        UCSS.HTTP.PostForm(request);
-    }
     
-    /// <summary>
-    /// Used everytimeplayer buy an item 
-    /// </summary>
-    void useFireball()
-    {
-        //Create object to sen Http Request
-        WWWForm form = new WWWForm();
-        form.AddField("UserId", Decrypt.DecryptString((PlayerPrefs.GetString(ConstantClass.PP_UserIDKey))));
-        form.AddField("EventId", PlayerPrefs.GetInt(ConstantClass.PP_EventIDKey));
-
-        //SEND POST REQUEST
-    }
 
     #region PROCESS BUY ITEM REQUEST
     private void OnDoneCallBuyItemRequest(string result, string transactionId)
     {
-        ResponseModel<LoadCoinModel> jsonResponse = new ResponseModel<LoadCoinModel>();
-        jsonResponse.Data = new LoadCoinModel();
-        jsonResponse = JsonMapper.ToObject<ResponseModel<LoadCoinModel>>(result);
+        ResponseModel<CustomerResponseModel> jsonResponse = new ResponseModel<CustomerResponseModel>();
+        jsonResponse.Data = new CustomerResponseModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<CustomerResponseModel>>(result);
 
-        if (!jsonResponse.Succeed)
+        if (jsonResponse.Succeed)
+        {
+            coinNumber = (int) jsonResponse.Data.Coin;
+            fireballNumber = (int)jsonResponse.Data.Fireball;
+            iceballNumber = (int)jsonResponse.Data.Iceball;
+
+            setValueToShop();
+
+        }
+        else
         {
             restorePurchase(justBoughtProduct, justBoughtProduct.IncrementOnBuy);
-            //showLoginMessage(www.error);
-            Debug.Log(error);
+            MessageHelper.MessageDialog("Error", jsonResponse.Message);
+            Debug.Log(jsonResponse.Message);
         }
-        
+        LoadingManager.hideLoadingIndicator(loadingPanel);        
+    }
+
+    private void OnDoneCallBuyCoinRequest(string result, string transactionId)
+    {
+        ResponseModel<CustomerResponseModel> jsonResponse = new ResponseModel<CustomerResponseModel>();
+        jsonResponse.Data = new CustomerResponseModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<CustomerResponseModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            coinNumber = (int) jsonResponse.Data.Coin;
+            setValueToShop();
+        }
+        else
+        {
+            restorePurchase(justBoughtProduct, justBoughtProduct.IncrementOnBuy);
+            MessageHelper.MessageDialog("Error", jsonResponse.Message);
+            Debug.Log(jsonResponse.Message);
+        }
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     private void OnBuyItemError(string error, string transactionId)
@@ -222,84 +181,7 @@ public class ShopController : MonoBehaviour {
     }
     #endregion
     
-    #region PROCESS LOAD COIN REQUEST
-    private void OnDoneCallLoadCoinRequest(string result, string transactionId)
-    {
-        ResponseModel<LoadCoinModel> jsonResponse = new ResponseModel<LoadCoinModel>();
-        jsonResponse.Data = new LoadCoinModel();
-        jsonResponse = JsonMapper.ToObject<ResponseModel<LoadCoinModel>>(result);
-
-        if (jsonResponse.Succeed)
-        {
-            coinNumber = jsonResponse.Data.Coin;
-        }
-        else
-        {
-            MessageHelper.MessageDialog("Cannot Load Coin");
-        }
-        
-    }
-
-    private void OnLoadCoinError(string error, string transactionId)
-    {
-        MessageHelper.MessageDialog(error);
-        Debug.Log(error);
-        
-    }
-    #endregion
-
-    #region PROCESS LOAD FIREBALL REQUEST
-    private void OnDoneCallLoadFireballRequest(string result, string transactionId)
-    {
-        ResponseModel<LoadFireballModel> jsonResponse = new ResponseModel<LoadFireballModel>();
-        jsonResponse.Data = new LoadFireballModel();
-        jsonResponse = JsonMapper.ToObject<ResponseModel<LoadFireballModel>>(result);
-
-        if (jsonResponse.Succeed)
-        {
-            fireballNumber = jsonResponse.Data.Fireball;
-        }
-        else
-        {
-            MessageHelper.MessageDialog("Cannot Load Fireball");
-        }
-        
-    }
-
-    private void OnLoadFireballError(string error, string transactionId)
-    {
-        MessageHelper.MessageDialog(error);
-        Debug.Log(error);
-        
-    }
-    #endregion
-
-    #region PROCESS LOAD TEEK REQUEST
-    private void OnDoneCallLoadTeekRequest(string result, string transactionId)
-    {
-        ResponseModel<LoadTeekModel> jsonResponse = new ResponseModel<LoadTeekModel>();
-        jsonResponse.Data = new LoadTeekModel();
-        jsonResponse = JsonMapper.ToObject<ResponseModel<LoadTeekModel>>(result);
-
-        if (jsonResponse.Succeed)
-        {
-            coinNumber = jsonResponse.Data.Teek;
-        }
-        else
-        {
-            MessageHelper.MessageDialog("Cannot Load Teek");
-        }
-        
-    }
-
-    private void OnLoadTeekError(string error, string transactionId)
-    {
-        MessageHelper.MessageDialog(error);
-        Debug.Log(error);
-        
-    }
-
-    #endregion
+ 
 
     private void OnTimeOut(string transactionId)
     {
@@ -336,6 +218,59 @@ public class ShopController : MonoBehaviour {
         MySceneManager.setLastScene(ConstantClass.GameSceneName);
 
         SceneManager.LoadSceneAsync(ConstantClass.InventorySceneName);
+    }
+    #endregion
+
+    public void LoadCustomerInformation()
+    {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        HTTPRequest request = new HTTPRequest();
+        request.url = ConstantClass.API_LoadCustomerInformation;
+
+        WWWForm form = new WWWForm();
+        form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+        form.AddField("organizerId", PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId));
+
+        request.formData = form;
+
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCustomerInformationRequest);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+
+        UCSS.HTTP.PostForm(request);
+    }
+
+    #region PROCESS LOAD USER INFORMATION REQUEST
+    private void OnDoneCustomerInformationRequest(string result, string transactionId)
+    {
+        ResponseModel<CustomerResponseModel> jsonResponse = new ResponseModel<CustomerResponseModel>();
+        jsonResponse.Data = new CustomerResponseModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<CustomerResponseModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            if(jsonResponse.Data.Coin != null)
+            {
+                coinNumber = (int)jsonResponse.Data.Coin;
+            }
+            if (jsonResponse.Data.Fireball != null)
+            {
+                fireballNumber = (int) jsonResponse.Data.Fireball;
+            }
+            if (jsonResponse.Data.Iceball != null)
+            {
+                iceballNumber = (int)jsonResponse.Data.Iceball;
+            }
+        }
+        else
+        {
+            //Show error message
+            MessageHelper.MessageDialog(jsonResponse.Message);
+        }
+
+        //Call Set Value To Shop After Getting Data From Server
+        setValueToShop();
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
     #endregion
 }

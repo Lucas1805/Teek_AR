@@ -45,7 +45,7 @@ namespace Assets
 
         #region API LINKS
         //API LINKS
-        public const string API_HOST_IP = "192.168.1.8";
+        public const string API_HOST_IP = "10.5.49.249";
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
         public const string API_RedeemPrizeCode = "http://" + API_HOST_IP + "/Teek/api/Prize/ReedemPrize";
@@ -62,12 +62,9 @@ namespace Assets
         public const string API_RedeemPrizeByTeek = "http://" + API_HOST_IP + "/Teek/api/Prize/RedeemPrizeByTeek";
         public const string API_RedeemPrizeByGem = "http://" + API_HOST_IP + "/Teek/api/Prize/RedeemPrizeByGem";
         public const string API_LoadUserProfile = "http://" + API_HOST_IP + "/Teek/api/PlayerInfo/GetPlayerInfoByUserId";
-
-        public const string API_LoadCoins = "http://" + API_HOST_IP + "/Teek/api/";
-        public const string API_LoadTeek = "http://" + API_HOST_IP + "/Teek/api/";
-        public const string API_LoadFireball = "http://" + API_HOST_IP + "/Teek/api/";
-        public const string API_BuyItem = "http://" + API_HOST_IP + "/Teek/api/";
-        public const string API_UseFireball = "http://" + API_HOST_IP + "/Teek/api/";
+        
+        public const string API_UpdateBallItem = "http://" + API_HOST_IP + "/Teek/api/Customer/UpdateBallItem";
+        public const string API_UpdateCoinItem = "http://" + API_HOST_IP + "/Teek/api/Customer/UpdateCoinAmount";
 
         public const string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
 
