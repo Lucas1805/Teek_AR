@@ -441,6 +441,8 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         healthPanel.SetActive(true);
         resultPanel.SetActive(false);
 
+        isShowDropItemListAlready = false;
+
         isFirstTimeDragonAppear = false;
         timeCountdownDragonRespawn = timeDragonRespawnInMinute * 60;
     }
