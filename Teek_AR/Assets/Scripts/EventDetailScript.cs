@@ -255,7 +255,7 @@ public class EventDetailScript : MonoBehaviour
         
         if (jsonResponse.Succeed)
         {
-            if(jsonResponse.Data != null)
+            if(jsonResponse.Data != null && jsonResponse.Data.Count > 0)
             {
                 foreach (var item in jsonResponse.Data)
                 {
