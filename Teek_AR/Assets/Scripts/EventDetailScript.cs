@@ -61,7 +61,7 @@ public class EventDetailScript : MonoBehaviour
 
     public void GetPrizeData()
     {
-
+        LoadingManager.showLoadingIndicator(loadingPanel);
         HTTPRequest request = new HTTPRequest();
         request.url = ConstantClass.API_LoadPrizeList + "?EventId=" + EventId;
 
@@ -111,12 +111,13 @@ public class EventDetailScript : MonoBehaviour
 
                 newButton.transform.SetParent(contentPanel.transform, false);
             }
-            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
 
     }
 
@@ -138,8 +139,8 @@ public class EventDetailScript : MonoBehaviour
 
     public void PlayGame()
     {
+        LoadingManager.showLoadingIndicator(loadingPanel);
         SceneManager.LoadSceneAsync(Assets.ConstantClass.GameSceneName);
-
     }
 
     public void LoadUserInformation()
@@ -193,13 +194,14 @@ public class EventDetailScript : MonoBehaviour
             RubyAmountText.text = jsonResponse.Data[0].Ruby.ToString();
             SapphireAmountText.text = jsonResponse.Data[0].Sapphire.ToString();
             CitrineAmountText.text = jsonResponse.Data[0].Citrine.ToString();
-            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
             //Show error message
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
  
@@ -257,13 +259,14 @@ public class EventDetailScript : MonoBehaviour
                     newButton.transform.SetParent(couponPanel.transform, false);
                 }
             }
-            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
             //Show error message
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
     
     #endregion
@@ -295,7 +298,7 @@ public class EventDetailScript : MonoBehaviour
 
     public void LoadPreviouseScene()
     {
-        
+        LoadingManager.showLoadingIndicator(loadingPanel);
         MySceneManager.loadPreviousScene();
     }
 
@@ -328,6 +331,16 @@ public class EventDetailScript : MonoBehaviour
 
                 UCSS.HTTP.PostForm(request);
             }
+            else
+            {
+                LoadingManager.hideLoadingIndicator(loadingPanel);
+                MessageHelper.MessageDialog("ERROR", "Cannot get prize ID");
+            }
+        }
+        else
+        {
+            LoadingManager.hideLoadingIndicator(loadingPanel);
+            MessageHelper.MessageDialog("Please enter master code");
         }
     }
 
@@ -354,6 +367,8 @@ public class EventDetailScript : MonoBehaviour
             //Show message
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
     
     #endregion
@@ -508,6 +523,8 @@ public class EventDetailScript : MonoBehaviour
             MessageHelper.MessageDialog(jsonResponse.Message);
             Debug.Log(jsonResponse.Message);
         }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     private void OnDoneCallRedeemPrizeByGem(string result, string transactionId)
@@ -526,6 +543,8 @@ public class EventDetailScript : MonoBehaviour
             MessageHelper.MessageDialog(jsonResponse.Message);
             Debug.Log(jsonResponse.Message);
         }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
     #endregion
 }

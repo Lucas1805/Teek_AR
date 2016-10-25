@@ -138,12 +138,12 @@ public class HomeScript : MonoBehaviour {
 
                 newBrandButton.transform.SetParent(AllBrandsPanel.transform, false);
             }
-            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     public void CallAPIGetOrganizersByUserId()
@@ -180,12 +180,13 @@ public class HomeScript : MonoBehaviour {
                     newBrandButton.transform.SetParent(MyBrandsPanel.transform, false);
                 }
             }
-            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
             MessageHelper.MessageDialog(jsonResponse.Message);
-        }        
+        }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     public void FilterCheck()
@@ -313,14 +314,13 @@ public class HomeScript : MonoBehaviour {
             UsernameText.text = jsonResponse.Data.Username;
 
             WWW www_loadImage = new WWW(jsonResponse.Data.ImageURL);
-            //StartCoroutine(loadProfileImage(www_loadImage));
-
-            LoadingManager.hideLoadingIndicator(loadingPanel);
+            StartCoroutine(loadProfileImage(www_loadImage));
         }
         else
         {
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
     #endregion
 
@@ -334,9 +334,10 @@ public class HomeScript : MonoBehaviour {
             if (www.error == null)
             {
                 ProfileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-                LoadingManager.hideLoadingIndicator(loadingPanel);
+                //LoadingManager.hideLoadingIndicator(loadingPanel);
             }
         }
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     public void Refresh()

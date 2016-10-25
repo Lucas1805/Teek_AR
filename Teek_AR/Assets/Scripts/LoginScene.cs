@@ -85,6 +85,7 @@ public class LoginScene : MonoBehaviour
         }
         else
         {
+            LoadingManager.hideLoadingIndicator(loadingPanel);
             MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Please enter username and password");
         }
     }
@@ -174,18 +175,21 @@ public class LoginScene : MonoBehaviour
         if (rg_fullname.Length <= 0)
         {
             result = false;
+            LoadingManager.hideLoadingIndicator(loadingPanel);
             MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Please enter fullname");
             resetPasswordFields();
         }
         else if (rg_email.Length <= 0)
         {
             result = false;
+            LoadingManager.hideLoadingIndicator(loadingPanel);
             MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle, "Please enter email");
             resetPasswordFields();
         }
         else if (rg_email.Length > 0 && !validateEmail(rg_email))
         {
             result = false;
+            LoadingManager.hideLoadingIndicator(loadingPanel);
             MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Email format is not valid");
             resetPasswordFields();
 
@@ -193,24 +197,28 @@ public class LoginScene : MonoBehaviour
         else if (rg_username.Length <= 0)
         {
             result = false;
+            LoadingManager.hideLoadingIndicator(loadingPanel);
             MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Please enter your username");
             resetPasswordFields();
         }
         else if (rg_password.Length <= 0)
         {
             result = false;
+            LoadingManager.hideLoadingIndicator(loadingPanel);
             MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Please enter your password");
             resetPasswordFields();
         }
         else if (rg_password.Length < 8)
         {
             result = false;
+            LoadingManager.hideLoadingIndicator(loadingPanel);
             MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Password must be at least 8 characters");
             resetPasswordFields();
         }
         else if (!rg_password.Equals(rg_passwordAgain))
         {
             result = false;
+            LoadingManager.hideLoadingIndicator(loadingPanel);
             MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Re-enter Password is not match");
             resetPasswordFields();
         }
@@ -252,10 +260,12 @@ public class LoginScene : MonoBehaviour
             PlayerPrefs.DeleteKey(ConstantClass.PP_UserIDKey);
 
             //Show error message
-            
+            LoadingManager.hideLoadingIndicator(loadingPanel);
             MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message);
             resetLoginField();
         }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     private void OnDoneCallRegisterRequest(string result, string transactionId)
@@ -277,7 +287,7 @@ public class LoginScene : MonoBehaviour
         else
         {
             //Show error message
-            
+            LoadingManager.hideLoadingIndicator(loadingPanel);
             if (jsonResponse.Errors != null)
                 MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message + " " + jsonResponse.Errors[0]);
             else
@@ -288,7 +298,7 @@ public class LoginScene : MonoBehaviour
 
     private void OnLoginError(string error, string transactionId)
     {
-        
+        LoadingManager.hideLoadingIndicator(loadingPanel);
         MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
         Debug.Log("Login WWW error: " + error);
         resetLoginField();
@@ -296,7 +306,7 @@ public class LoginScene : MonoBehaviour
 
     private void OnRegisterError(string error, string transactionId)
     {
-        
+        LoadingManager.hideLoadingIndicator(loadingPanel);
         MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
         Debug.Log("Regiser WWW Error: " + error);
         resetPasswordFields();
@@ -304,7 +314,7 @@ public class LoginScene : MonoBehaviour
 
     private void OnTimeOut(string transactionId)
     {
-        
+        LoadingManager.hideLoadingIndicator(loadingPanel);
         MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, ConstantClass.Msg_TimeOut);
         Debug.Log(ConstantClass.Msg_TimeOut);
     }

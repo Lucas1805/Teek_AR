@@ -65,14 +65,13 @@ public class ProfileScript : MonoBehaviour {
 
             WWW www_loadImage = new WWW(jsonResponse.Data.ImageURL);
             StartCoroutine(loadProfileImage(www_loadImage));
-
-            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
-     }
+        LoadingManager.hideLoadingIndicator(loadingPanel);
+    }
     #endregion
 
     IEnumerator loadProfileImage(WWW www)
@@ -88,5 +87,6 @@ public class ProfileScript : MonoBehaviour {
                 LoadingManager.hideLoadingIndicator(loadingPanel);
             }
         }
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 }

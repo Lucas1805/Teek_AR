@@ -44,10 +44,9 @@ public class StoreEventController : MonoBehaviour
         }
         else
         {
+            LoadingManager.hideLoadingIndicator(loadingPanel);
             MessageHelper.MessageDialog("Error, Cannot get store ID");
         }
-
-        
 
     }
 
@@ -100,18 +99,21 @@ public class StoreEventController : MonoBehaviour
             else
             {
                 //SHOW NO RECORD MESSAGE
-                
-                //MessageHelper.MessageDialog("This store has no event now");
-                //Debug.Log("No Event To Show");
+                GameObject newButton = Instantiate(EventButtonTemplate) as GameObject;
+                EventButtonTemplate sampleButton = newButton.GetComponent<EventButtonTemplate>();
+
+                sampleButton.EventName.text = "No available event at this time";
+                sampleButton.Time.gameObject.SetActive(false);
+                sampleButton.GetComponent<Button>().interactable = false;
+                newButton.transform.SetParent(EventContentPanel.transform, false);
             }
-            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
             //Show error message
-            
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     
@@ -129,15 +131,23 @@ public class StoreEventController : MonoBehaviour
 
     public void LoadPreviousScene()
     {
+        LoadingManager.showLoadingIndicator(loadingPanel);
         MySceneManager.loadPreviousScene();
     }
 
     IEnumerator LoadImage(WWW www, Image image)
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
         yield return www;
-        image.overrideSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-        
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        if (www.isDone)
+        {
+            if (www.error == null)
+            {
+                image.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                LoadingManager.hideLoadingIndicator(loadingPanel);
+            }
+        }
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 }
 

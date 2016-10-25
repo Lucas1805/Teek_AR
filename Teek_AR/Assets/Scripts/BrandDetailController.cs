@@ -98,16 +98,22 @@ public class BrandDetailController : MonoBehaviour {
             else
             {
                 //SHOW NO RECORD MESSAGE
-                //MessageHelper.MessageDialog("This brand has no store yet");
-                //Debug.Log("No Store To Show On Organizer: " + OrganizerId);
+                GameObject newButton = Instantiate(StoreButtonTemplate) as GameObject;
+                StoreButtonTemplate sampleButton = newButton.GetComponent<StoreButtonTemplate>();
+                
+                sampleButton.StoreName.text = "This brand has no store yet!!";
+                sampleButton.Address.text = "";
+                sampleButton.GetComponent<Button>().interactable = false;
+                newButton.transform.SetParent(StoreContentPanel.transform, false);
+                Debug.Log("No Store To Show On Organizer: " + OrganizerId);
             }
-            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
             //Show error message
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     #endregion
@@ -165,16 +171,22 @@ public class BrandDetailController : MonoBehaviour {
             else
             {
                 //SHOW NO RECORD MESSAGE
-                //MessageHelper.MessageDialog("No available event at this time");
-                //Debug.Log("No Event To Show");
+                GameObject newButton = Instantiate(EventButtonTemplate) as GameObject;
+                EventButtonTemplate sampleButton = newButton.GetComponent<EventButtonTemplate>();
+                
+                sampleButton.EventName.text = "No available event at this time yet";
+                sampleButton.Time.gameObject.SetActive(false);
+                sampleButton.GetComponent<Button>().interactable = false;
+                newButton.transform.SetParent(EventContentPanel.transform, false);
             }
-            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
             //Show error message
             MessageHelper.MessageDialog(jsonResponse.Message);
         }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
 
@@ -199,13 +211,22 @@ public class BrandDetailController : MonoBehaviour {
 
     public void LoadPreviousScene()
     {
+        LoadingManager.showLoadingIndicator(loadingPanel);
         MySceneManager.loadPreviousScene();
     }
 
     IEnumerator LoadImage(WWW www, Image image)
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
         yield return www;
-        image.overrideSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        if (www.isDone)
+        {
+            if (www.error == null)
+            {
+                image.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                LoadingManager.hideLoadingIndicator(loadingPanel);
+            }
+        }
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 }
