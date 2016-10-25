@@ -38,9 +38,16 @@ public class EventDetailScript : MonoBehaviour
     public GameObject RedeemPrizePanel;
     public Toggle TeekToggleButton;
     public Toggle GemToggleButton;
+    public GameObject RedeemPrizeCodeSuccessPanel;
+    public Text CountTimeText;
+    public Text RedeemPrizeCodeSuccessMessage;
 
     private int PrizeCodeId;
     private int PrizeId;
+    private bool StartCountTime = false; //Use to count down time when redeem prize code success
+
+    private float TimeOutRedeemPrizeCodeSuccessfully = 2f*60;
+
 
     // Use this for initialization
     void Start()
@@ -57,6 +64,21 @@ public class EventDetailScript : MonoBehaviour
         GetPrizeData();
         LoadPrizeCode();
         
+    }
+
+    void Update()
+    {
+        if(StartCountTime)
+        {
+            TimeOutRedeemPrizeCodeSuccessfully -= Time.deltaTime;
+            CountTimeText.text = "Auto close in: " + Math.Truncate(TimeOutRedeemPrizeCodeSuccessfully).ToString() + " second(s)";
+        }
+        if(TimeOutRedeemPrizeCodeSuccessfully <= 0)
+        {
+            RedeemPrizeCodeSuccessPanel.SetActive(false);
+            StartCountTime = false;
+            TimeOutRedeemPrizeCodeSuccessfully = 2f * 60;
+        }
     }
 
     public void GetPrizeData()
@@ -361,6 +383,11 @@ public class EventDetailScript : MonoBehaviour
             }
             //Load Prize Code Again
             LoadPrizeCode();
+
+            //Show redeem prize code success panel
+            RedeemPrizeCodeSuccessPanel.SetActive(true);
+            RedeemPrizeCodeSuccessMessage.text += jsonResponse.Data.PrizeName;
+            StartCountTime = true;
         }
         else
         {
@@ -547,4 +574,10 @@ public class EventDetailScript : MonoBehaviour
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
     #endregion
+
+    public void ResetTimeCountForRedeemPrizeCode()
+    {
+        StartCountTime = false;
+        TimeOutRedeemPrizeCodeSuccessfully = 2f * 60;
+    }
 }
