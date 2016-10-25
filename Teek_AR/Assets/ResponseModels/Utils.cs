@@ -35,8 +35,7 @@ namespace Assets.ResponseModels
 
                     TimeSpan time = TimeSpan.FromMilliseconds(double.Parse(JsonDateString));
 
-                    DateTime startdate = new DateTime(1970, 1, 1) + time;
-                    
+                    DateTime startdate = new DateTime(1970, 1, 1).ToLocalTime() + time;
                     result = startdate.ToString("dd/MM/yyyy HH:mm");
                 }
                 else
