@@ -206,16 +206,16 @@ public class EventDetailScript : MonoBehaviour
     #region PROCESS LOAD USER INFORMATION REQUEST
     private void OnLoadUserInformationRequest(string result, string transactionId)
     {
-        ResponseModel<List<CustomerResponseModel>> jsonResponse = new ResponseModel<List<CustomerResponseModel>>();
-        jsonResponse.Data = new List<CustomerResponseModel>();
-        jsonResponse = JsonMapper.ToObject<ResponseModel<List<CustomerResponseModel>>>(result);
+        ResponseModel<CustomerResponseModel> jsonResponse = new ResponseModel<CustomerResponseModel>();
+        jsonResponse.Data = new CustomerResponseModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<CustomerResponseModel>>(result);
 
         if (jsonResponse.Succeed)
         {
-            TeekAmountText.text = jsonResponse.Data[0].Teek.ToString() + " Teek";
-            RubyAmountText.text = jsonResponse.Data[0].Ruby.ToString();
-            SapphireAmountText.text = jsonResponse.Data[0].Sapphire.ToString();
-            CitrineAmountText.text = jsonResponse.Data[0].Citrine.ToString();
+            TeekAmountText.text = jsonResponse.Data.Teek.ToString() + " Teek";
+            RubyAmountText.text = jsonResponse.Data.Ruby.ToString();
+            SapphireAmountText.text = jsonResponse.Data.Sapphire.ToString();
+            CitrineAmountText.text = jsonResponse.Data.Citrine.ToString();
         }
         else
         {
