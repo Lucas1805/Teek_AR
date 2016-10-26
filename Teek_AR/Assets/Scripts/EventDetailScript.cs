@@ -189,26 +189,14 @@ public class EventDetailScript : MonoBehaviour
         }
         else
         {
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            //MessageHelper.MessageDialog(jsonResponse.Message);
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
 
     }
 
-    public void FilterCombo()
-    {
-        foreach (Transform childTransform in contentPanel.transform)
-        {
-            GameObject childGameObject = childTransform.gameObject;
-            if (childTransform.GetChild(2).GetComponent<Text>().text.Equals("24"))
-            {
-                childGameObject.SetActive(false);
-            }
-
-        }
-
-    }
+   
 
 
 
@@ -339,8 +327,6 @@ public class EventDetailScript : MonoBehaviour
         else
         {
             RegisterEventButton.SetActive(true);
-            //Show error message
-            //MessageHelper.MessageDialog(jsonResponse.Message);
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
@@ -634,5 +620,44 @@ public class EventDetailScript : MonoBehaviour
     {
         StartCountTime = false;
         TimeOutRedeemPrizeCodeSuccessfully = 5f * 60;
+    }
+
+    public void RegisterEvent()
+    {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        HTTPRequest request = new HTTPRequest();
+        request.url = ConstantClass.API_RegisterEvent;
+
+        WWWForm form = new WWWForm();
+
+        form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+        form.AddField("eventId", EventId);
+
+        request.formData = form;
+
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneRegisterEvent);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+
+        UCSS.HTTP.PostForm(request);
+    }
+
+    private void OnDoneRegisterEvent(string result, string transactionId)
+    {
+        ResponseModel<String> jsonResponse = new ResponseModel<String>();
+        jsonResponse.Data = "";
+        jsonResponse = JsonMapper.ToObject<ResponseModel<String>>(result);
+        if (jsonResponse.Succeed)
+        {
+            MessageHelper.MessageDialog("Register successfully!!");
+            RegisterEventButton.SetActive(false);
+        } else
+        {
+            MessageHelper.MessageDialog("Register failed!!");
+        }
+        
+
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 }
