@@ -29,6 +29,7 @@ public class BrandDetailController : MonoBehaviour {
 
         //Set OrganizerId to PlayerPrefs
         PlayerPrefs.SetInt(ConstantClass.PP_OrganizerId, OrganizerId);
+        PlayerPrefs.SetString(ConstantClass.PP_OrganizerName, OrganizerName);
         PlayerPrefs.Save();
 
         LoadStoreList();

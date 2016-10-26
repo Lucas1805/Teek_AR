@@ -10,6 +10,7 @@ using Assets.ResponseModels;
 using LitJson;
 using Assets;
 using System;
+using System.Linq;
 
 public class EventDetailScript : MonoBehaviour
 {
@@ -46,7 +47,7 @@ public class EventDetailScript : MonoBehaviour
     private int PrizeId;
     private bool StartCountTime = false; //Use to count down time when redeem prize code success
 
-    private float TimeOutRedeemPrizeCodeSuccessfully = 2f*60;
+    private float TimeOutRedeemPrizeCodeSuccessfully = 5f*60;
 
 
     // Use this for initialization
@@ -71,13 +72,13 @@ public class EventDetailScript : MonoBehaviour
         if(StartCountTime)
         {
             TimeOutRedeemPrizeCodeSuccessfully -= Time.deltaTime;
-            CountTimeText.text = "Auto close in: " + Math.Truncate(TimeOutRedeemPrizeCodeSuccessfully).ToString() + " second(s)";
+            CountTimeText.text = "Auto close in: " + ((int) Math.Truncate(TimeOutRedeemPrizeCodeSuccessfully) / 60).ToString() + ":" + (Math.Truncate(TimeOutRedeemPrizeCodeSuccessfully) % 60).ToString() + " minute(s)";
         }
         if(TimeOutRedeemPrizeCodeSuccessfully <= 0)
         {
             RedeemPrizeCodeSuccessPanel.SetActive(false);
             StartCountTime = false;
-            TimeOutRedeemPrizeCodeSuccessfully = 2f * 60;
+            TimeOutRedeemPrizeCodeSuccessfully = 5f * 60;
         }
     }
 
@@ -225,8 +226,6 @@ public class EventDetailScript : MonoBehaviour
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
-
- 
     #endregion
 
     void LoadEventInfo()
@@ -257,6 +256,9 @@ public class EventDetailScript : MonoBehaviour
         {
             if(jsonResponse.Data != null && jsonResponse.Data.Count > 0)
             {
+                //Sort before show
+                jsonResponse.Data = jsonResponse.Data.OrderByDescending(t => t.Status).ThenBy(t => t.PrizeName).ToList();
+                
                 foreach (var item in jsonResponse.Data)
                 {
                     GameObject newButton = Instantiate(CouponTemplate) as GameObject;
@@ -265,7 +267,7 @@ public class EventDetailScript : MonoBehaviour
                     sampleButton.CouponId.text = item.Id.ToString();
                     if(item.Status == false && item.Date != null)
                     {
-                        sampleButton.RedeemDate.text = Utils.JsonDateToDateTimeLongString(item.Date);
+                        sampleButton.RedeemDate.text = "Redeem at: " + Utils.JsonDateToDateTimeLongString(item.Date);
                     }
                     sampleButton.Yes.GetComponent<Button>().onClick.AddListener(() => ShowRedeemPrizeCodePanel(int.Parse(sampleButton.CouponId.text)));
 
@@ -386,7 +388,7 @@ public class EventDetailScript : MonoBehaviour
 
             //Show redeem prize code success panel
             RedeemPrizeCodeSuccessPanel.SetActive(true);
-            RedeemPrizeCodeSuccessMessage.text += jsonResponse.Data.PrizeName;
+            RedeemPrizeCodeSuccessMessage.text += jsonResponse.Data.PrizeName + " from " + PlayerPrefs.GetString(ConstantClass.PP_OrganizerName);
             StartCountTime = true;
         }
         else
@@ -578,6 +580,6 @@ public class EventDetailScript : MonoBehaviour
     public void ResetTimeCountForRedeemPrizeCode()
     {
         StartCountTime = false;
-        TimeOutRedeemPrizeCodeSuccessfully = 2f * 60;
+        TimeOutRedeemPrizeCodeSuccessfully = 5f * 60;
     }
 }

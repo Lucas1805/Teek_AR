@@ -39,13 +39,14 @@ namespace Assets
         public const string PP_UserIDKey = "UserID"; //MUST ENCRYPT
         public const string PP_EventIDKey = "EventID";
         public const string PP_OrganizerId = "OrganizerID";
+        public const string PP_OrganizerName = "OrganizerName";
         public const string PP_UserParticipationID = "UserParticipationID";
         public const string PP_CustomerId = "CustomerID";
         #endregion
 
         #region API LINKS
         //API LINKS
-        public const string API_HOST_IP = "10.5.49.249";
+        public const string API_HOST_IP = "10.5.49.213";
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
         public const string API_RedeemPrizeCode = "http://" + API_HOST_IP + "/Teek/api/Prize/ReedemPrize";
