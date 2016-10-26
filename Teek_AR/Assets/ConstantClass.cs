@@ -63,8 +63,8 @@ namespace Assets
         public const string API_RedeemPrizeByTeek = "http://" + API_HOST_IP + "/Teek/api/Prize/RedeemPrizeByTeek";
         public const string API_RedeemPrizeByGem = "http://" + API_HOST_IP + "/Teek/api/Prize/RedeemPrizeByGem";
         public const string API_LoadUserProfile = "http://" + API_HOST_IP + "/Teek/api/PlayerInfo/GetPlayerInfoByUserId";
+        public const string API_RegisterEvent = "http://" + API_HOST_IP + "/Teek/api/Event/RegisterEvent";
         public const string API_GetPublishedActivityByEventId = "http://" + API_HOST_IP + "/Teek/api/Activity/GetPublished";
-
         public const string API_UpdateBallItem = "http://" + API_HOST_IP + "/Teek/api/Customer/UpdateBallItem";
         public const string API_UpdateCoinItem = "http://" + API_HOST_IP + "/Teek/api/Customer/UpdateCoinAmount";
 
