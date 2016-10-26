@@ -16,7 +16,12 @@ public class EventDetailScript : MonoBehaviour
 {
     public GameObject ButtonTemplate;
     public GameObject CouponTemplate;
-    
+    public GameObject GameTemplate;
+    public GameObject SurveyTemplate;
+    public GameObject VotingTemplate;
+    public GameObject CheckinTemplate;
+    public GameObject RegisterEventButton;
+
     public static int EventId;
     public static string EventName;
     public static Image EventImage;
@@ -25,6 +30,8 @@ public class EventDetailScript : MonoBehaviour
     public GameObject loadingPanel;
     public GameObject contentPanel;
     public GameObject couponPanel;
+
+    public GameObject activityPanel;
     public Text TeekAmountText;
     public Text RubyAmountText;
     public Text SapphireAmountText;
@@ -63,8 +70,53 @@ public class EventDetailScript : MonoBehaviour
         LoadUserInformation();
         LoadEventInfo();
         GetPrizeData();
+        LoadActivities();
         LoadPrizeCode();
         
+    }
+
+    private void LoadActivities()
+    {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        HTTPRequest request = new HTTPRequest();
+        request.url = ConstantClass.API_GetPublishedActivityByEventId + "?EventId=" + EventId;
+
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallGetActivities);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        UCSS.HTTP.GetString(request);
+    }
+
+    private void OnDoneCallGetActivities(string result, string transactionId)
+    {
+        ResponseModel<List<ActivityModel>> jsonResponse = new ResponseModel<List<ActivityModel>>();
+        jsonResponse.Data = new List<ActivityModel>();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<List<ActivityModel>>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            foreach (var item in jsonResponse.Data)
+            {
+                if (item.GameId != null)
+                {
+                    GameObject newButton = Instantiate(GameTemplate) as GameObject;
+                    GameButtonTemplate sampleButton = newButton.GetComponent<GameButtonTemplate>();
+                    sampleButton.GameId.text = item.GameId.ToString();
+                    newButton.transform.SetParent(activityPanel.transform, false);
+                }
+               
+
+
+
+                
+            }
+        }
+        else
+        {
+            MessageHelper.MessageDialog(jsonResponse.Message);
+        }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     void Update()
@@ -286,8 +338,9 @@ public class EventDetailScript : MonoBehaviour
         }
         else
         {
+            RegisterEventButton.SetActive(true);
             //Show error message
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            //MessageHelper.MessageDialog(jsonResponse.Message);
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);

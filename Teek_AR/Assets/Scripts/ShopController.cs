@@ -13,6 +13,7 @@ public class ShopController : MonoBehaviour {
     public ShopUIBase mobyShop;
     public GameObject loadingPanel;
     public GameObject menuGroupButtonPanel;
+    public static int GameId;
     
     private int coinNumber = 666;
     private int fireballNumber = 13;

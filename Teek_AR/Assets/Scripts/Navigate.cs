@@ -41,10 +41,11 @@ public class Navigate : MonoBehaviour {
         SceneManager.LoadSceneAsync(ConstantClass.EventDetailSceneName);
     }
 
-    public void NavigateEventDetailToGameScene(GameObject Event)
+    public void NavigateEventDetailToGameScene(Text GameId)
     {
-        EventDetailScript.EventId = int.Parse(Event.transform.GetChild(0).GetComponent<Text>().text);
+        ShopController.GameId = int.Parse(GameId.text);
         SceneManager.LoadSceneAsync(ConstantClass.GameSceneName);
     }
+
 
 }
