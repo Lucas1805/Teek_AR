@@ -352,11 +352,12 @@ public class EventDetailScript : MonoBehaviour
         }
         LoadPrizeCode();
 
-        ////Clear Activity List
-        //foreach (Transform child in ActivityPanel.transform)
-        //{
-        //    GameObject.Destroy(child.gameObject);
-        //}
+        //Clear Activity List
+        foreach (Transform child in ActivityPanel.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+        LoadActivities();
     }
 
     public void LoadPreviouseScene()

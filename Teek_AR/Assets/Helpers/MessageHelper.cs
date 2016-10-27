@@ -177,16 +177,146 @@ public class MessageHelper : MonoBehaviour
 
     }
 
+    static public void SuccessDialog(string title, string message)
+    {
+        dialogResult = DialogResult.NULL;
+
+        GameObject ShadePanel = GameObject.Find("ShadePanel(Clone)");
+        if (ShadePanel == null)
+        {
+            GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+            ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+            ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        }
+        else
+        {
+            Destroy(ShadePanel.transform.GetChild(0).gameObject);
+        }
+        GameObject DialogBoxTemplate = Resources.Load("prefabs/Success Dialog") as GameObject;
+        GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
+        DialogBoxTemplate sampleButton = DialogBox.GetComponent<DialogBoxTemplate>();
+        sampleButton.Title.text = title;
+        sampleButton.Message.text = message;
+        sampleButton.transform.SetParent(ShadePanel.transform, false);
+
+        GameObject OKButtonTemplate = Resources.Load("prefabs/SuccessOKButton") as GameObject;
+
+        GameObject OKButton = Instantiate(OKButtonTemplate) as GameObject;
+        OKButton.GetComponent<Button>().onClick.AddListener(() =>
+        {
+            Destroy(GameObject.Find("ShadePanel(Clone)"));
+        });
+        OKButton.transform.SetParent(sampleButton.Buttons.transform, false);
+    }
+
+    static public void SuccessDialog(string message)
+    {
+        dialogResult = DialogResult.NULL;
+
+        GameObject ShadePanel = GameObject.Find("ShadePanel(Clone)");
+        if (ShadePanel == null)
+        {
+            GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+            ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+            ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        }
+        else
+        {
+            Destroy(ShadePanel.transform.GetChild(0).gameObject);
+        }
+        GameObject DialogBoxTemplate = Resources.Load("prefabs/Success Dialog") as GameObject;
+        GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
+        DialogBoxTemplate sampleButton = DialogBox.GetComponent<DialogBoxTemplate>();
+        sampleButton.Title.text = "";
+        sampleButton.Message.text = message;
+        sampleButton.transform.SetParent(ShadePanel.transform, false);
+
+        GameObject OKButtonTemplate = Resources.Load("prefabs/SuccessOKButton") as GameObject;
+
+        GameObject OKButton = Instantiate(OKButtonTemplate) as GameObject;
+        OKButton.GetComponent<Button>().onClick.AddListener(() =>
+        {
+            Destroy(GameObject.Find("ShadePanel(Clone)"));
+        });
+        OKButton.transform.SetParent(sampleButton.Buttons.transform, false);
+
+    }
+
+    static public void ErrorDialog(string title, string message)
+    {
+        dialogResult = DialogResult.NULL;
+
+        GameObject ShadePanel = GameObject.Find("ShadePanel(Clone)");
+        if (ShadePanel == null)
+        {
+            GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+            ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+            ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        }
+        else
+        {
+            Destroy(ShadePanel.transform.GetChild(0).gameObject);
+        }
+        GameObject DialogBoxTemplate = Resources.Load("prefabs/Error Dialog") as GameObject;
+        GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
+        DialogBoxTemplate sampleButton = DialogBox.GetComponent<DialogBoxTemplate>();
+        sampleButton.Title.text = title;
+        sampleButton.Message.text = message;
+        sampleButton.transform.SetParent(ShadePanel.transform, false);
+
+        GameObject OKButtonTemplate = Resources.Load("prefabs/ErrorOKButton") as GameObject;
+
+        GameObject OKButton = Instantiate(OKButtonTemplate) as GameObject;
+        OKButton.GetComponent<Button>().onClick.AddListener(() =>
+        {
+            Destroy(GameObject.Find("ShadePanel(Clone)"));
+        });
+        OKButton.transform.SetParent(sampleButton.Buttons.transform, false);
+    }
+
+    static public void ErrorDialog(string message)
+    {
+        dialogResult = DialogResult.NULL;
+
+        GameObject ShadePanel = GameObject.Find("ShadePanel(Clone)");
+        if (ShadePanel == null)
+        {
+            GameObject ShadePanelTemplate = Resources.Load("prefabs/ShadePanel") as GameObject;
+            ShadePanel = Instantiate(ShadePanelTemplate) as GameObject;
+            ShadePanel.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        }
+        else
+        {
+            Destroy(ShadePanel.transform.GetChild(0).gameObject);
+        }
+        GameObject DialogBoxTemplate = Resources.Load("prefabs/Error Dialog") as GameObject;
+        GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
+        DialogBoxTemplate sampleButton = DialogBox.GetComponent<DialogBoxTemplate>();
+        sampleButton.Title.text = "";
+        sampleButton.Message.text = message;
+        sampleButton.transform.SetParent(ShadePanel.transform, false);
+
+        GameObject OKButtonTemplate = Resources.Load("prefabs/ErrorOKButton") as GameObject;
+
+        GameObject OKButton = Instantiate(OKButtonTemplate) as GameObject;
+        OKButton.GetComponent<Button>().onClick.AddListener(() =>
+        {
+            Destroy(GameObject.Find("ShadePanel(Clone)"));
+        });
+        OKButton.transform.SetParent(sampleButton.Buttons.transform, false);
+
+    }
+
     public static void OnError(string error, string transactionId)
     {
         LoadingManager.hideLoadingIndicator(GameObject.Find("Loading Panel"));
-        MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
+        MessageHelper.ErrorDialog(ConstantClass.Msg_ErrorTitle, error);
         Debug.Log("WWW Error: " + error);
     }
     public static void OnTimeOut(string transactionId)
     {
         LoadingManager.hideLoadingIndicator(GameObject.Find("Loading Panel"));
-        MessageHelper.MessageDialog(ConstantClass.Msg_TimeOut);
+        MessageHelper.ErrorDialog(ConstantClass.Msg_TimeOut);
         Debug.Log(ConstantClass.Msg_TimeOut);
     }
 }
