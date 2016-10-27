@@ -44,8 +44,6 @@ public class EventDetailScript : MonoBehaviour
     public GameObject RedeemCodePanel;
     public InputField MasterCodeText;
     public GameObject RedeemPrizePanel;
-    public Toggle TeekToggleButton;
-    public Toggle GemToggleButton;
     public GameObject RedeemPrizeCodeSuccessPanel;
     public Text CountTimeText;
     public Text RedeemPrizeCodeSuccessMessage;
@@ -54,7 +52,7 @@ public class EventDetailScript : MonoBehaviour
     private int PrizeId;
     private bool StartCountTime = false; //Use to count down time when redeem prize code success
 
-    private float TimeOutRedeemPrizeCodeSuccessfully = 5f*60;
+    private float TimeOutRedeemPrizeCodeSuccessfully = 5f * 60;
 
 
     // Use this for initialization
@@ -72,7 +70,7 @@ public class EventDetailScript : MonoBehaviour
         GetPrizeData();
         LoadActivities();
         LoadPrizeCode();
-        
+
     }
 
     private void LoadActivities()
@@ -104,11 +102,11 @@ public class EventDetailScript : MonoBehaviour
                     sampleButton.GameId.text = item.GameId.ToString();
                     newButton.transform.SetParent(activityPanel.transform, false);
                 }
-               
 
 
 
-                
+
+
             }
         }
         else
@@ -121,12 +119,12 @@ public class EventDetailScript : MonoBehaviour
 
     void Update()
     {
-        if(StartCountTime)
+        if (StartCountTime)
         {
             TimeOutRedeemPrizeCodeSuccessfully -= Time.deltaTime;
-            CountTimeText.text = "Auto close in: " + ((int) Math.Truncate(TimeOutRedeemPrizeCodeSuccessfully) / 60).ToString() + ":" + (Math.Truncate(TimeOutRedeemPrizeCodeSuccessfully) % 60).ToString() + " minute(s)";
+            CountTimeText.text = "Auto close in: " + ((int)Math.Truncate(TimeOutRedeemPrizeCodeSuccessfully) / 60).ToString() + ":" + (Math.Truncate(TimeOutRedeemPrizeCodeSuccessfully) % 60).ToString() + " minute(s)";
         }
-        if(TimeOutRedeemPrizeCodeSuccessfully <= 0)
+        if (TimeOutRedeemPrizeCodeSuccessfully <= 0)
         {
             RedeemPrizeCodeSuccessPanel.SetActive(false);
             StartCountTime = false;
@@ -150,7 +148,7 @@ public class EventDetailScript : MonoBehaviour
         ResponseModel<List<PrizeResponseModel>> jsonResponse = new ResponseModel<List<PrizeResponseModel>>();
         jsonResponse.Data = new List<PrizeResponseModel>();
         jsonResponse = JsonMapper.ToObject<ResponseModel<List<PrizeResponseModel>>>(result);
-        
+
         if (jsonResponse.Succeed)
         {
             foreach (var item in jsonResponse.Data)
@@ -196,7 +194,7 @@ public class EventDetailScript : MonoBehaviour
 
     }
 
-   
+
 
 
 
@@ -270,16 +268,16 @@ public class EventDetailScript : MonoBehaviour
 
     void LoadEventInfo()
     {
-        if(EventName != null && EventName.Length > 0)
+        if (EventName != null && EventName.Length > 0)
         {
-            EventNameText.text = Utils.TruncateLongString(EventName,23);
+            EventNameText.text = Utils.TruncateLongString(EventName, 23);
         }
         else
         {
             EventNameText.text = "";
         }
-        
-        if(EventImage != null)
+
+        if (EventImage != null)
         {
             EventImageObject.sprite = EventImage.sprite;
         }
@@ -291,21 +289,21 @@ public class EventDetailScript : MonoBehaviour
         ResponseModel<List<PrizeCodeModel>> jsonResponse = new ResponseModel<List<PrizeCodeModel>>();
         jsonResponse.Data = new List<PrizeCodeModel>();
         jsonResponse = JsonMapper.ToObject<ResponseModel<List<PrizeCodeModel>>>(result);
-        
+
         if (jsonResponse.Succeed)
         {
-            if(jsonResponse.Data != null && jsonResponse.Data.Count > 0)
+            if (jsonResponse.Data != null && jsonResponse.Data.Count > 0)
             {
                 //Sort before show
                 jsonResponse.Data = jsonResponse.Data.OrderByDescending(t => t.Status).ThenBy(t => t.PrizeName).ToList();
-                
+
                 foreach (var item in jsonResponse.Data)
                 {
                     GameObject newButton = Instantiate(CouponTemplate) as GameObject;
                     CouponButtonTemplate sampleButton = newButton.GetComponent<CouponButtonTemplate>();
                     sampleButton.PrizeName.text = item.PrizeName;
                     sampleButton.CouponId.text = item.Id.ToString();
-                    if(item.Status == false && item.Date != null)
+                    if (item.Status == false && item.Date != null)
                     {
                         sampleButton.RedeemDate.text = "Redeem at: " + Utils.JsonDateToDateTimeLongString(item.Date);
                     }
@@ -331,7 +329,7 @@ public class EventDetailScript : MonoBehaviour
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
-    
+
     #endregion
 
     public void Refresh()
@@ -379,7 +377,7 @@ public class EventDetailScript : MonoBehaviour
 
         if (MasterCodeText.text.Length > 0)
         {
-            if(PrizeCodeId != 0)
+            if (PrizeCodeId != 0)
             {
                 //SEND REDEEM PRIZE CODE REQUEST
                 HTTPRequest request = new HTTPRequest();
@@ -417,7 +415,7 @@ public class EventDetailScript : MonoBehaviour
 
         if (jsonResponse.Succeed)
         {
-            
+
             //Clear PrizeCodeList
             foreach (Transform child in PrizeCodePanel.transform)
             {
@@ -428,7 +426,7 @@ public class EventDetailScript : MonoBehaviour
 
             //Show redeem prize code success panel
             RedeemPrizeCodeSuccessPanel.SetActive(true);
-            RedeemPrizeCodeSuccessMessage.text += jsonResponse.Data.PrizeName + " from " + PlayerPrefs.GetString(ConstantClass.PP_OrganizerName);
+            RedeemPrizeCodeSuccessMessage.text ="You got " + jsonResponse.Data.PrizeName + " from " + PlayerPrefs.GetString(ConstantClass.PP_OrganizerName);
             StartCountTime = true;
         }
         else
@@ -439,7 +437,7 @@ public class EventDetailScript : MonoBehaviour
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
-    
+
     #endregion
 
     #region PROCESS REDEEM PRIZE REQUEST
@@ -498,30 +496,22 @@ public class EventDetailScript : MonoBehaviour
             {
                 Citrine = 0;
             }
-            
+
             this.PrizeId = PrizeIdTemp;
 
             if (Teek > 0 && (Ruby > 0 || Sapphire > 0 || Citrine > 0)) //If can claim by both Teek and Gem, default select is Teek
             {
-                TeekToggleButton.isOn = true;
-                GemToggleButton.isOn = false;
-                TeekToggleButton.interactable = true;
-                GemToggleButton.interactable = true;
+              
             }
-            else if(Teek <= 0 && (Ruby > 0 || Sapphire > 0 || Citrine > 0)) //If only can claim by Gem, disable Teek Toggle Button and selcect gem button for default
+            else if (Teek <= 0 && (Ruby > 0 || Sapphire > 0 || Citrine > 0)) //If only can claim by Gem, disable Teek Toggle Button and selcect gem button for default
             {
-                TeekToggleButton.interactable = false;
-                GemToggleButton.isOn = true;
-                TeekToggleButton.isOn = false;
             }
-            else if(Teek > 0 && (Ruby == 0 && Sapphire == 0 && Citrine == 0)) //If only can claim by Teek, disable Gem Toggle Button and selcect teek button for default
+            else if (Teek > 0 && (Ruby == 0 && Sapphire == 0 && Citrine == 0)) //If only can claim by Teek, disable Gem Toggle Button and selcect teek button for default
             {
-                GemToggleButton.interactable = false;
-                TeekToggleButton.isOn = true;
-                GemToggleButton.isOn = false;
+                
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Debug.Log("Parse error in EventDetailScript with message: " + e.Message);
         }
@@ -530,17 +520,32 @@ public class EventDetailScript : MonoBehaviour
         RedeemPrizePanel.SetActive(true);
     }
 
-    public void RedeemPrize(GameObject ToggleGroup)
+    public void RedeemPrizeUsingGem()
     {
         LoadingManager.showLoadingIndicator(loadingPanel);
 
-        //Check if user select Teek of Gem
-        Toggle TeekToggleButton;
-        Toggle GemToggleButton;
+        //Prepare object to create request
+        HTTPRequest request = new HTTPRequest();
+        WWWForm form = new WWWForm();
+        form.AddField("prizeId", PrizeId);
+        form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+        form.AddField("organizerId", PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId));
+        form.AddField("eventId", PlayerPrefs.GetInt(ConstantClass.PP_EventIDKey));
 
-        GemToggleButton = ToggleGroup.transform.GetChild(0).GetComponent<Toggle>();
-        TeekToggleButton = ToggleGroup.transform.GetChild(1).GetComponent<Toggle>();
-        
+        request.formData = form;
+        Debug.Log("Redeem by gem");
+        request.url = ConstantClass.API_RedeemPrizeByGem;
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallRedeemPrizeByGem);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+
+        UCSS.HTTP.PostForm(request);
+    }
+
+    public void RedeemPrizeUsingTeek()
+    {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+
         //Prepare object to create request
         HTTPRequest request = new HTTPRequest();
         WWWForm form = new WWWForm();
@@ -551,29 +556,15 @@ public class EventDetailScript : MonoBehaviour
 
         request.formData = form;
 
-        if (TeekToggleButton.isOn) //If user choose to redeem by teek
-        {
-            Debug.Log("Redeem by teek");
-            request.url = ConstantClass.API_RedeemPrizeByTeek;
+        Debug.Log("Redeem by teek");
+        request.url = ConstantClass.API_RedeemPrizeByTeek;
 
-            request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallRedeemPrizeByTeek);
-            request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
-            request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallRedeemPrizeByTeek);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
 
-            UCSS.HTTP.PostForm(request);
+        UCSS.HTTP.PostForm(request);
 
-        }
-        else if(GemToggleButton.isOn) //If user choose to redeem by gem
-        {
-            Debug.Log("Redeem by gem");
-            request.url = ConstantClass.API_RedeemPrizeByGem;
-
-            request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallRedeemPrizeByGem);
-            request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
-            request.onError = new EventHandlerServiceError(MessageHelper.OnError);
-
-            UCSS.HTTP.PostForm(request);
-        }
     }
 
     private void OnDoneCallRedeemPrizeByTeek(string result, string transactionId)
@@ -585,11 +576,11 @@ public class EventDetailScript : MonoBehaviour
         if (jsonResponse.Succeed)
         {
             Refresh();
-            MessageHelper.MessageDialog("Claim prize successfully");
+            MessageHelper.SuccessDialog("Claim prize successfully");
         }
         else
         {
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            MessageHelper.ErrorDialog(jsonResponse.Message);
             Debug.Log(jsonResponse.Message);
         }
 
@@ -605,11 +596,11 @@ public class EventDetailScript : MonoBehaviour
         if (jsonResponse.Succeed)
         {
             Refresh();
-            MessageHelper.MessageDialog("Claim prize successfully");
+            MessageHelper.SuccessDialog("Claim prize successfully");
         }
         else
         {
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            MessageHelper.ErrorDialog(jsonResponse.Message);
             Debug.Log(jsonResponse.Message);
         }
 
@@ -652,11 +643,12 @@ public class EventDetailScript : MonoBehaviour
         {
             MessageHelper.MessageDialog("Register successfully!!");
             RegisterEventButton.SetActive(false);
-        } else
+        }
+        else
         {
             MessageHelper.MessageDialog("Register failed!!");
         }
-        
+
 
 
         LoadingManager.hideLoadingIndicator(loadingPanel);

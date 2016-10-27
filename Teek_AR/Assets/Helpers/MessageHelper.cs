@@ -227,7 +227,7 @@ public class MessageHelper : MonoBehaviour
         GameObject DialogBoxTemplate = Resources.Load("prefabs/Success Dialog") as GameObject;
         GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
         DialogBoxTemplate sampleButton = DialogBox.GetComponent<DialogBoxTemplate>();
-        sampleButton.Title.text = "";
+        sampleButton.Title.text = "Successfully!!";
         sampleButton.Message.text = message;
         sampleButton.transform.SetParent(ShadePanel.transform, false);
 
@@ -292,7 +292,7 @@ public class MessageHelper : MonoBehaviour
         GameObject DialogBoxTemplate = Resources.Load("prefabs/Error Dialog") as GameObject;
         GameObject DialogBox = Instantiate(DialogBoxTemplate) as GameObject;
         DialogBoxTemplate sampleButton = DialogBox.GetComponent<DialogBoxTemplate>();
-        sampleButton.Title.text = "";
+        sampleButton.Title.text = "Failed!!";
         sampleButton.Message.text = message;
         sampleButton.transform.SetParent(ShadePanel.transform, false);
 
