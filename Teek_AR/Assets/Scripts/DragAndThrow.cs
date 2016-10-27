@@ -536,7 +536,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         //form.AddField("userId", "40efe638-04b6-42aa-81c3-a79b208d75e5");
         //form.AddField("organizerId", 39);
         form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
-        form.AddField("organizerId", PlayerPrefs.GetString(ConstantClass.PP_OrganizerId));
+        form.AddField("organizerId", PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId));
         form.AddField("rubyAmount", rubyCount);
         form.AddField("sapphireAmount", sapphireCount);
         form.AddField("citrineAmount", citrineCount);

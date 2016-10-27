@@ -78,6 +78,7 @@ public class ShopController : MonoBehaviour {
         {
             form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
             form.AddField("organizerId", PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId));
+            form.AddField("eventId", PlayerPrefs.GetInt(ConstantClass.PP_EventIDKey));
             form.AddField("price", product.price);
 
             request.url = ConstantClass.API_UpdateBallItem;
