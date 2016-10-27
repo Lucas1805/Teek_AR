@@ -61,4 +61,10 @@ public class MenuController : MonoBehaviour {
         isOpen = false;
         isClose = true;
     }
+
+
+    public void NavigateMyEventScene()
+    {
+        SceneManager.LoadSceneAsync(ConstantClass.MyEventScene);
+    }
 }

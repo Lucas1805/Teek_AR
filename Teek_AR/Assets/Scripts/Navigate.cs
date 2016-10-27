@@ -36,7 +36,7 @@ public class Navigate : MonoBehaviour {
     public void NavigateStoreEventSceneToEventDetailScene(GameObject Event)
     {
         EventDetailScript.EventId = int.Parse(Event.transform.GetChild(0).GetComponent<Text>().text);
-
+        EventDetailScript.EventName = Event.transform.GetChild(3).GetComponent<Text>().text;
         MySceneManager.setLastScene(ConstantClass.StoreEventSceneName);
         SceneManager.LoadSceneAsync(ConstantClass.EventDetailSceneName);
     }
@@ -47,5 +47,11 @@ public class Navigate : MonoBehaviour {
         SceneManager.LoadSceneAsync(ConstantClass.GameSceneName);
     }
 
-
+    public void NavigateMyEventSceneToEventDetailScene(GameObject Event)
+    {
+        EventDetailScript.EventId = int.Parse(Event.transform.GetChild(0).GetComponent<Text>().text);
+        EventDetailScript.EventName = Event.transform.GetChild(3).GetComponent<Text>().text;
+        MySceneManager.setLastScene(ConstantClass.MyEventScene);
+        SceneManager.LoadSceneAsync(ConstantClass.EventDetailSceneName);
+    }
 }
