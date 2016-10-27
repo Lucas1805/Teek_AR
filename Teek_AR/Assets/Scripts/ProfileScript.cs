@@ -12,10 +12,12 @@ public class ProfileScript : MonoBehaviour {
     public Text BrandCountText;
     public Text EventCountText;
     public Text UsernameText;
+    public Text UsernameTextMenu;
     public Text FullnameText;
     public Text EmailText;
     public Text PhoneText;
     public Image ProfileImage;
+    public Image ProfileImageMenu;
     public GameObject loadingPanel;
 
     // Use this for initialization
@@ -59,6 +61,7 @@ public class ProfileScript : MonoBehaviour {
             BrandCountText.text = jsonResponse.Data.BrandCount.ToString();
             EventCountText.text = jsonResponse.Data.EventCount.ToString();
             UsernameText.text = jsonResponse.Data.Username;
+            UsernameTextMenu.text = jsonResponse.Data.Username;
             FullnameText.text = jsonResponse.Data.Fullname;
             EmailText.text = jsonResponse.Data.Email;
             PhoneText.text = jsonResponse.Data.Phone;
@@ -84,6 +87,7 @@ public class ProfileScript : MonoBehaviour {
             if (www.error == null)
             {
                 ProfileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                ProfileImageMenu.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
                 LoadingManager.hideLoadingIndicator(loadingPanel);
             }
         }

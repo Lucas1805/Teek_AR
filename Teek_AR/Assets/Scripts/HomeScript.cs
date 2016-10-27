@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Ucss;
 using Assets.ResponseModels;
 using LitJson;
+using System.Linq;
 
 public class HomeScript : MonoBehaviour {
 
@@ -122,19 +123,35 @@ public class HomeScript : MonoBehaviour {
         jsonResponse.Data = new List<OrganizerModel>();
         jsonResponse = JsonMapper.ToObject<ResponseModel<List<OrganizerModel>>>(result);
 
+
         if (jsonResponse.Succeed)
         {
-            foreach (var item in jsonResponse.Data)
+            if (jsonResponse.Data.Count > 0)
             {
+                //Sort by name
+                jsonResponse.Data = jsonResponse.Data.OrderBy(q => q.Name).ThenByDescending(q => q.StoreCount).ToList();
+
+                foreach (var item in jsonResponse.Data)
+                {
+                    GameObject newBrandButton = Instantiate(BrandButtonTemplateGO) as GameObject;
+                    BrandButtonTemplate sampleBrandButton = newBrandButton.GetComponent<BrandButtonTemplate>();
+                    sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = Utils.TruncateLongString(item.Name, 18);
+                    sampleBrandButton.Brand.transform.GetChild(0).GetComponent<Text>().text = item.Id.ToString();
+                    sampleBrandButton.BrandAmount.text = item.StoreCount.ToString() + " store(s)";
+
+                    sampleBrandButton.Activities.transform.GetChild(0).gameObject.SetActive(item.HasMultiplier);
+                    sampleBrandButton.Activities.transform.GetChild(1).gameObject.SetActive(item.HasARGAME);
+                    sampleBrandButton.Activities.transform.GetChild(2).gameObject.SetActive(item.HasVoting);
+
+                    newBrandButton.transform.SetParent(AllBrandsPanel.transform, false);
+                }
+            }
+            else
+            {
+                //Show record that say on data yet
                 GameObject newBrandButton = Instantiate(BrandButtonTemplateGO) as GameObject;
                 BrandButtonTemplate sampleBrandButton = newBrandButton.GetComponent<BrandButtonTemplate>();
-                sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = Utils.TruncateLongString(item.Name,18);
-                sampleBrandButton.Brand.transform.GetChild(0).GetComponent<Text>().text = item.Id.ToString();
-                sampleBrandButton.BrandAmount.text = item.StoreCount.ToString() + " store(s)";
-               
-                sampleBrandButton.Activities.transform.GetChild(0).gameObject.SetActive(item.HasMultiplier);
-                sampleBrandButton.Activities.transform.GetChild(1).gameObject.SetActive(item.HasARGAME);
-                sampleBrandButton.Activities.transform.GetChild(2).gameObject.SetActive(item.HasVoting);
+                sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = "No data yet";
 
                 newBrandButton.transform.SetParent(AllBrandsPanel.transform, false);
             }
@@ -166,20 +183,27 @@ public class HomeScript : MonoBehaviour {
 
         if (jsonResponse.Succeed)
         {
-            foreach (var item in jsonResponse.Data)
+            if(jsonResponse.Data.Count > 0)
             {
+                //Sort by name
+                jsonResponse.Data = jsonResponse.Data.OrderBy(q => q.Name).ThenByDescending(q => q.StoreCount).ToList();
+
+                foreach (var item in jsonResponse.Data)
                 {
-                    GameObject newBrandButton = Instantiate(BrandButtonTemplateGO) as GameObject;
-                    BrandButtonTemplate sampleBrandButton = newBrandButton.GetComponent<BrandButtonTemplate>();
-                    sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = Utils.TruncateLongString(item.Name, 18);
-                    sampleBrandButton.Brand.transform.GetChild(0).GetComponent<Text>().text = item.Id.ToString();
-                    sampleBrandButton.BrandAmount.text = item.StoreCount.ToString() + " store(s)";
-                    sampleBrandButton.Activities.transform.GetChild(0).gameObject.SetActive(item.HasMultiplier);
-                    sampleBrandButton.Activities.transform.GetChild(1).gameObject.SetActive(item.HasARGAME);
-                    sampleBrandButton.Activities.transform.GetChild(2).gameObject.SetActive(item.HasVoting);
-                    newBrandButton.transform.SetParent(MyBrandsPanel.transform, false);
+                    {
+                        GameObject newBrandButton = Instantiate(BrandButtonTemplateGO) as GameObject;
+                        BrandButtonTemplate sampleBrandButton = newBrandButton.GetComponent<BrandButtonTemplate>();
+                        sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = Utils.TruncateLongString(item.Name, 18);
+                        sampleBrandButton.Brand.transform.GetChild(0).GetComponent<Text>().text = item.Id.ToString();
+                        sampleBrandButton.BrandAmount.text = item.StoreCount.ToString() + " store(s)";
+                        sampleBrandButton.Activities.transform.GetChild(0).gameObject.SetActive(item.HasMultiplier);
+                        sampleBrandButton.Activities.transform.GetChild(1).gameObject.SetActive(item.HasARGAME);
+                        sampleBrandButton.Activities.transform.GetChild(2).gameObject.SetActive(item.HasVoting);
+                        newBrandButton.transform.SetParent(MyBrandsPanel.transform, false);
+                    }
                 }
             }
+            
         }
         else
         {

@@ -216,13 +216,21 @@ namespace MobyShop.UI {
 				Shop.BuyProduct( this.productId );
 			}
 
-            //QuanHM - set parent DialogConfirmPurchase(Clone) to ShopCanvas
+            //QuanHM - set parent DialogConfirmPurchase(Clone) and DialogNotEnoughCoins(Clone) to ShopCanvas
             #region
             GameObject dialogConfirmPurchase = GameObject.Find("DialogConfirmPurchase(Clone)");
             if (dialogConfirmPurchase != null)
             {
                 GameObject shopCanvas = GameObject.Find("ShopCanvas");
                 dialogConfirmPurchase.transform.SetParent(shopCanvas.transform);
+            }
+            
+
+            GameObject dialogNotEnoughCoins = GameObject.Find("DialogNotEnoughCoins(Clone)");
+            if (dialogNotEnoughCoins != null)
+            {
+                GameObject shopCanvas = GameObject.Find("ShopCanvas");
+                dialogNotEnoughCoins.transform.SetParent(shopCanvas.transform);
             }
             #endregion
         }
