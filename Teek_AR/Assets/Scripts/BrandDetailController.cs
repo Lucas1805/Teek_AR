@@ -92,6 +92,7 @@ public class BrandDetailController : MonoBehaviour {
                     sampleButton.StoreId.text = item.Id.ToString();
                     sampleButton.StoreName.text = item.Name;
                     sampleButton.Address.text = item.Address;
+                    
                     newButton.transform.SetParent(StoreContentPanel.transform, false);
                 }
                 
@@ -140,7 +141,7 @@ public class BrandDetailController : MonoBehaviour {
                     sampleButton.Time.text = Utils.JsonDateToDateTimeLongString(item.StartDate);
 
                     //Load event image
-                    WWW www_loadImage = new WWW("https://agenciatrampo.com.br/wp-content/uploads/2016/02/Solu%C3%A7%C3%B5es-em-Marketing-Digital-para-eventos-480x379.jpg");
+                    WWW www_loadImage = new WWW(item.ImageUrl);
                     StartCoroutine(LoadImage(www_loadImage, sampleButton.EventImgUrl));
 
 

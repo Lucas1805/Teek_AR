@@ -260,8 +260,15 @@ public class EventDetailScript : MonoBehaviour
         }
         else
         {
-            //Show error message
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            if(jsonResponse.Data == null)
+            {
+
+            }
+            else
+            {
+                //Show error message
+                MessageHelper.MessageDialog(jsonResponse.Message);
+            }
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);

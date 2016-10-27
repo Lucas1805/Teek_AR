@@ -19,6 +19,7 @@ namespace Assets
         public const string TutorialSceneName = "TutorialScene";
         public const string StoreEventSceneName = "StoreEventScene";
         public const string BrandDetailSceneName = "BrandDetailScene";
+        public const string MyEventScene = "MyEventScene";
         #endregion
 
         #region THIS CLASS NAME IS CLASS NAME IN MOBY SHOP
@@ -69,6 +70,7 @@ namespace Assets
         public const string API_UpdateCoinItem = "http://" + API_HOST_IP + "/Teek/api/Customer/UpdateCoinAmount";
         public const string API_LoadCouponList = "http://" + API_HOST_IP + "/Teek/api/RedeemCoupon/GetCouponList";
         public const string API_RedeemCoupon = "http://" + API_HOST_IP + "/Teek/api/RedeemCoupon/RedeemCoupon";
+        public const string API_LoadMyEvent = "http://" + API_HOST_IP + "/Teek/api/Event/GetEventByUserId";
 
         public const string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
 
