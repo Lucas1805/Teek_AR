@@ -76,6 +76,10 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
     private float timeCountdownDragonRespawn;
     private float timeDragonRespawnInMinute = 20f;
 
+    public GameObject HolyBlast;
+    private Vector3 hitPosition;
+    private float timeWaitForEffectWhenHit = 0;
+
     void Start()
     {
         timeCountdownDragonRespawn = timeDragonRespawnInMinute * 60;
@@ -188,7 +192,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         //    + "\n" + iceballMaterial.name;
         //displayText.text = "initialPosition: \n" + initialPosition.ToString()
         //    +"\nmousePosition: \n" + Input.mousePosition.ToString();
-        displayText.text = transform.position.ToString();
+        //displayText.text = hitPosition.ToString();
 
         CheckDistanceCameraAndPattern();
 
@@ -237,6 +241,21 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         {
             timeCounter += Time.deltaTime;
             isSpawned = false;
+            transform.Rotate(new Vector3(10, 0, 0));
+        }
+
+        if (isHit)
+        {
+            HolyBlast.SetActive(false);
+            HolyBlast.transform.position = hitPosition;
+            HolyBlast.SetActive(true);
+            timeWaitForEffectWhenHit += Time.deltaTime;
+        }
+        if (timeWaitForEffectWhenHit >= 0.1)
+        {
+            createBall();
+            isHit = false;
+            timeWaitForEffectWhenHit = 0;
         }
 
         if (isDead)
@@ -294,9 +313,12 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
     void OnTriggerEnter(Collider other)
     {
+        hitPosition = transform.position;
+        isHit = true;
+
         if (other.gameObject.CompareTag("Boundary"))
         {
-            createBall();
+            //createBall();
         }
 
         if (other.gameObject.CompareTag("Dragon"))
@@ -316,7 +338,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
             hitSound.SetActive(false);
             hitSound.SetActive(true);
 
-            createBall();
+            //createBall();
 
             if (health.value <= 0)
             {
