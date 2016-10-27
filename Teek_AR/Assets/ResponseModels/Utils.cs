@@ -51,5 +51,34 @@ namespace Assets.ResponseModels
             return result;
         }
 
+        public static List<string> TruncateLongerString(string originalString, int maxChar)
+        {
+            List<string> resultList = new List<string>();
+
+            int resultListCount = originalString.Length - maxChar + 1;
+
+            for (int i = 0; i < resultListCount; i++)
+            {
+                if (i == 0)
+                {
+                    resultList.Add(originalString.Substring(i, maxChar) + "...");
+                }
+                else if (i == (originalString.Length - maxChar))
+                {
+                    resultList.Add("..." + originalString.Substring(i, maxChar));
+                }
+                else
+                {
+                    resultList.Add("..." + originalString.Substring(i, maxChar) + "...");
+                }
+            }
+
+            for (int i = 0; i < resultListCount; i++)
+            {
+                resultList.Add(resultList[resultListCount - i - 1]);
+            }
+
+            return resultList;
+        }
     }
 }
