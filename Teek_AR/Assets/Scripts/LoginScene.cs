@@ -76,8 +76,8 @@ public class LoginScene : MonoBehaviour
             request.url = ConstantClass.API_Login;
 
             request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallLoginRequest);
-            request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
-            request.onError = new EventHandlerServiceError(this.OnLoginError);
+            request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+            request.onError = new EventHandlerServiceError(MessageHelper.OnError);
 
             request.formData = form;
 
@@ -86,7 +86,7 @@ public class LoginScene : MonoBehaviour
         else
         {
             LoadingManager.hideLoadingIndicator(loadingPanel);
-            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Please enter username and password");
+            MessageHelper.ErrorDialog(ConstantClass.Msg_MessageTitle,"Please enter username and password");
         }
     }
 
@@ -107,8 +107,8 @@ public class LoginScene : MonoBehaviour
         request.url = ConstantClass.API_Login;
 
         request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallLoginRequest);
-        request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
-        request.onError = new EventHandlerServiceError(this.OnLoginError);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
 
         request.formData = form;
 
@@ -139,8 +139,8 @@ public class LoginScene : MonoBehaviour
             request.url = ConstantClass.API_Register;
 
             request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallRegisterRequest);
-            request.onTimeOut = new EventHandlerServiceTimeOut(this.OnTimeOut);
-            request.onError = new EventHandlerServiceError(this.OnRegisterError);
+            request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+            request.onError = new EventHandlerServiceError(MessageHelper.OnError);
 
             request.formData = form;
 
@@ -176,21 +176,21 @@ public class LoginScene : MonoBehaviour
         {
             result = false;
             LoadingManager.hideLoadingIndicator(loadingPanel);
-            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Please enter fullname");
+            MessageHelper.ErrorDialog(ConstantClass.Msg_MessageTitle,"Please enter fullname");
             resetPasswordFields();
         }
         else if (rg_email.Length <= 0)
         {
             result = false;
             LoadingManager.hideLoadingIndicator(loadingPanel);
-            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle, "Please enter email");
+            MessageHelper.ErrorDialog(ConstantClass.Msg_MessageTitle, "Please enter email");
             resetPasswordFields();
         }
         else if (rg_email.Length > 0 && !validateEmail(rg_email))
         {
             result = false;
             LoadingManager.hideLoadingIndicator(loadingPanel);
-            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Email format is not valid");
+            MessageHelper.ErrorDialog(ConstantClass.Msg_MessageTitle,"Email format is not valid");
             resetPasswordFields();
 
         }
@@ -198,28 +198,28 @@ public class LoginScene : MonoBehaviour
         {
             result = false;
             LoadingManager.hideLoadingIndicator(loadingPanel);
-            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Please enter your username");
+            MessageHelper.ErrorDialog(ConstantClass.Msg_MessageTitle,"Please enter your username");
             resetPasswordFields();
         }
         else if (rg_password.Length <= 0)
         {
             result = false;
             LoadingManager.hideLoadingIndicator(loadingPanel);
-            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Please enter your password");
+            MessageHelper.ErrorDialog(ConstantClass.Msg_MessageTitle,"Please enter your password");
             resetPasswordFields();
         }
         else if (rg_password.Length < 8)
         {
             result = false;
             LoadingManager.hideLoadingIndicator(loadingPanel);
-            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Password must be at least 8 characters");
+            MessageHelper.ErrorDialog(ConstantClass.Msg_MessageTitle,"Password must be at least 8 characters");
             resetPasswordFields();
         }
         else if (!rg_password.Equals(rg_passwordAgain))
         {
             result = false;
             LoadingManager.hideLoadingIndicator(loadingPanel);
-            MessageHelper.MessageDialog(ConstantClass.Msg_MessageTitle,"Re-enter Password is not match");
+            MessageHelper.ErrorDialog(ConstantClass.Msg_MessageTitle,"Re-enter Password is not match");
             resetPasswordFields();
         }
         return result;
@@ -261,7 +261,7 @@ public class LoginScene : MonoBehaviour
 
             //Show error message
             LoadingManager.hideLoadingIndicator(loadingPanel);
-            MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message);
+            MessageHelper.ErrorDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message);
             resetLoginField();
         }
 
@@ -289,33 +289,10 @@ public class LoginScene : MonoBehaviour
             //Show error message
             LoadingManager.hideLoadingIndicator(loadingPanel);
             if (jsonResponse.Errors != null)
-                MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message + " " + jsonResponse.Errors[0]);
+                MessageHelper.ErrorDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message + " " + jsonResponse.Errors[0]);
             else
-                MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message);
+                MessageHelper.ErrorDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message);
             resetPasswordFields();
         }
-    }
-
-    private void OnLoginError(string error, string transactionId)
-    {
-        LoadingManager.hideLoadingIndicator(loadingPanel);
-        MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
-        Debug.Log("Login WWW error: " + error);
-        resetLoginField();
-    }
-
-    private void OnRegisterError(string error, string transactionId)
-    {
-        LoadingManager.hideLoadingIndicator(loadingPanel);
-        MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, error);
-        Debug.Log("Regiser WWW Error: " + error);
-        resetPasswordFields();
-    }
-
-    private void OnTimeOut(string transactionId)
-    {
-        LoadingManager.hideLoadingIndicator(loadingPanel);
-        MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, ConstantClass.Msg_TimeOut);
-        Debug.Log(ConstantClass.Msg_TimeOut);
     }
 }
