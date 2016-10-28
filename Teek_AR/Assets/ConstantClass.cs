@@ -40,6 +40,7 @@ namespace Assets
         public const string PP_UserIDKey = "UserID"; //MUST ENCRYPT
         public const string PP_EventIDKey = "EventID";
         public const string PP_OrganizerId = "OrganizerID";
+        public const string PP_GameId = "GameID";
         public const string PP_OrganizerName = "OrganizerName";
         public const string PP_UserParticipationID = "UserParticipationID";
         public const string PP_CustomerId = "CustomerID";
@@ -47,7 +48,7 @@ namespace Assets
 
         #region API LINKS
         //API LINKS
-        public const string API_HOST_IP = "localhost";
+        public const string API_HOST_IP = "10.5.49.72";
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
         public const string API_RedeemPrizeCode = "http://" + API_HOST_IP + "/Teek/api/Prize/ReedemPrize";
@@ -71,6 +72,7 @@ namespace Assets
         public const string API_LoadCouponList = "http://" + API_HOST_IP + "/Teek/api/RedeemCoupon/GetCouponList";
         public const string API_RedeemCoupon = "http://" + API_HOST_IP + "/Teek/api/RedeemCoupon/RedeemCoupon";
         public const string API_LoadMyEvent = "http://" + API_HOST_IP + "/Teek/api/Event/GetEventByUserId";
+        public const string API_LoadDropRate = "http://" + API_HOST_IP + "/Teek/api/Game/GetDropRate";
 
         public const string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
 

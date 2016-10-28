@@ -47,6 +47,8 @@ public class EventDetailScript : MonoBehaviour
     public GameObject RedeemPrizeCodeSuccessPanel;
     public Text CountTimeText;
     public Text RedeemPrizeCodeSuccessMessage;
+    public Button ClaimByTeekButton;
+    public Button ClaimByGemButton;
 
     private int PrizeCodeId;
     private int PrizeId;
@@ -102,11 +104,6 @@ public class EventDetailScript : MonoBehaviour
                     sampleButton.GameId.text = item.GameId.ToString();
                     newButton.transform.SetParent(activityPanel.transform, false);
                 }
-
-
-
-
-
             }
         }
         else
@@ -499,16 +496,19 @@ public class EventDetailScript : MonoBehaviour
 
             this.PrizeId = PrizeIdTemp;
 
-            if (Teek > 0 && (Ruby > 0 || Sapphire > 0 || Citrine > 0)) //If can claim by both Teek and Gem, default select is Teek
+            //Turn on interactable for both button
+            ClaimByTeekButton.interactable = true;
+            ClaimByGemButton.interactable = true;
+
+            if (Teek <= 0 && (Ruby > 0 || Sapphire > 0 || Citrine > 0)) //If only can claim by Gem, disable Teek Select Button
             {
-              
+                ClaimByTeekButton.interactable = false;
+                ClaimByGemButton.interactable = true;
             }
-            else if (Teek <= 0 && (Ruby > 0 || Sapphire > 0 || Citrine > 0)) //If only can claim by Gem, disable Teek Toggle Button and selcect gem button for default
+            else if (Teek > 0 && (Ruby == 0 && Sapphire == 0 && Citrine == 0)) //If only can claim by Teek, disable Gem Select Button
             {
-            }
-            else if (Teek > 0 && (Ruby == 0 && Sapphire == 0 && Citrine == 0)) //If only can claim by Teek, disable Gem Toggle Button and selcect teek button for default
-            {
-                
+                ClaimByGemButton.interactable = false;
+                ClaimByTeekButton.interactable = true;
             }
         }
         catch (Exception e)
