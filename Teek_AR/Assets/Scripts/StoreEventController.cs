@@ -68,10 +68,11 @@ public class StoreEventController : MonoBehaviour
 
                     sampleButton.EventId.text = item.Id.ToString();
                     sampleButton.EventName.text = Utils.TruncateLongString(item.Name, 23);
+                    sampleButton.OriginalName.text = item.Name;
                     sampleButton.Time.text = Utils.JsonDateToDateTimeLongString(item.StartDate);
 
                     //Load event image
-                    WWW www_loadImage = new WWW("https://agenciatrampo.com.br/wp-content/uploads/2016/02/Solu%C3%A7%C3%B5es-em-Marketing-Digital-para-eventos-480x379.jpg");
+                    WWW www_loadImage = new WWW(item.ImageUrl);
                     StartCoroutine(LoadImage(www_loadImage, sampleButton.EventImgUrl));
 
                     if (item.Multiplier != 0)

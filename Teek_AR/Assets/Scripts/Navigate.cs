@@ -17,7 +17,7 @@ public class Navigate : MonoBehaviour {
     public void NavigateBrandDetailScene(GameObject Brand)
     {
         BrandDetailController.OrganizerId = int.Parse(Brand.transform.GetChild(0).GetComponent<Text>().text);
-        BrandDetailController.OrganizerName = Brand.transform.GetChild(1).GetComponent<Text>().text;
+        BrandDetailController.OrganizerName = Brand.transform.GetChild(2).GetComponent<Text>().text; // Get original name
 
         MySceneManager.setLastScene(ConstantClass.HomeSceneName);
         SceneManager.LoadSceneAsync(ConstantClass.BrandDetailSceneName);
@@ -26,7 +26,7 @@ public class Navigate : MonoBehaviour {
     public void NavigateBrandDetailToEventDetailScene(GameObject Event)
     {
         EventDetailScript.EventId = int.Parse(Event.transform.GetChild(0).GetComponent<Text>().text);
-        EventDetailScript.EventName = Event.transform.GetChild(3).GetComponent<Text>().text;
+        EventDetailScript.EventName = Event.transform.GetChild(8).GetComponent<Text>().text; //Get original name
         EventDetailScript.EventImage = Event.transform.GetChild(1).GetComponent<Image>();
 
         MySceneManager.setLastScene(ConstantClass.BrandDetailSceneName);
@@ -36,7 +36,7 @@ public class Navigate : MonoBehaviour {
     public void NavigateStoreEventSceneToEventDetailScene(GameObject Event)
     {
         EventDetailScript.EventId = int.Parse(Event.transform.GetChild(0).GetComponent<Text>().text);
-        EventDetailScript.EventName = Event.transform.GetChild(3).GetComponent<Text>().text;
+        EventDetailScript.EventName = Event.transform.GetChild(8).GetComponent<Text>().text; //Get original name
         MySceneManager.setLastScene(ConstantClass.StoreEventSceneName);
         SceneManager.LoadSceneAsync(ConstantClass.EventDetailSceneName);
     }

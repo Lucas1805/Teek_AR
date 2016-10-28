@@ -136,6 +136,7 @@ public class HomeScript : MonoBehaviour {
                     GameObject newBrandButton = Instantiate(BrandButtonTemplateGO) as GameObject;
                     BrandButtonTemplate sampleBrandButton = newBrandButton.GetComponent<BrandButtonTemplate>();
                     sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = Utils.TruncateLongString(item.Name, 18);
+                    sampleBrandButton.Brand.transform.GetChild(2).GetComponent<Text>().text = item.Name; // Original name
                     sampleBrandButton.Brand.transform.GetChild(0).GetComponent<Text>().text = item.Id.ToString();
                     sampleBrandButton.BrandAmount.text = item.StoreCount.ToString() + " store(s)";
 
@@ -194,6 +195,7 @@ public class HomeScript : MonoBehaviour {
                         GameObject newBrandButton = Instantiate(BrandButtonTemplateGO) as GameObject;
                         BrandButtonTemplate sampleBrandButton = newBrandButton.GetComponent<BrandButtonTemplate>();
                         sampleBrandButton.Brand.transform.GetChild(1).GetComponent<Text>().text = Utils.TruncateLongString(item.Name, 18);
+                        sampleBrandButton.Brand.transform.GetChild(2).GetComponent<Text>().text = item.Name; // Original name
                         sampleBrandButton.Brand.transform.GetChild(0).GetComponent<Text>().text = item.Id.ToString();
                         sampleBrandButton.BrandAmount.text = item.StoreCount.ToString() + " store(s)";
                         sampleBrandButton.Activities.transform.GetChild(0).gameObject.SetActive(item.HasMultiplier);

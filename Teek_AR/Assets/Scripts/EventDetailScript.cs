@@ -56,10 +56,14 @@ public class EventDetailScript : MonoBehaviour
 
     private float TimeOutRedeemPrizeCodeSuccessfully = 5f * 60;
 
+    private List<string> truncateLongerStringList = new List<string>();
+    private float truncateLongerStringTime = 0;
 
     // Use this for initialization
     void Start()
     {
+        truncateLongerStringList = Utils.TruncateLongerString(EventName, 17);
+
         //Get Organizer Id from PlayerPrefs
         OrganizerId = PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId);
 
@@ -127,6 +131,25 @@ public class EventDetailScript : MonoBehaviour
             StartCountTime = false;
             TimeOutRedeemPrizeCodeSuccessfully = 5f * 60;
         }
+
+        #region QuanHM - TruncateLongerString
+        if (EventName.Length > 17)  // if length of EventName over 20 char then call TruncateLongerString
+        {
+            truncateLongerStringTime += Time.deltaTime * 2;
+            if (truncateLongerStringTime <= truncateLongerStringList.Count)
+            {
+                EventNameText.text = truncateLongerStringList[(int)truncateLongerStringTime];
+            }
+            else
+            {
+                truncateLongerStringTime = 0;
+            }
+        }
+        else // else just show the original EventName
+        {
+            EventNameText.text = EventName;
+        }
+        #endregion
     }
 
     public void GetPrizeData()

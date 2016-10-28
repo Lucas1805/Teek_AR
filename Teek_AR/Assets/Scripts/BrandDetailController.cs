@@ -22,10 +22,15 @@ public class BrandDetailController : MonoBehaviour {
     public GameObject loadingPanel;
     public Text OrganizerNameText;
 
+    private List<string> truncateLongerStringList = new List<string>();
+    private float truncateLongerStringTime = 0;
 
-	// Use this for initialization
-	void Start () {
-        OrganizerNameText.text = Utils.TruncateLongString(OrganizerName, 21);
+
+    // Use this for initialization
+    void Start () {
+
+        OrganizerNameText.text = OrganizerName;
+        truncateLongerStringList = Utils.TruncateLongerString(OrganizerName, 17);
 
         //Set OrganizerId to PlayerPrefs
         PlayerPrefs.SetInt(ConstantClass.PP_OrganizerId, OrganizerId);
@@ -35,7 +40,29 @@ public class BrandDetailController : MonoBehaviour {
         LoadStoreList();
         LoadEventListByOrganizer();
     }
-	
+
+    void Update()
+    {
+        #region QuanHM - TruncateLongerString
+        if (OrganizerName.Length > 17)  // if length of EventName over 20 char then call TruncateLongerString
+        {
+            truncateLongerStringTime += Time.deltaTime * 2;
+            if (truncateLongerStringTime <= truncateLongerStringList.Count)
+            {
+                OrganizerNameText.text = truncateLongerStringList[(int)truncateLongerStringTime];
+            }
+            else
+            {
+                truncateLongerStringTime = 0;
+            }
+        }
+        else // else just show the original EventName
+        {
+            OrganizerNameText.text = OrganizerName;
+        }
+        #endregion
+    }
+
     public void LoadStoreList()
     {
         LoadingManager.showLoadingIndicator(loadingPanel);
@@ -138,6 +165,7 @@ public class BrandDetailController : MonoBehaviour {
 
                     sampleButton.EventId.text = item.Id.ToString();
                     sampleButton.EventName.text = Utils.TruncateLongString(item.Name, 23);
+                    sampleButton.OriginalName.text = item.Name;
                     sampleButton.Time.text = Utils.JsonDateToDateTimeLongString(item.StartDate);
 
                     //Load event image
