@@ -47,6 +47,8 @@ public class EventDetailScript : MonoBehaviour
     public GameObject RedeemPrizeCodeSuccessPanel;
     public Text CountTimeText;
     public Text RedeemPrizeCodeSuccessMessage;
+    public Button ClaimByTeekButton;
+    public Button ClaimByGemButton;
 
     private int PrizeCodeId;
     private int PrizeId;
@@ -54,10 +56,14 @@ public class EventDetailScript : MonoBehaviour
 
     private float TimeOutRedeemPrizeCodeSuccessfully = 5f * 60;
 
+    private List<string> truncateLongerStringList = new List<string>();
+    private float truncateLongerStringTime = 0;
 
     // Use this for initialization
     void Start()
     {
+        truncateLongerStringList = Utils.TruncateLongerString(EventName, 17);
+
         //Get Organizer Id from PlayerPrefs
         OrganizerId = PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId);
 
@@ -102,11 +108,6 @@ public class EventDetailScript : MonoBehaviour
                     sampleButton.GameId.text = item.GameId.ToString();
                     newButton.transform.SetParent(activityPanel.transform, false);
                 }
-
-
-
-
-
             }
         }
         else
@@ -130,6 +131,25 @@ public class EventDetailScript : MonoBehaviour
             StartCountTime = false;
             TimeOutRedeemPrizeCodeSuccessfully = 5f * 60;
         }
+
+        #region QuanHM - TruncateLongerString
+        if (EventName.Length > 17)  // if length of EventName over 20 char then call TruncateLongerString
+        {
+            truncateLongerStringTime += Time.deltaTime * 2;
+            if (truncateLongerStringTime <= truncateLongerStringList.Count)
+            {
+                EventNameText.text = truncateLongerStringList[(int)truncateLongerStringTime];
+            }
+            else
+            {
+                truncateLongerStringTime = 0;
+            }
+        }
+        else // else just show the original EventName
+        {
+            EventNameText.text = EventName;
+        }
+        #endregion
     }
 
     public void GetPrizeData()
@@ -499,16 +519,19 @@ public class EventDetailScript : MonoBehaviour
 
             this.PrizeId = PrizeIdTemp;
 
-            if (Teek > 0 && (Ruby > 0 || Sapphire > 0 || Citrine > 0)) //If can claim by both Teek and Gem, default select is Teek
+            //Turn on interactable for both button
+            ClaimByTeekButton.interactable = true;
+            ClaimByGemButton.interactable = true;
+
+            if (Teek <= 0 && (Ruby > 0 || Sapphire > 0 || Citrine > 0)) //If only can claim by Gem, disable Teek Select Button
             {
-              
+                ClaimByTeekButton.interactable = false;
+                ClaimByGemButton.interactable = true;
             }
-            else if (Teek <= 0 && (Ruby > 0 || Sapphire > 0 || Citrine > 0)) //If only can claim by Gem, disable Teek Toggle Button and selcect gem button for default
+            else if (Teek > 0 && (Ruby == 0 && Sapphire == 0 && Citrine == 0)) //If only can claim by Teek, disable Gem Select Button
             {
-            }
-            else if (Teek > 0 && (Ruby == 0 && Sapphire == 0 && Citrine == 0)) //If only can claim by Teek, disable Gem Toggle Button and selcect teek button for default
-            {
-                
+                ClaimByGemButton.interactable = false;
+                ClaimByTeekButton.interactable = true;
             }
         }
         catch (Exception e)

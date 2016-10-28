@@ -23,9 +23,10 @@ public class ShopController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
+        
         //CALL AIP TO GET NUMBER OF ITEM OF USER TO LOAD
         LoadCustomerInformation();
+        LoadDropRate();
         Shop.OnProductBought += this.OnProductBought;
     }
 	
@@ -242,6 +243,27 @@ public class ShopController : MonoBehaviour {
         UCSS.HTTP.PostForm(request);
     }
 
+    public void LoadDropRate()
+    {
+        if(GameId != 0)
+        {
+            LoadingManager.showLoadingIndicator(loadingPanel);
+            HTTPRequest request = new HTTPRequest();
+            request.url = ConstantClass.API_LoadDropRate;
+
+            WWWForm form = new WWWForm();
+            form.AddField("gameid", GameId);
+
+            request.formData = form;
+
+            request.stringCallback = new EventHandlerHTTPString(this.OnDoneLoadDropRateRequest);
+            request.onTimeOut = new EventHandlerServiceTimeOut(this.SetDefaultDropRate);
+            request.onError = new EventHandlerServiceError(this.SetDefaultDropRate);
+
+            UCSS.HTTP.PostForm(request);
+        }
+    }
+
     #region PROCESS LOAD USER INFORMATION REQUEST
     private void OnDoneCustomerInformationRequest(string result, string transactionId)
     {
@@ -273,6 +295,56 @@ public class ShopController : MonoBehaviour {
         //Call Set Value To Shop After Getting Data From Server
         setValueToShop();
         LoadingManager.hideLoadingIndicator(loadingPanel);
+    }
+    #endregion
+
+    #region PROCESS LOAD DROP RATE REQUEST
+    private void OnDoneLoadDropRateRequest(string result, string transactionId)
+    {
+        ResponseModel<DropRateModel> jsonResponse = new ResponseModel<DropRateModel>();
+        jsonResponse.Data = new DropRateModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<DropRateModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            if(jsonResponse.Data != null)
+            {
+                DragAndThrow.DropRateCombo1 = (float)jsonResponse.Data.DropRateCombo1;
+                DragAndThrow.DropRateCombo2 = (float)jsonResponse.Data.DropRateCombo2;
+                DragAndThrow.DropRateCombo3 = (float)jsonResponse.Data.DropRateCombo3;
+            }
+            else
+            {
+                DragAndThrow.DropRateCombo1 = 70f;
+                DragAndThrow.DropRateCombo2 = 20f;
+                DragAndThrow.DropRateCombo3 = 10f;
+            }
+        }
+        else
+        {
+            DragAndThrow.DropRateCombo1 = 70f;
+            DragAndThrow.DropRateCombo2 = 20f;
+            DragAndThrow.DropRateCombo3 = 10f;
+        }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
+    }
+
+    public void SetDefaultDropRate(string error, string transactionId)
+    {
+        LoadingManager.hideLoadingIndicator(loadingPanel);
+        DragAndThrow.DropRateCombo1 = 70f;
+        DragAndThrow.DropRateCombo2 = 20f;
+        DragAndThrow.DropRateCombo3 = 10f;
+        Debug.Log("WWW Error: " + error + ".Set drop rate to default");
+    }
+    public void SetDefaultDropRate(string transactionId)
+    {
+        LoadingManager.hideLoadingIndicator(loadingPanel);
+        DragAndThrow.DropRateCombo1 = 70f;
+        DragAndThrow.DropRateCombo2 = 20f;
+        DragAndThrow.DropRateCombo3 = 10f;
+        Debug.Log("WWW Error: Time out.Set drop rate to default");
     }
     #endregion
 }

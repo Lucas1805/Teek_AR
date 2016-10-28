@@ -80,6 +80,10 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
     private Vector3 hitPosition;
     private float timeWaitForEffectWhenHit = 0;
 
+    public static float DropRateCombo1; //THIS IS THE DEFAULT VALUE IF CANNOT LOAD FROM SERVER
+    public static float DropRateCombo2;
+    public static float DropRateCombo3;
+
     void Start()
     {
         timeCountdownDragonRespawn = timeDragonRespawnInMinute * 60;
@@ -364,21 +368,31 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         {
             listItemClone.Add(item);
         }
-
-        float percent1Item = 1;
-        float percent2Item = 1;
-        //float percent3Item = 98;
-
+        
         int ranNumPercent = Random.Range(1, 101);
         int ranNumInListItem = 0;
 
-        if (ranNumPercent <= percent1Item)
+        if (ranNumPercent <= DropRateCombo1)
         {
             ranNumInListItem = Random.Range(0, listItemClone.Count);
             listDropItem[ranNumInListItem].transform.GetChild(1).GetComponent<Text>().text = "x 1";
             listDropItem[ranNumInListItem].SetActive(true);
+            switch (ranNumInListItem)
+            {
+                case 0:
+                    rubyCount++;
+                    break;
+                case 1:
+                    sapphireCount++;
+                    break;
+                case 2:
+                    citrineCount++;
+                    break;
+                default:
+                    break;
+            }
         }
-        else if (percent1Item < ranNumPercent && ranNumPercent <= (percent1Item + percent2Item))
+        else if (DropRateCombo1 < ranNumPercent && ranNumPercent <= (DropRateCombo1 + DropRateCombo2))
         {
             for (int i = 0; i < 2; i++)
             {
