@@ -28,10 +28,7 @@ public class EventDetailScript : MonoBehaviour
     public int OrganizerId;
 
     public GameObject loadingPanel;
-    public GameObject contentPanel;
-    public GameObject couponPanel;
-
-    public GameObject activityPanel;
+    
     public Text TeekAmountText;
     public Text RubyAmountText;
     public Text SapphireAmountText;
@@ -106,7 +103,7 @@ public class EventDetailScript : MonoBehaviour
                     GameObject newButton = Instantiate(GameTemplate) as GameObject;
                     GameButtonTemplate sampleButton = newButton.GetComponent<GameButtonTemplate>();
                     sampleButton.GameId.text = item.GameId.ToString();
-                    newButton.transform.SetParent(activityPanel.transform, false);
+                    newButton.transform.SetParent(ActivityPanel.transform, false);
                 }
             }
         }
@@ -202,7 +199,7 @@ public class EventDetailScript : MonoBehaviour
 
 
 
-                newButton.transform.SetParent(contentPanel.transform, false);
+                newButton.transform.SetParent(PrizePanel.transform, false);
             }
         }
         else
@@ -338,7 +335,7 @@ public class EventDetailScript : MonoBehaviour
                         sampleButton.No.SetActive(true);
                     }
 
-                    newButton.transform.SetParent(couponPanel.transform, false);
+                    newButton.transform.SetParent(PrizeCodePanel.transform, false);
                 }
             }
         }
