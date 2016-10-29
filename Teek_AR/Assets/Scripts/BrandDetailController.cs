@@ -22,6 +22,11 @@ public class BrandDetailController : MonoBehaviour {
     public GameObject loadingPanel;
     public Text OrganizerNameText;
 
+    public Text TeekAmountText;
+    public Text RubyAmountText;
+    public Text SapphireAmountText;
+    public Text CitrineAmountText;
+
     private List<string> truncateLongerStringList = new List<string>();
     private float truncateLongerStringTime = 0;
 
@@ -37,7 +42,7 @@ public class BrandDetailController : MonoBehaviour {
         PlayerPrefs.SetString(ConstantClass.PP_OrganizerName, OrganizerName);
         PlayerPrefs.Save();
 
-        LoadStoreList();
+        LoadUserInformation();
         LoadEventListByOrganizer();
     }
 
@@ -259,4 +264,47 @@ public class BrandDetailController : MonoBehaviour {
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
+
+    public void LoadUserInformation()
+    {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        HTTPRequest request = new HTTPRequest();
+        request.url = ConstantClass.API_LoadCustomerInformation;
+
+        WWWForm form = new WWWForm();
+        form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+        form.AddField("organizerId", OrganizerId);
+
+        request.formData = form;
+
+        request.stringCallback = new EventHandlerHTTPString(this.OnLoadUserInformationRequest);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+
+        UCSS.HTTP.PostForm(request);
+    }
+
+    #region PROCESS LOAD USER INFORMATION REQUEST
+    private void OnLoadUserInformationRequest(string result, string transactionId)
+    {
+        ResponseModel<CustomerResponseModel> jsonResponse = new ResponseModel<CustomerResponseModel>();
+        jsonResponse.Data = new CustomerResponseModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<CustomerResponseModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            TeekAmountText.text = jsonResponse.Data.Teek.ToString() + " Teek";
+            RubyAmountText.text = jsonResponse.Data.Ruby.ToString();
+            SapphireAmountText.text = jsonResponse.Data.Sapphire.ToString();
+            CitrineAmountText.text = jsonResponse.Data.Citrine.ToString();
+        }
+        else
+        {
+            //Show error message
+            MessageHelper.MessageDialog(jsonResponse.Message);
+        }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
+    }
+    #endregion
 }
