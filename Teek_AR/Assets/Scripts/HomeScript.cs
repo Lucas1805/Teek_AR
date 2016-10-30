@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using Ucss;
 using Assets.ResponseModels;
 using LitJson;
-using System.Linq;
 
 public class HomeScript : MonoBehaviour {
 
@@ -30,7 +29,7 @@ public class HomeScript : MonoBehaviour {
     public Image ProfileImage;
 
     private bool isFilterAll;
-
+    
     // Use this for initialization
     void Start () {
         CallAPIGetOrganizers();
@@ -40,7 +39,7 @@ public class HomeScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        
+
 	}
 
 
@@ -130,7 +129,7 @@ public class HomeScript : MonoBehaviour {
             {
                 //Sort by name
                 jsonResponse.Data = jsonResponse.Data.OrderBy(q => q.Name).ThenByDescending(q => q.StoreCount).ToList();
-
+                
                 foreach (var item in jsonResponse.Data)
                 {
                     GameObject newBrandButton = Instantiate(BrandButtonTemplateGO) as GameObject;
@@ -143,6 +142,14 @@ public class HomeScript : MonoBehaviour {
                     sampleBrandButton.Activities.transform.GetChild(0).gameObject.SetActive(item.HasMultiplier);
                     sampleBrandButton.Activities.transform.GetChild(1).gameObject.SetActive(item.HasARGAME);
                     sampleBrandButton.Activities.transform.GetChild(2).gameObject.SetActive(item.HasVoting);
+
+                    //Load Image of brand
+                    if(item.ImageUrl != null)
+                    {
+                        string url = ConstantClass.ImageHost + item.ImageUrl;
+                        WWW www_loadImage = new WWW(url);
+                        StartCoroutine(LoadImage(www_loadImage, sampleBrandButton.BrandLogo));
+                    }
 
                     newBrandButton.transform.SetParent(AllBrandsPanel.transform, false);
                 }
@@ -163,6 +170,7 @@ public class HomeScript : MonoBehaviour {
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
+
 
     public void CallAPIGetOrganizersByUserId()
     {
@@ -201,6 +209,15 @@ public class HomeScript : MonoBehaviour {
                         sampleBrandButton.Activities.transform.GetChild(0).gameObject.SetActive(item.HasMultiplier);
                         sampleBrandButton.Activities.transform.GetChild(1).gameObject.SetActive(item.HasARGAME);
                         sampleBrandButton.Activities.transform.GetChild(2).gameObject.SetActive(item.HasVoting);
+
+                        //Load Image of brand
+                        if (item.ImageUrl != null)
+                        {
+                            string url = ConstantClass.ImageHost + item.ImageUrl;
+                            WWW www_loadImage = new WWW(url);
+                            StartCoroutine(LoadImage(www_loadImage, sampleBrandButton.BrandLogo));
+                        }
+
                         newBrandButton.transform.SetParent(MyBrandsPanel.transform, false);
                     }
                 }
@@ -360,7 +377,6 @@ public class HomeScript : MonoBehaviour {
             if (www.error == null)
             {
                 ProfileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-                //LoadingManager.hideLoadingIndicator(loadingPanel);
             }
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);
@@ -385,5 +401,19 @@ public class HomeScript : MonoBehaviour {
 
         LoadUserInformation();
 
+    }
+
+    IEnumerator LoadImage(WWW www, Image image)
+    {
+        yield return www;
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        if (www.isDone)
+        {
+            if (www.error == null)
+            {
+                image.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));               
+            }
+        }
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 }
