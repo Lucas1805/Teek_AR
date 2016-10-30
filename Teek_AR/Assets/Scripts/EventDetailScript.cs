@@ -11,12 +11,14 @@ using LitJson;
 using Assets;
 using System;
 using System.Linq;
+using Assets.ViewModels;
 
 public class EventDetailScript : MonoBehaviour
 {
     public GameObject ButtonTemplate;
     public GameObject CouponTemplate;
     public GameObject GameTemplate;
+    public GameObject StoreButtonTemplate;
     public GameObject SurveyTemplate;
     public GameObject VotingTemplate;
     public GameObject CheckinTemplate;
@@ -28,15 +30,22 @@ public class EventDetailScript : MonoBehaviour
     public int OrganizerId;
 
     public GameObject loadingPanel;
-    
+
     public Text TeekAmountText;
     public Text RubyAmountText;
     public Text SapphireAmountText;
+
+
+
+    public Text EventFullName;
+    public Text EventMultiplier;
+    public Text EventCalendar;
     public Text CitrineAmountText;
     public Text EventNameText;
     public Image EventImageObject;
     public GameObject PrizePanel;
-    public GameObject PrizeCodePanel;
+    public GameObject BagPanel;
+    public GameObject InformationPanel;
     public GameObject ActivityPanel;
     public GameObject RedeemCodePanel;
     public InputField MasterCodeText;
@@ -71,9 +80,54 @@ public class EventDetailScript : MonoBehaviour
         LoadUserInformation();
         LoadEventInfo();
         GetPrizeData();
+        LoadInformtion();
+        LoadStores();
         LoadActivities();
         LoadPrizeCode();
 
+    }
+
+    private void LoadInformtion()
+    {
+        //throw new NotImplementedException();
+    }
+
+    private void LoadStores()
+    {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        HTTPRequest request = new HTTPRequest();
+        request.url = ConstantClass.API_GetStoreByEventId + "?EventId=" + EventId;
+
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallGetStores);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        UCSS.HTTP.GetString(request);
+    }
+
+    private void OnDoneCallGetStores(string result, string transactionId)
+    {
+        ResponseModel<List<StoreModel>> jsonResponse = new ResponseModel<List<StoreModel>>();
+        jsonResponse.Data = new List<StoreModel>();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<List<StoreModel>>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            foreach (var item in jsonResponse.Data)
+            {
+                GameObject newButton = Instantiate(StoreButtonTemplate) as GameObject;
+                StoreButtonTemplate sampleButton = newButton.GetComponent<StoreButtonTemplate>();
+                sampleButton.StoreId.text = item.Id.ToString();
+                sampleButton.StoreName.text = item.Name.ToString();
+                sampleButton.Address.text = item.Address.ToString();
+                newButton.transform.SetParent(InformationPanel.transform, false);
+            }
+        }
+        else
+        {
+            MessageHelper.MessageDialog(jsonResponse.Message);
+        }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     private void LoadActivities()
@@ -335,7 +389,7 @@ public class EventDetailScript : MonoBehaviour
                         sampleButton.No.SetActive(true);
                     }
 
-                    newButton.transform.SetParent(PrizeCodePanel.transform, false);
+                    newButton.transform.SetParent(BagPanel.transform, false);
                 }
             }
         }
@@ -361,7 +415,7 @@ public class EventDetailScript : MonoBehaviour
         GetPrizeData();
 
         //Clear PrizeCode List
-        foreach (Transform child in PrizeCodePanel.transform)
+        foreach (Transform child in BagPanel.transform)
         {
             GameObject.Destroy(child.gameObject);
         }
@@ -373,6 +427,14 @@ public class EventDetailScript : MonoBehaviour
             GameObject.Destroy(child.gameObject);
         }
         LoadActivities();
+        foreach (Transform child in InformationPanel.transform)
+        {
+            if (child.GetSiblingIndex() > 4) {
+                GameObject.Destroy(child.gameObject);
+            }
+            
+        }
+        LoadStores();
     }
 
     public void LoadPreviouseScene()
@@ -434,7 +496,7 @@ public class EventDetailScript : MonoBehaviour
         {
 
             //Clear PrizeCodeList
-            foreach (Transform child in PrizeCodePanel.transform)
+            foreach (Transform child in BagPanel.transform)
             {
                 GameObject.Destroy(child.gameObject);
             }
@@ -443,7 +505,7 @@ public class EventDetailScript : MonoBehaviour
 
             //Show redeem prize code success panel
             RedeemPrizeCodeSuccessPanel.SetActive(true);
-            RedeemPrizeCodeSuccessMessage.text ="You got " + jsonResponse.Data.PrizeName + " from " + PlayerPrefs.GetString(ConstantClass.PP_OrganizerName);
+            RedeemPrizeCodeSuccessMessage.text = "You got " + jsonResponse.Data.PrizeName + " from " + PlayerPrefs.GetString(ConstantClass.PP_OrganizerName);
             StartCountTime = true;
         }
         else
