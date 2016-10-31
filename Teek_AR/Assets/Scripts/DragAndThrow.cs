@@ -133,6 +133,8 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
         // moi vo test thu cai khung hien ket qua drop item
         //ShowDropItem();
+
+        GameObject.Find("ShopCanvas").transform.SetParent(GameObject.Find("Canvas").transform, true);
     }
     void OnMouseDown()
     {
@@ -297,6 +299,8 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         {
             SwitchBall();
         }
+
+        GameObject.Find("MenuButton_A").transform.position = new Vector3(115, Screen.height-90, 0);
     }
 
     void createBall()
@@ -581,6 +585,11 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
             rubyCount = 0;
             sapphireCount = 0;
             citrineCount = 0;
+
+            foreach (var item in listDropItem)
+            {
+                item.SetActive(false);
+            }
         }
 
         else
