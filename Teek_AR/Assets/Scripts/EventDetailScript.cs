@@ -111,6 +111,14 @@ public class EventDetailScript : MonoBehaviour
                 EventFullName.text = item.Name.ToString();
                 EventMultiplier.text = item.Multiplier.ToString();
                 EventCalendar.text = Utils.JsonDateToDateTimeLongString(item.StartDate.ToString()) + " - " + Utils.JsonDateToDateTimeLongString(item.EndDate.ToString());
+
+            //Load event image
+            if (item.ImageUrl != null)
+            {
+                string url = ConstantClass.ImageHost + item.ImageUrl;
+                WWW www_loadImage = new WWW(url);
+                StartCoroutine(LoadImage(www_loadImage, EventImageObject));
+            }
         }
         else
         {
@@ -778,6 +786,21 @@ public class EventDetailScript : MonoBehaviour
         Refresh();
 
 
+        LoadingManager.hideLoadingIndicator(loadingPanel);
+    }
+
+    IEnumerator LoadImage(WWW www, Image image)
+    {
+        yield return www;
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        if (www.isDone)
+        {
+            if (www.error == null)
+            {
+                image.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                LoadingManager.hideLoadingIndicator(loadingPanel);
+            }
+        }
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 }
