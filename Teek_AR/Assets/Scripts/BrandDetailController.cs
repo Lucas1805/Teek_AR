@@ -174,8 +174,12 @@ public class BrandDetailController : MonoBehaviour {
                     sampleButton.Time.text = Utils.JsonDateToDateTimeLongString(item.StartDate);
 
                     //Load event image
-                    WWW www_loadImage = new WWW(item.ImageUrl);
-                    StartCoroutine(LoadImage(www_loadImage, sampleButton.EventImgUrl));
+                    if (item.ImageUrl != null)
+                    {
+                        string url = ConstantClass.ImageHost + item.ImageUrl;
+                        WWW www_loadImage = new WWW(url);
+                        StartCoroutine(LoadImage(www_loadImage, sampleButton.EventImgUrl));
+                    }
 
 
                     if (item.Multiplier != 0)
@@ -202,17 +206,6 @@ public class BrandDetailController : MonoBehaviour {
                     newButton.transform.SetParent(EventContentPanel.transform, false);
                 }
                 
-            }
-            else
-            {
-                //SHOW NO RECORD MESSAGE
-                GameObject newButton = Instantiate(EventButtonTemplate) as GameObject;
-                EventButtonTemplate sampleButton = newButton.GetComponent<EventButtonTemplate>();
-                
-                sampleButton.EventName.text = "No available event at this time yet";
-                sampleButton.Time.gameObject.SetActive(false);
-                sampleButton.GetComponent<Button>().interactable = false;
-                newButton.transform.SetParent(EventContentPanel.transform, false);
             }
         }
         else
