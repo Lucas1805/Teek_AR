@@ -89,7 +89,35 @@ public class EventDetailScript : MonoBehaviour
 
     private void LoadInformtion()
     {
-        //throw new NotImplementedException();
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        HTTPRequest request = new HTTPRequest();
+        request.url = ConstantClass.API_GetEventDetails + "?EventId=" + EventId;
+
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallGetDetails);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        UCSS.HTTP.GetString(request);
+    }
+
+    private void OnDoneCallGetDetails(string result, string transactionId)
+    {
+        ResponseModel<EventModel> jsonResponse = new ResponseModel<EventModel>();
+        jsonResponse.Data = new EventModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<EventModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            var item = jsonResponse.Data;
+                EventFullName.text = item.Name.ToString();
+                EventMultiplier.text = item.Multiplier.ToString();
+                EventCalendar.text = Utils.JsonDateToDateTimeLongString(item.StartDate.ToString()) + " - " + Utils.JsonDateToDateTimeLongString(item.EndDate.ToString());
+        }
+        else
+        {
+            MessageHelper.MessageDialog(jsonResponse.Message);
+        }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     private void LoadStores()
@@ -396,6 +424,23 @@ public class EventDetailScript : MonoBehaviour
         else
         {
             RegisterEventButton.SetActive(true);
+            foreach (Transform child in ActivityPanel.transform)
+            {
+                if (child.childCount >= 4)
+                {
+                    GameObject childObject = child.GetChild(4).gameObject;
+                    if (childObject != null)
+                    {
+                        childObject.GetComponent<Button>().interactable = false;
+                    }
+                }
+               
+                
+            }
+            foreach (Transform child in PrizePanel.transform)
+            {
+               child.gameObject.GetComponent<Button>().interactable = false;
+            }
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
@@ -730,7 +775,7 @@ public class EventDetailScript : MonoBehaviour
         {
             MessageHelper.ErrorDialog("Register failed!!");
         }
-
+        Refresh();
 
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
