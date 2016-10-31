@@ -74,6 +74,7 @@ namespace Assets
         public const string API_RedeemCoupon = "http://" + API_HOST_IP + "/Teek/api/RedeemCoupon/RedeemCoupon";
         public const string API_LoadMyEvent = "http://" + API_HOST_IP + "/Teek/api/Event/GetEventByUserId";
         public const string API_LoadDropRate = "http://" + API_HOST_IP + "/Teek/api/Game/GetDropRate";
+        public const string API_GetStoreByEventId = "http://" + API_HOST_IP + "/Teek/api/store/GetStoresByEventId";
 
         public const string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
 
