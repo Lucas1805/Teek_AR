@@ -475,13 +475,13 @@ public class EventDetailScript : MonoBehaviour
             else
             {
                 LoadingManager.hideLoadingIndicator(loadingPanel);
-                MessageHelper.MessageDialog("ERROR", "Cannot get prize ID");
+                MessageHelper.ErrorDialog("ERROR", "Cannot get prize ID");
             }
         }
         else
         {
             LoadingManager.hideLoadingIndicator(loadingPanel);
-            MessageHelper.MessageDialog("Please enter master code");
+            MessageHelper.ErrorDialog("Please enter master code");
         }
     }
 
@@ -511,7 +511,7 @@ public class EventDetailScript : MonoBehaviour
         else
         {
             //Show message
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            MessageHelper.ErrorDialog(jsonResponse.Message);
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
@@ -723,12 +723,12 @@ public class EventDetailScript : MonoBehaviour
         jsonResponse = JsonMapper.ToObject<ResponseModel<String>>(result);
         if (jsonResponse.Succeed)
         {
-            MessageHelper.MessageDialog("Register successfully!!");
+            MessageHelper.SuccessDialog("Register successfully!!");
             RegisterEventButton.SetActive(false);
         }
         else
         {
-            MessageHelper.MessageDialog("Register failed!!");
+            MessageHelper.ErrorDialog("Register failed!!");
         }
 
 

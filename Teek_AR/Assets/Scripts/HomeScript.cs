@@ -166,7 +166,7 @@ public class HomeScript : MonoBehaviour {
         }
         else
         {
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            MessageHelper.ErrorDialog(jsonResponse.Message);
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
@@ -226,7 +226,7 @@ public class HomeScript : MonoBehaviour {
         }
         else
         {
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            MessageHelper.ErrorDialog(jsonResponse.Message);
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
@@ -361,7 +361,7 @@ public class HomeScript : MonoBehaviour {
         }
         else
         {
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            MessageHelper.ErrorDialog(jsonResponse.Message);
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
