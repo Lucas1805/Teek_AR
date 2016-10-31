@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Ucss;
 using Assets.ResponseModels;
 using LitJson;
+using System;
 
 public class DragAndThrow : MonoBehaviour
 {
@@ -55,7 +56,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
     public GameObject victorySound;
     public GameObject shootSound;
     public GameObject hitSound;
-    
+
     private int fireballAmount;
     private int iceballAmount;
 
@@ -135,7 +136,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
     }
     void OnMouseDown()
     {
-        distance = Vector3.Distance(transform.position,Camera.main.transform.position);
+        distance = Vector3.Distance(transform.position, Camera.main.transform.position);
         dragging = true;
 
     }
@@ -149,23 +150,23 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
             isThrow = true;
             return;
         }
-        speedCounter = Vector3.Distance(Input.mousePosition,initialPosition) / dragTotalTime / 100;
+        speedCounter = Vector3.Distance(Input.mousePosition, initialPosition) / dragTotalTime / 100;
         dragTotalTime = 0;
         this.GetComponent<Rigidbody>().useGravity = true;
         Physics.gravity = new Vector3(0, -50, 0);
-        this.GetComponent<Rigidbody>().velocity += this.transform.forward * speedCounter/2;
-        this.GetComponent<Rigidbody>().velocity += this.transform.up *speedCounter / 3;
+        this.GetComponent<Rigidbody>().velocity += this.transform.forward * speedCounter / 2;
+        this.GetComponent<Rigidbody>().velocity += this.transform.up * speedCounter / 3;
 
-        float angle = Input.mousePosition.x - Screen.width/2;
+        float angle = Input.mousePosition.x - Screen.width / 2;
         this.GetComponent<Rigidbody>().velocity += this.transform.right * angle / 30;
-        
+
         dragging = false;
         isThrow = true;
 
         //ProductInfo fireball = Shop.GetProduct("fireball");
         //if (ball != null)
         {
-            if (CurrentMaterialName()==fireballMaterial.name)
+            if (CurrentMaterialName() == fireballMaterial.name)
             {
                 if (fireballAmount > 0)
                 {
@@ -173,7 +174,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
                     fireballAmount = Shop.GetProductClassAmount(ConstantClass.FireBallItemClassName);
                 }
             }
-            if(CurrentMaterialName()==iceballMaterial.name)
+            if (CurrentMaterialName() == iceballMaterial.name)
             {
                 if (iceballAmount > 0)
                 {
@@ -186,6 +187,8 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
         shootSound.SetActive(false);
         shootSound.SetActive(true);
+
+        CallAPIUpdateBallItem();
     }
     // Update is called once per frame
     void Update()
@@ -208,7 +211,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         {
             //ProductInfo fireball = Shop.GetProduct("fireball");
 
-            if (fireballAmount+iceballAmount > 0)
+            if (fireballAmount + iceballAmount > 0)
             {
                 if (!isSpawned)
                 {
@@ -221,7 +224,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         {
             if (!dragging)
             {
-                if (fireballAmount+iceballAmount <= 0)
+                if (fireballAmount + iceballAmount <= 0)
                 {
                     hideBall();
                 }
@@ -236,7 +239,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Vector3 rayPoint = ray.GetPoint(distance);
-            transform.position = Vector3.Lerp(this.transform.position,rayPoint, Speed * Time.deltaTime);
+            transform.position = Vector3.Lerp(this.transform.position, rayPoint, Speed * Time.deltaTime);
 
             dragTotalTime += Time.deltaTime;
 
@@ -327,7 +330,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
         if (other.gameObject.CompareTag("Dragon"))
         {
-            if (CurrentMaterialName()==fireballMaterial.name)
+            if (CurrentMaterialName() == fireballMaterial.name)
             {
                 health.value -= 10;
             }
@@ -368,13 +371,13 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         {
             listItemClone.Add(item);
         }
-        
-        int ranNumPercent = Random.Range(1, 101);
+
+        int ranNumPercent = UnityEngine.Random.Range(1, 101);
         int ranNumInListItem = 0;
 
         if (ranNumPercent <= DropRateCombo1)
         {
-            ranNumInListItem = Random.Range(0, listItemClone.Count);
+            ranNumInListItem = UnityEngine.Random.Range(0, listItemClone.Count);
             listDropItem[ranNumInListItem].transform.GetChild(1).GetComponent<Text>().text = "x 1";
             listDropItem[ranNumInListItem].SetActive(true);
             switch (ranNumInListItem)
@@ -396,7 +399,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         {
             for (int i = 0; i < 2; i++)
             {
-                switch (Random.Range(0, listItemClone.Count))
+                switch (UnityEngine.Random.Range(0, listItemClone.Count))
                 {
                     case 0:
                         rubyCount++;
@@ -434,7 +437,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         {
             for (int i = 0; i < 3; i++)
             {
-                switch (Random.Range(0, listItemClone.Count))
+                switch (UnityEngine.Random.Range(0, listItemClone.Count))
                 {
                     case 0:
                         rubyCount++;
@@ -506,7 +509,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
     public void SwitchBall()
     {
-        if (CurrentMaterialName()==fireballMaterial.name)
+        if (CurrentMaterialName() == fireballMaterial.name)
         {
             gameObject.transform.GetChild(0).GetComponent<Renderer>().material = iceballMaterial;
             return;
@@ -520,7 +523,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
     public string CurrentMaterialName()
     {
-        return gameObject.transform.GetChild(0).GetComponent<Renderer>().material.name.Replace(" (Instance)","");
+        return gameObject.transform.GetChild(0).GetComponent<Renderer>().material.name.Replace(" (Instance)", "");
     }
 
     public void CountdownDragonRespawn()
@@ -587,6 +590,56 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
                 MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message + " " + jsonResponse.Errors[0]);
             else
                 MessageHelper.MessageDialog(ConstantClass.Msg_ErrorTitle, jsonResponse.Message);
+        }
+    }
+
+    public void CallAPIUpdateBallItem()
+    {
+        HTTPRequest request = new HTTPRequest();
+        WWWForm form = new WWWForm();
+        form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+        form.AddField("organizerId", PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId));
+        form.AddField("eventId", PlayerPrefs.GetInt(ConstantClass.PP_EventIDKey));
+        form.AddField("price", 0);
+
+        if (CurrentMaterialName() == fireballMaterial.name)
+        {
+            form.AddField("fireballAmount", 1);
+            form.AddField("iceballAmount", 0);
+        }
+        if (CurrentMaterialName() == iceballMaterial.name)
+        {
+            form.AddField("fireballAmount", 0);
+            form.AddField("iceballAmount", 1);
+        }
+
+        request.url = ConstantClass.API_UpdateBallItem;
+
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallAPIUpdateBallItem);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+
+        request.formData = form;
+
+        UCSS.HTTP.PostForm(request);
+    }
+
+    public void OnDoneCallAPIUpdateBallItem(string result, string transactionId)
+    {
+        ResponseModel<CustomerResponseModel> jsonResponse = new ResponseModel<CustomerResponseModel>();
+        jsonResponse.Data = new CustomerResponseModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<CustomerResponseModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            fireballAmount = (int)jsonResponse.Data.Fireball;
+            iceballAmount = (int)jsonResponse.Data.Iceball;
+        }
+        else
+        {
+            //restorePurchase(justBoughtProduct, justBoughtProduct.IncrementOnBuy);
+            MessageHelper.MessageDialog("Error", jsonResponse.Message);
+            Debug.Log(jsonResponse.Message);
         }
     }
 }
