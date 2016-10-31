@@ -222,7 +222,8 @@ namespace MobyShop.UI {
             if (dialogConfirmPurchase != null)
             {
                 GameObject shopCanvas = GameObject.Find("ShopCanvas");
-                dialogConfirmPurchase.transform.SetParent(shopCanvas.transform);
+                dialogConfirmPurchase.transform.SetParent(shopCanvas.transform,false);
+                dialogConfirmPurchase.GetComponent<RectTransform>().localScale = new Vector3(1,1,1);
             }
             
 
@@ -231,6 +232,17 @@ namespace MobyShop.UI {
             {
                 GameObject shopCanvas = GameObject.Find("ShopCanvas");
                 dialogNotEnoughCoins.transform.SetParent(shopCanvas.transform);
+                dialogNotEnoughCoins.transform.SetParent(shopCanvas.transform, false);
+                dialogNotEnoughCoins.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+            }
+
+            GameObject DialogBillingSimulatorUI = GameObject.Find("DialogBillingSimulatorUI(Clone)");
+            if (DialogBillingSimulatorUI != null)
+            {
+                GameObject shopCanvas = GameObject.Find("ShopCanvas");
+                DialogBillingSimulatorUI.transform.SetParent(shopCanvas.transform);
+                DialogBillingSimulatorUI.transform.SetParent(shopCanvas.transform, false);
+                DialogBillingSimulatorUI.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
             }
             #endregion
         }

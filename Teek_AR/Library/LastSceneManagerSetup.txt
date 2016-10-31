@@ -1,8 +1,4 @@
 sceneSetups:
-<<<<<<< HEAD
-- path: Assets/Scenes/HomeScene.unity
-=======
 - path: Assets/Scenes/GameScene.unity
->>>>>>> origin/Quan
   isLoaded: 1
   isActive: 1
