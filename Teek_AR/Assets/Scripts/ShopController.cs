@@ -27,7 +27,20 @@ public class ShopController : MonoBehaviour {
         //CALL AIP TO GET NUMBER OF ITEM OF USER TO LOAD
         LoadCustomerInformation();
         LoadDropRate();
-        Shop.OnProductBought += this.OnProductBought;
+
+        /*
+        --------WARNING---------
+        The code below add a listener to shop. Whenever a product is bought it will run ALL functions that has been add to it
+        To prevent the potention bug when use play game -> buy a product -> back to home -> play another game and buy product -> user must pay twice the price
+        because the function has been add 2 times
+
+        So we must check if it's been add into it or not. If NOT (== null) then we add
+        */
+        if(Shop.OnProductBought == null)
+        {
+            Shop.OnProductBought += this.OnProductBought;
+        }
+
     }
 	
 	// Update is called once per frame
