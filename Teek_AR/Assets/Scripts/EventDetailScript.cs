@@ -35,6 +35,14 @@ public class EventDetailScript : MonoBehaviour
     public Text RubyAmountText;
     public Text SapphireAmountText;
 
+    //Buu
+    public Text PrizeName;
+    public Text PrizeTeek;
+    public Image PrizeImage;
+    public Text PrizeRuby;
+    public Text PrizeCitrine;
+    public Text PrizeSapphire;
+    public Text OrLabel;
 
 
     public Text EventFullName;
@@ -268,26 +276,27 @@ public class EventDetailScript : MonoBehaviour
 
                 if (item.Ruby != 0)
                 {
-                    sampleButton.Gem.transform.GetChild(0).gameObject.SetActive(true);
                     sampleButton.Gem.transform.GetChild(0).gameObject.GetComponentInChildren<Text>().text = item.Ruby.ToString();
                 }
                 if (item.Sapphire != 0)
                 {
-                    sampleButton.Gem.transform.GetChild(2).gameObject.SetActive(true);
                     sampleButton.Gem.transform.GetChild(2).gameObject.GetComponentInChildren<Text>().text = item.Sapphire.ToString();
                 }
                 if (item.Citrine != 0)
                 {
-                    sampleButton.Gem.transform.GetChild(1).gameObject.SetActive(true);
                     sampleButton.Gem.transform.GetChild(1).gameObject.GetComponentInChildren<Text>().text = item.Citrine.ToString();
                 }
                 if (item.Teek != 0)
                 {
-                    sampleButton.Coin.SetActive(true);
                     sampleButton.Coin.GetComponentInChildren<Text>().text = item.Teek.ToString();
                 }
-
-
+                if (item.ImageURL != null)
+                {
+                    string url = ConstantClass.API_HOST_IP + item.ImageURL;
+                    WWW www_loadImage = new WWW(url);
+                    GameObject child = sampleButton.PrizeImage.transform.GetChild(0).gameObject;
+                    StartCoroutine(LoadImage(www_loadImage, child.transform.GetChild(0).gameObject.GetComponent<Image>()));
+                }
 
                 newButton.transform.SetParent(PrizePanel.transform, false);
             }
@@ -592,59 +601,74 @@ public class EventDetailScript : MonoBehaviour
             //Get teek value
             if (TeekText != null && TeekText.Length > 0)
             {
+                PrizeTeek.text = TeekText;
                 Teek = int.Parse(TeekText);
             }
             else
             {
+                PrizeTeek.text = "0";
                 Teek = 0;
             }
 
             //Get Ruby value
             if (RubyText != null && RubyText.Length > 0)
             {
+                PrizeRuby.text = RubyText;
                 Ruby = int.Parse(RubyText);
             }
             else
             {
+                PrizeRuby.text = "0";
                 Ruby = 0;
             }
 
             //Get Saphhire value
             if (SapphireText != null && SapphireText.Length > 0)
             {
+                PrizeSapphire.text = SapphireText;
                 Sapphire = int.Parse(SapphireText);
             }
             else
             {
+                PrizeSapphire.text = "0";
                 Sapphire = 0;
             }
 
             //Get Citrine value
             if (CitrineText != null && CitrineText.Length > 0)
             {
+                PrizeCitrine.text = CitrineText;
                 Citrine = int.Parse(CitrineText);
             }
             else
             {
+                PrizeCitrine.text = "0";
                 Citrine = 0;
             }
 
             this.PrizeId = PrizeIdTemp;
+            PrizeName.text = RewardObject.PrizeName.text;
+            PrizeImage.sprite = RewardObject.PrizeImage.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite;
 
-            //Turn on interactable for both button
-            ClaimByTeekButton.interactable = true;
-            ClaimByGemButton.interactable = true;
+            ClaimByTeekButton.gameObject.SetActive(false);
+            OrLabel.gameObject.SetActive(false);
+            ClaimByGemButton.gameObject.SetActive(false);
 
-            if (Teek <= 0 && (Ruby > 0 || Sapphire > 0 || Citrine > 0)) //If only can claim by Gem, disable Teek Select Button
+            if (Teek > 0 && (Ruby  !=0 || Sapphire != 0 || Citrine != 0)) //If only can claim by Teek, disable Gem Select Button
             {
-                ClaimByTeekButton.interactable = false;
-                ClaimByGemButton.interactable = true;
-            }
-            else if (Teek > 0 && (Ruby == 0 && Sapphire == 0 && Citrine == 0)) //If only can claim by Teek, disable Gem Select Button
+                ClaimByTeekButton.gameObject.SetActive(true);
+                OrLabel.gameObject.SetActive(true);
+                ClaimByGemButton.gameObject.SetActive(true);
+            } else if (Teek <=0 && (Ruby != 0 || Sapphire != 0 || Citrine != 0))
             {
-                ClaimByGemButton.interactable = false;
-                ClaimByTeekButton.interactable = true;
-            }
+                ClaimByTeekButton.gameObject.SetActive(false);
+                ClaimByGemButton.gameObject.SetActive(true);
+            } else if (Teek > 0 && (Ruby == 0 && Sapphire == 0 && Citrine == 0))
+            {
+                ClaimByGemButton.gameObject.SetActive(false);
+                ClaimByTeekButton.gameObject.SetActive(true);
+            } 
+            
         }
         catch (Exception e)
         {
