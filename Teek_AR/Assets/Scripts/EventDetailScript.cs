@@ -23,9 +23,9 @@ public class EventDetailScript : MonoBehaviour
     public GameObject VotingTemplate;
     public GameObject CheckinTemplate;
     public GameObject RegisterEventButton;
-
+    public GameObject EmptyPanel;
     public static int EventId;
-    public static string EventName;
+    //public static string EventName;
     public static Image EventImage;
     public int OrganizerId;
 
@@ -76,7 +76,7 @@ public class EventDetailScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        truncateLongerStringList = Utils.TruncateLongerString(EventName, 17);
+        //truncateLongerStringList = Utils.TruncateLongerString(EventName, 17);
 
         //Get Organizer Id from PlayerPrefs
         OrganizerId = PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId);
@@ -86,7 +86,7 @@ public class EventDetailScript : MonoBehaviour
         PlayerPrefs.Save();
 
         LoadUserInformation();
-        LoadEventInfo();
+        //LoadEventInfo();
         GetPrizeData();
         LoadInformtion();
         LoadStores();
@@ -130,7 +130,7 @@ public class EventDetailScript : MonoBehaviour
         }
         else
         {
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            MessageHelper.ErrorDialog(jsonResponse.Message);
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
@@ -168,7 +168,7 @@ public class EventDetailScript : MonoBehaviour
         }
         else
         {
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            MessageHelper.ErrorDialog(jsonResponse.Message);
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
@@ -207,7 +207,7 @@ public class EventDetailScript : MonoBehaviour
         }
         else
         {
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            MessageHelper.ErrorDialog(jsonResponse.Message);
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
@@ -227,24 +227,24 @@ public class EventDetailScript : MonoBehaviour
             TimeOutRedeemPrizeCodeSuccessfully = 5f * 60;
         }
 
-        #region QuanHM - TruncateLongerString
-        if (EventName.Length > 17)  // if length of EventName over 20 char then call TruncateLongerString
-        {
-            truncateLongerStringTime += Time.deltaTime * 2;
-            if (truncateLongerStringTime <= truncateLongerStringList.Count)
-            {
-                EventNameText.text = truncateLongerStringList[(int)truncateLongerStringTime];
-            }
-            else
-            {
-                truncateLongerStringTime = 0;
-            }
-        }
-        else // else just show the original EventName
-        {
-            EventNameText.text = EventName;
-        }
-        #endregion
+        //#region QuanHM - TruncateLongerString
+        //if (EventName.Length > 17)  // if length of EventName over 20 char then call TruncateLongerString
+        //{
+        //    truncateLongerStringTime += Time.deltaTime * 2;
+        //    if (truncateLongerStringTime <= truncateLongerStringList.Count)
+        //    {
+        //        EventNameText.text = truncateLongerStringList[(int)truncateLongerStringTime];
+        //    }
+        //    else
+        //    {
+        //        truncateLongerStringTime = 0;
+        //    }
+        //}
+        //else // else just show the original EventName
+        //{
+        //    EventNameText.text = EventName;
+        //}
+        //#endregion
     }
 
     public void GetPrizeData()
@@ -266,6 +266,7 @@ public class EventDetailScript : MonoBehaviour
 
         if (jsonResponse.Succeed)
         {
+            EmptyPanel.SetActive(false);
             foreach (var item in jsonResponse.Data)
             {
                 GameObject newButton = Instantiate(ButtonTemplate) as GameObject;
@@ -303,7 +304,7 @@ public class EventDetailScript : MonoBehaviour
         }
         else
         {
-            //MessageHelper.MessageDialog(jsonResponse.Message);
+            EmptyPanel.SetActive(true);
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
@@ -367,7 +368,7 @@ public class EventDetailScript : MonoBehaviour
 
         if (jsonResponse.Succeed)
         {
-            TeekAmountText.text = jsonResponse.Data.Teek.ToString() + " Teek";
+            TeekAmountText.text = jsonResponse.Data.Teek.ToString();
             RubyAmountText.text = jsonResponse.Data.Ruby.ToString();
             SapphireAmountText.text = jsonResponse.Data.Sapphire.ToString();
             CitrineAmountText.text = jsonResponse.Data.Citrine.ToString();
@@ -375,29 +376,29 @@ public class EventDetailScript : MonoBehaviour
         else
         {
             //Show error message
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            MessageHelper.ErrorDialog(jsonResponse.Message);
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
     #endregion
 
-    void LoadEventInfo()
-    {
-        if (EventName != null && EventName.Length > 0)
-        {
-            EventNameText.text = Utils.TruncateLongString(EventName, 23);
-        }
-        else
-        {
-            EventNameText.text = "";
-        }
+    //void LoadEventInfo()
+    //{
+    //    if (EventName != null && EventName.Length > 0)
+    //    {
+    //        EventNameText.text = Utils.TruncateLongString(EventName, 23);
+    //    }
+    //    else
+    //    {
+    //        EventNameText.text = "";
+    //    }
 
-        if (EventImage != null)
-        {
-            EventImageObject.sprite = EventImage.sprite;
-        }
-    }
+    //    if (EventImage != null)
+    //    {
+    //        EventImageObject.sprite = EventImage.sprite;
+    //    }
+    //}
 
     #region PROCESS LOAD PRIZE CODE REQUEST
     private void OnLoadPrizeCodeRequest(string result, string transactionId)

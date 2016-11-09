@@ -14,7 +14,11 @@ public class BrandDetailController : MonoBehaviour {
 
     public static int OrganizerId;
     public static string OrganizerName = "";
-    
+
+   
+    public static Image BrandLogo;
+    public Image BrandLogoImage;
+    public Image BackgroundImage;
     public GameObject StoreButtonTemplate;
     public GameObject StoreContentPanel;
     public GameObject EventButtonTemplate;
@@ -35,15 +39,29 @@ public class BrandDetailController : MonoBehaviour {
     void Start () {
 
         OrganizerNameText.text = OrganizerName;
-        truncateLongerStringList = Utils.TruncateLongerString(OrganizerName, 17);
+        //truncateLongerStringList = Utils.TruncateLongerString(OrganizerName, 17);
 
         //Set OrganizerId to PlayerPrefs
         PlayerPrefs.SetInt(ConstantClass.PP_OrganizerId, OrganizerId);
         PlayerPrefs.SetString(ConstantClass.PP_OrganizerName, OrganizerName);
         PlayerPrefs.Save();
 
-        LoadUserInformation();
+        //LoadUserInformation();
+        LoadBrandLogo();
+        LoadBackground();
         LoadEventListByOrganizer();
+        
+
+    }
+
+    private void LoadBackground()
+    {
+        BackgroundImage.sprite = BrandLogo.sprite;
+    }
+
+    private void LoadBrandLogo()
+    {
+        BrandLogoImage.sprite = BrandLogo.sprite;
     }
 
     void Update()

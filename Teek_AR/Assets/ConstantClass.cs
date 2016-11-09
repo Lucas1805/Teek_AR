@@ -48,7 +48,7 @@ namespace Assets
 
         #region API LINKS
         //API LINKS
-        public const string ImageHost = "http://localhost:19291";
+        public const string ImageHost = "http://localhost";
         public const string API_HOST_IP = "localhost";
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
