@@ -68,8 +68,12 @@ public class MyEventController : MonoBehaviour {
                     sampleButton.Time.text = Utils.JsonDateToDateTimeLongString(item.StartDate);
 
                     //Load event image
-                    WWW www_loadImage = new WWW(item.ImageUrl);
-                    StartCoroutine(LoadImage(www_loadImage, sampleButton.EventImgUrl));
+                    if (item.ImageUrl != null)
+                    {
+                        string url = ConstantClass.ImageHost + item.ImageUrl;
+                        WWW www_loadImage = new WWW(url);
+                        StartCoroutine(LoadImage(www_loadImage, sampleButton.EventImgUrl));
+                    }
 
 
                     if (item.Multiplier != 0)

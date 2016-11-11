@@ -23,17 +23,21 @@ public class EventDetailScript : MonoBehaviour
     public GameObject VotingTemplate;
     public GameObject CheckinTemplate;
     public GameObject RegisterEventButton;
-    public GameObject EmptyPanel;
+   
     public static int EventId;
     //public static string EventName;
     public static Image EventImage;
     public int OrganizerId;
+    private int GameId;
 
     public GameObject loadingPanel;
 
     public Text TeekAmountText;
     public Text RubyAmountText;
     public Text SapphireAmountText;
+    public GameObject ActivityEmpty;
+    public GameObject EmptyPanel;
+
 
     //Buu
     public Text PrizeName;
@@ -118,7 +122,7 @@ public class EventDetailScript : MonoBehaviour
             var item = jsonResponse.Data;
                 EventFullName.text = item.Name.ToString();
                 EventMultiplier.text = item.Multiplier.ToString();
-                EventCalendar.text = Utils.JsonDateToDateTimeLongString(item.StartDate.ToString()) + " - " + Utils.JsonDateToDateTimeLongString(item.EndDate.ToString());
+                EventCalendar.text = Utils.JsonDateToDateTimeShortString(item.StartDate.ToString()) + " - " + Utils.JsonDateToDateTimeShortString(item.EndDate.ToString());
 
             //Load event image
             if (item.ImageUrl != null)
@@ -194,19 +198,30 @@ public class EventDetailScript : MonoBehaviour
 
         if (jsonResponse.Succeed)
         {
-            foreach (var item in jsonResponse.Data)
+           
+            if (jsonResponse.Data.Count > 0)
             {
-                if (item.GameId != null)
+                ActivityEmpty.SetActive(false);
+                foreach (var item in jsonResponse.Data)
                 {
-                    GameObject newButton = Instantiate(GameTemplate) as GameObject;
-                    GameButtonTemplate sampleButton = newButton.GetComponent<GameButtonTemplate>();
-                    sampleButton.GameId.text = item.GameId.ToString();
-                    newButton.transform.SetParent(ActivityPanel.transform, false);
+                    if (item.GameId != null)
+                    {
+                        GameObject newButton = Instantiate(GameTemplate) as GameObject;
+                        GameButtonTemplate sampleButton = newButton.GetComponent<GameButtonTemplate>();
+                        sampleButton.GameId.text = item.GameId.ToString();
+                        sampleButton.PlayButton.onClick.AddListener(() => this.PlayGame(item.GameId.ToString()));
+                        newButton.transform.SetParent(ActivityPanel.transform, false);
+                    }
                 }
+            } else
+            {
+                ActivityEmpty.SetActive(true);
             }
+            
         }
         else
         {
+            
             MessageHelper.ErrorDialog(jsonResponse.Message);
         }
 
@@ -315,10 +330,50 @@ public class EventDetailScript : MonoBehaviour
 
 
 
-    public void PlayGame()
+    public void PlayGame(string GameIdText)
     {
-        LoadingManager.showLoadingIndicator(loadingPanel);
-        SceneManager.LoadSceneAsync(Assets.ConstantClass.GameSceneName);
+        ShopController.GameId = GameId;
+        SceneManager.LoadSceneAsync(ConstantClass.GameSceneName);
+        LoadingManager.hideLoadingIndicator(loadingPanel);
+        //LoadingManager.showLoadingIndicator(loadingPanel);
+        //string bssid = Utils.getBSSID();
+        //HTTPRequest request = new HTTPRequest();
+        //request.url = ConstantClass.API_CheckBSSID;
+        //GameId = int.Parse(GameIdText);
+
+        //WWWForm form = new WWWForm();
+        //form.AddField("bssid", bssid);
+        //form.AddField("eventID", EventId);
+
+        //request.formData = form;
+
+        //request.stringCallback = new EventHandlerHTTPString(this.OnDoneCheckBSSID);
+        //request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        //request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+
+        //UCSS.HTTP.PostForm(request);
+
+    }
+
+    private void OnDoneCheckBSSID(string result, string transactionId)
+    {
+        ResponseModel<String> jsonResponse = new ResponseModel<String>();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<String>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            ShopController.GameId = GameId;
+            SceneManager.LoadSceneAsync(ConstantClass.GameSceneName);
+            LoadingManager.hideLoadingIndicator(loadingPanel);
+        }
+        else
+        {
+            //Show error message
+            MessageHelper.ErrorDialog(jsonResponse.Message);
+            LoadingManager.hideLoadingIndicator(loadingPanel);
+        }
+
+       
     }
 
     public void LoadUserInformation()
@@ -375,8 +430,10 @@ public class EventDetailScript : MonoBehaviour
         }
         else
         {
-            //Show error message
-            MessageHelper.ErrorDialog(jsonResponse.Message);
+            TeekAmountText.text = "0";
+            RubyAmountText.text = "0";
+            SapphireAmountText.text = "0";
+            CitrineAmountText.text = "0";
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);

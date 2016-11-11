@@ -70,7 +70,7 @@ public class CouponController : MonoBehaviour {
         else
         {
             LoadingManager.hideLoadingIndicator(loadingPanel);
-            MessageHelper.MessageDialog("Please enter coupon code");
+            MessageHelper.ErrorDialog("Please enter coupon code");
         }
         
     }
@@ -109,7 +109,7 @@ public class CouponController : MonoBehaviour {
         }
         else
         {
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            MessageHelper.ErrorDialog(jsonResponse.Message);
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
@@ -150,7 +150,7 @@ public class CouponController : MonoBehaviour {
         }
         else
         {
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            MessageHelper.ErrorDialog(jsonResponse.Message);
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
@@ -176,7 +176,7 @@ public class CouponController : MonoBehaviour {
         }
         else
         {
-            MessageHelper.MessageDialog(jsonResponse.Message);
+            MessageHelper.ErrorDialog(jsonResponse.Message);
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }

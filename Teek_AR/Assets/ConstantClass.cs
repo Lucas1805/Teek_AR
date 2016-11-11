@@ -77,6 +77,7 @@ namespace Assets
         public const string API_GetStoreByEventId = "http://" + API_HOST_IP + "/Teek/api/store/GetStoresByEventId";
         public const string API_GetEventDetails = "http://" + API_HOST_IP + "/Teek/api/event/GetEventDetails";
         public const string API_GetUserParticipation = "http://" + API_HOST_IP + "/Teek/api/userparticipation/CheckUserParticipation";
+        public const string API_CheckBSSID = "http://" + API_HOST_IP + "/Teek/api/wifirouter/CheckBSSID";
 
         public const string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
 

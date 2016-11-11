@@ -66,24 +66,24 @@ public class BrandDetailController : MonoBehaviour {
 
     void Update()
     {
-        #region QuanHM - TruncateLongerString
-        if (OrganizerName.Length > 17)  // if length of EventName over 20 char then call TruncateLongerString
-        {
-            truncateLongerStringTime += Time.deltaTime * 2;
-            if (truncateLongerStringTime <= truncateLongerStringList.Count)
-            {
-                OrganizerNameText.text = truncateLongerStringList[(int)truncateLongerStringTime];
-            }
-            else
-            {
-                truncateLongerStringTime = 0;
-            }
-        }
-        else // else just show the original EventName
-        {
-            OrganizerNameText.text = OrganizerName;
-        }
-        #endregion
+        //#region QuanHM - TruncateLongerString
+        //if (OrganizerName.Length > 17)  // if length of EventName over 20 char then call TruncateLongerString
+        //{
+        //    truncateLongerStringTime += Time.deltaTime * 2;
+        //    if (truncateLongerStringTime <= truncateLongerStringList.Count)
+        //    {
+        //        OrganizerNameText.text = truncateLongerStringList[(int)truncateLongerStringTime];
+        //    }
+        //    else
+        //    {
+        //        truncateLongerStringTime = 0;
+        //    }
+        //}
+        //else // else just show the original EventName
+        //{
+        //    OrganizerNameText.text = OrganizerName;
+        //}
+        //#endregion
     }
 
     public void LoadStoreList()
@@ -187,7 +187,7 @@ public class BrandDetailController : MonoBehaviour {
                     EventButtonTemplate sampleButton = newButton.GetComponent<EventButtonTemplate>();
 
                     sampleButton.EventId.text = item.Id.ToString();
-                    sampleButton.EventName.text = Utils.TruncateLongString(item.Name, 23);
+                    sampleButton.EventName.text = Utils.TruncateLongString(item.Name, 40);
                     sampleButton.OriginalName.text = item.Name;
                     sampleButton.Time.text = Utils.JsonDateToDateTimeLongString(item.StartDate);
 
