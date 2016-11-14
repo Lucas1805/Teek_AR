@@ -122,6 +122,14 @@ public class BrandDetailController : MonoBehaviour {
         }
     }
 
+    public void LoadOrganizerInfo()
+    {
+
+    }
+
+    #region PROCESS LOAD ORGANIZER REQUEST
+
+    #endregion
 
     #region PROCESS LOAD STORE REQUEST
     private void OnDoneCallLoadStoreListRequest(string result, string transactionId)
@@ -241,11 +249,14 @@ public class BrandDetailController : MonoBehaviour {
     public void Refresh()
     {
         //Clear Store List
-        foreach (Transform child in StoreContentPanel.transform)
-        {
-            GameObject.Destroy(child.gameObject);
-        }
-        LoadStoreList();
+        //foreach (Transform child in StoreContentPanel.transform)
+        //{
+        //    GameObject.Destroy(child.gameObject);
+        //}
+        //LoadStoreList();
+
+        //Load brand info
+
 
         //Clear Event List
         foreach (Transform child in EventContentPanel.transform)
