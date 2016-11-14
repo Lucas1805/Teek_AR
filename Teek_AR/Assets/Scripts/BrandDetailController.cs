@@ -26,6 +26,10 @@ public class BrandDetailController : MonoBehaviour {
     public GameObject loadingPanel;
     public Text OrganizerNameText;
 
+    public Text BrandAddress;
+    public Text BrandEmail;
+    public Text BrandPhone;
+
     public Text TeekAmountText;
     public Text RubyAmountText;
     public Text SapphireAmountText;
@@ -50,7 +54,7 @@ public class BrandDetailController : MonoBehaviour {
         LoadBrandLogo();
         LoadBackground();
         LoadEventListByOrganizer();
-        
+        LoadOrganizerInfo();
 
     }
 
@@ -124,7 +128,40 @@ public class BrandDetailController : MonoBehaviour {
 
     public void LoadOrganizerInfo()
     {
+        LoadingManager.showLoadingIndicator(loadingPanel);
 
+        if (OrganizerId != 0)
+        {
+            HTTPRequest request = new HTTPRequest();
+            request.url = ConstantClass.API_GetOrganizerDetail + "?organizerId=" + OrganizerId;
+
+            request.stringCallback = new EventHandlerHTTPString(this.OnDoneGetOrganizerDetail);
+            request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+            request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+
+
+            UCSS.HTTP.GetString(request);
+        }
+    }
+
+    private void OnDoneGetOrganizerDetail(string result, string transactionId)
+    {
+        ResponseModel<OrganizerModel> jsonResponse = new ResponseModel<OrganizerModel>();
+        jsonResponse.Data = new OrganizerModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<OrganizerModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            BrandAddress.text = jsonResponse.Data.Address;
+            BrandEmail.text = jsonResponse.Data.Email;
+            BrandPhone.text = jsonResponse.Data.Phone;
+}
+        else
+        {
+            //Show error message
+            MessageHelper.ErrorDialog(jsonResponse.Message);
+        }
+        LoadingManager.hideLoadingIndicator(loadingPanel);
     }
 
     #region PROCESS LOAD ORGANIZER REQUEST
