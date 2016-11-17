@@ -854,16 +854,30 @@ public class EventDetailScript : MonoBehaviour
     private void OnDoneRegisterEvent(string result, string transactionId)
     {
         ResponseModel<String> jsonResponse = new ResponseModel<String>();
-        jsonResponse.Data = "";
         jsonResponse = JsonMapper.ToObject<ResponseModel<String>>(result);
         if (jsonResponse.Succeed)
         {
-            MessageHelper.SuccessDialog("Register successfully!!");
+            if(jsonResponse.Data != null)
+            {
+                if(jsonResponse.Data.Length > 0)
+                {
+                    MessageHelper.SuccessDialog("Register campaign successfully!! You gain " + jsonResponse.Data + " coins");
+                }
+                else
+                {
+                    MessageHelper.SuccessDialog("Register campaign successfully!!");
+                }
+            }
+            else
+            {
+                MessageHelper.SuccessDialog("Register campaign successfully!!");
+            }
+            
             RegisterEventButton.SetActive(false);
         }
         else
         {
-            MessageHelper.ErrorDialog("Register failed!!");
+            MessageHelper.ErrorDialog("Register campaign failed!!");
         }
         Refresh();
 

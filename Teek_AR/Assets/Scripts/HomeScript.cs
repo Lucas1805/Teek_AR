@@ -75,7 +75,6 @@ public class HomeScript : MonoBehaviour {
     {
         LoadingManager.showLoadingIndicator(loadingPanel);
         HTTPRequest request = new HTTPRequest();
-        //request.url = ConstantClass.
         request.url = ConstantClass.API_LoadOrganizer;
         request.stringCallback = new EventHandlerHTTPString(this.OnDoneCallAPIGetOrganizers);
         request.onError = new EventHandlerServiceError(MessageHelper.OnError);
