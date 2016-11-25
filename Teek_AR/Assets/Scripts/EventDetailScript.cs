@@ -81,7 +81,6 @@ public class EventDetailScript : MonoBehaviour
     void Start()
     {
         //truncateLongerStringList = Utils.TruncateLongerString(EventName, 17);
-
         //Get Organizer Id from PlayerPrefs
         OrganizerId = PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId);
 
@@ -120,6 +119,7 @@ public class EventDetailScript : MonoBehaviour
         if (jsonResponse.Succeed)
         {
             var item = jsonResponse.Data;
+            EventNameText.text = item.Name.ToString();
                 EventFullName.text = item.Name.ToString();
                 EventMultiplier.text = item.Multiplier.ToString();
                 EventCalendar.text = Utils.JsonDateToDateTimeShortString(item.StartDate.ToString()) + " - " + Utils.JsonDateToDateTimeShortString(item.EndDate.ToString());

@@ -29,6 +29,7 @@ public class BrandDetailController : MonoBehaviour {
     public Text BrandAddress;
     public Text BrandEmail;
     public Text BrandPhone;
+    public Text BrandDescription;
 
     public Text TeekAmountText;
     public Text RubyAmountText;
@@ -155,6 +156,7 @@ public class BrandDetailController : MonoBehaviour {
             BrandAddress.text = jsonResponse.Data.Address;
             BrandEmail.text = jsonResponse.Data.Email;
             BrandPhone.text = jsonResponse.Data.Phone;
+            BrandDescription.text = jsonResponse.Data.Description;
 }
         else
         {

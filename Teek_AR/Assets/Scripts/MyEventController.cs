@@ -15,8 +15,9 @@ public class MyEventController : MonoBehaviour {
     public Text UsernameText;
     public Image ProfileImage;
     public GameObject EventButtonTemplate;
-    public GameObject EventContentPanel;
+    public GameObject MyEventPanel;
     public GameObject loadingPanel;
+    public InputField searchField;
 
     // Use this for initialization
     void Start () {
@@ -64,7 +65,7 @@ public class MyEventController : MonoBehaviour {
                     EventButtonTemplate sampleButton = newButton.GetComponent<EventButtonTemplate>();
 
                     sampleButton.EventId.text = item.Id.ToString();
-                    sampleButton.EventName.text = Utils.TruncateLongString(item.Name, 23);
+                    sampleButton.EventName.text = Utils.TruncateLongString(item.Name, 40);
                     sampleButton.Time.text = Utils.JsonDateToDateTimeLongString(item.StartDate);
 
                     //Load event image
@@ -97,7 +98,7 @@ public class MyEventController : MonoBehaviour {
                         }
                     }
 
-                    newButton.transform.SetParent(EventContentPanel.transform, false);
+                    newButton.transform.SetParent(MyEventPanel.transform, false);
                 }
 
             }
@@ -110,7 +111,7 @@ public class MyEventController : MonoBehaviour {
                 sampleButton.EventName.text = "You has not join any event yet";
                 sampleButton.Time.gameObject.SetActive(false);
                 sampleButton.GetComponent<Button>().interactable = false;
-                newButton.transform.SetParent(EventContentPanel.transform, false);
+                newButton.transform.SetParent(MyEventPanel.transform, false);
             }
         }
         else
@@ -142,7 +143,7 @@ public class MyEventController : MonoBehaviour {
     {
 
         //Clear Event List
-        foreach (Transform child in EventContentPanel.transform)
+        foreach (Transform child in MyEventPanel.transform)
         {
             GameObject.Destroy(child.gameObject);
         }
@@ -204,5 +205,32 @@ public class MyEventController : MonoBehaviour {
             }
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);
+    }
+    public void SearchByName()
+    {
+        foreach (Transform item in MyEventPanel.transform)
+        {
+            GameObject parent = item.gameObject;
+            if (!parent.transform.GetChild(3).GetComponent<Text>().text.ToLower().Contains(searchField.text.ToLower()))
+            {
+                parent.SetActive(false);
+            }
+            else
+            {
+                parent.SetActive(true);
+            }
+        }
+        foreach (Transform item in MyEventPanel.transform)
+        {
+            GameObject parent = item.gameObject;
+            if (!parent.transform.GetChild(3).GetComponent<Text>().text.ToLower().Contains(searchField.text.ToLower()))
+            {
+                parent.SetActive(false);
+            }
+            else
+            {
+                parent.SetActive(true);
+            }
+        }
     }
 }

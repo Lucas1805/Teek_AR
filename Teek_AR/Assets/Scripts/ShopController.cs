@@ -15,9 +15,9 @@ public class ShopController : MonoBehaviour {
     public GameObject menuGroupButtonPanel;
     public static int GameId;
     
-    private int coinNumber = 666;
-    private int fireballNumber = 13;
-    private int iceballNumber = 13;
+    private int coinNumber = 0;
+    private int fireballNumber = 0;
+    private int iceballNumber = 0;
     
     private ProductInfo justBoughtProduct;
 

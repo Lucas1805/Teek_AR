@@ -10,8 +10,8 @@ namespace Assets.ResponseModels
         public virtual int Id { get; set; }
         public virtual string Name { get; set; }
         public virtual string Address { get; set; }
-        public virtual string Latitude { get; set; }
-        public virtual string Longitude { get; set; }
+        public virtual Nullable<double> Latitude { get; set; }
+        public virtual Nullable<double> Longitude { get; set; }
         public virtual Nullable<bool> IsAvailable { get; set; }
         public virtual string Email { get; set; }
         public virtual string Phone { get; set; }

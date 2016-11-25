@@ -60,14 +60,7 @@ public class LoginScene : MonoBehaviour
         if (username.Length > 0 && password.Length > 0)
         {
             //Check if Login Infomartion is valid or not
-
-            //BACKDOOR CODE
-            if (usernameField.text == "adminThongNe" && passwordField.text == "adminThong123")
-            {
-                //Start a coroutine that will load the desired scene.
-                SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
-            }
-
+            
             //Create object to send Http Request
             HTTPRequest request = new HTTPRequest();
             WWWForm form = new WWWForm();
@@ -250,7 +243,7 @@ public class LoginScene : MonoBehaviour
             MySceneManager.setLastScene(ConstantClass.LoginSceneName);
 
             //Load home scene
-            SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
+            SceneManager.LoadSceneAsync(ConstantClass.MyEventScene);
         }
         else
         {
