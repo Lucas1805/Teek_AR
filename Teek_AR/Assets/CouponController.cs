@@ -132,9 +132,16 @@ public class CouponController : MonoBehaviour {
                     {
                         GameObject newButton = Instantiate(CouponTemplate) as GameObject;
                         NotificationTemplate sampleButton = newButton.GetComponent<NotificationTemplate>();
+                        if (item.BrandImgUrl != null)
+                        {
+                            string url = ConstantClass.ImageHost + item.BrandImgUrl;
+                            WWW www_loadImage = new WWW(url);
+                            StartCoroutine(LoadImage(www_loadImage, sampleButton.BrandImage));
+                        }
                         sampleButton.Name.text = "Get " + item.Teek + " teek from code: " + item.Code;
                         sampleButton.RedeemDate.text = "Redeem at: " + Utils.JsonDateToDateTimeLongString(item.RedeemDate);
                         newButton.transform.SetParent(couponPanel.transform, false);
+
                     }
                 }
             }
@@ -197,4 +204,18 @@ public class CouponController : MonoBehaviour {
         LoadingManager.hideLoadingIndicator(loadingPanel);
     }
     #endregion
+    IEnumerator LoadImage(WWW www, Image image)
+    {
+        yield return www;
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        if (www.isDone)
+        {
+            if (www.error == null)
+            {
+                image.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                LoadingManager.hideLoadingIndicator(loadingPanel);
+            }
+        }
+        LoadingManager.hideLoadingIndicator(loadingPanel);
+    }
 }

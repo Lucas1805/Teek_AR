@@ -29,5 +29,6 @@ namespace Assets.ResponseModels
         public virtual string MasterCode { get; set; }
         public List<ActivityModel> Activities { get; set; }
         public List<string> Categories { get; set; }
+        public string BrandImageUrl { get; set; }
     }
 }

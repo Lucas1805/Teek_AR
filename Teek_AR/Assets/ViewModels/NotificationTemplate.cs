@@ -11,5 +11,6 @@ namespace Assets.ViewModels
     {
         public Text Name;
         public Text RedeemDate;
+        public Image BrandImage;
     }
 }

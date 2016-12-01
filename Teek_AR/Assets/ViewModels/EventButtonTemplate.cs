@@ -9,4 +9,5 @@ public class EventButtonTemplate : MonoBehaviour {
     public Text OriginalName;
     public Text Time;
     public GameObject Activities;
+    public GameObject Brand;
 }

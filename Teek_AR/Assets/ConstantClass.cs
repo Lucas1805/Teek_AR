@@ -48,7 +48,7 @@ namespace Assets
 
         #region API LINKS
         //API LINKS
-        public const string ImageHost = API_HOST_IP + "/Teek/";
+        public const string ImageHost = "http://" + API_HOST_IP + "/Teek";
         public const string API_HOST_IP = "localhost";
         public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
@@ -79,6 +79,7 @@ namespace Assets
         public const string API_GetUserParticipation = "http://" + API_HOST_IP + "/Teek/api/userparticipation/CheckUserParticipation";
         public const string API_GetOrganizerDetail = "http://" + API_HOST_IP + "/Teek/api/organizer/GetOrganizerDetail";
         public const string API_CheckBSSID = "http://" + API_HOST_IP + "/Teek/api/wifirouter/CheckBSSID";
+        public const string API_GetHotEvents = "http://" + API_HOST_IP + "/Teek/api/event/GetHotEvents";
 
         public const string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
 

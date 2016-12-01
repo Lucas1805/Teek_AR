@@ -306,9 +306,9 @@ public class EventDetailScript : MonoBehaviour
                 {
                     sampleButton.Coin.GetComponentInChildren<Text>().text = item.Teek.ToString();
                 }
-                if (item.ImageURL != null)
+                if (item.ImageUrl != null)
                 {
-                    string url = ConstantClass.API_HOST_IP + item.ImageURL;
+                    string url = ConstantClass.ImageHost + item.ImageUrl;
                     WWW www_loadImage = new WWW(url);
                     GameObject child = sampleButton.PrizeImage.transform.GetChild(0).gameObject;
                     StartCoroutine(LoadImage(www_loadImage, child.transform.GetChild(0).gameObject.GetComponent<Image>()));

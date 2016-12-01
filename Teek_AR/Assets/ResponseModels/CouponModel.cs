@@ -15,5 +15,6 @@ namespace Assets.ResponseModels
         public virtual int OrganizerId { get; set; }
         public virtual string UserId { get; set; }
         public int? NewTeek { get; set; }
+        public string BrandImgUrl { get; set; }
     }
 }
