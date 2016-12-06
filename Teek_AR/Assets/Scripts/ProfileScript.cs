@@ -66,8 +66,13 @@ public class ProfileScript : MonoBehaviour {
             EmailText.text = jsonResponse.Data.Email;
             PhoneText.text = jsonResponse.Data.Phone;
 
-            WWW www_loadImage = new WWW(jsonResponse.Data.ImageURL);
-            StartCoroutine(loadProfileImage(www_loadImage));
+            //Load event image
+            if (jsonResponse.Data.ImageURL != null)
+            {
+                string url = ConstantClass.ImageHost + jsonResponse.Data.ImageURL;
+                WWW www_loadImage = new WWW(jsonResponse.Data.ImageURL);
+                StartCoroutine(loadProfileImage(www_loadImage));
+            }
         }
         else
         {
