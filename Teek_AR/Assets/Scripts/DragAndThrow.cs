@@ -85,8 +85,22 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
     public static float DropRateCombo2;
     public static float DropRateCombo3;
 
+    //public InputField GravityXInputField;
+    //public InputField GravityYInputField;
+    //public InputField GravityZInputField;
+    //public InputField VelocityFowardInputField;
+    //public InputField VelocityUpInputField;
+    //public InputField SpeedInputField;
+
+    public GameObject BackgroundPlane;
+    private bool isWaitSphereCollider = false;
+    private List<GameObject> listSphereCollider = new List<GameObject>();
+    private float timeWaitSphereCollider = 0;
+
     void Start()
     {
+
+
         timeCountdownDragonRespawn = timeDragonRespawnInMinute * 60;
 
         firstTimeDistance = Vector3.Distance(dragon.transform.position, Camera.main.transform.position);
@@ -135,6 +149,9 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         //ShowDropItem();
 
         GameObject.Find("ShopCanvas").transform.SetParent(GameObject.Find("Canvas").transform, true);
+
+        this.GetComponent<TrailRenderer>().enabled = false;
+        this.GetComponent<LineRenderer>().enabled = false;
     }
     void OnMouseDown()
     {
@@ -154,13 +171,29 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         }
         speedCounter = Vector3.Distance(Input.mousePosition, initialPosition) / dragTotalTime / 100;
         dragTotalTime = 0;
+
         this.GetComponent<Rigidbody>().useGravity = true;
+        //Physics.gravity = new Vector3(float.Parse(GravityXInputField.text),
+        //    float.Parse(GravityYInputField.text),
+        //    float.Parse(GravityZInputField.text));
+        //this.GetComponent<Rigidbody>().velocity +=
+        //    this.transform.forward * speedCounter / float.Parse(VelocityFowardInputField.text);
+        //this.GetComponent<Rigidbody>().velocity +=
+        //    this.transform.up * speedCounter / float.Parse(VelocityUpInputField.text);
         Physics.gravity = new Vector3(0, -50, 0);
         this.GetComponent<Rigidbody>().velocity += this.transform.forward * speedCounter / 2;
         this.GetComponent<Rigidbody>().velocity += this.transform.up * speedCounter / 3;
 
         float angle = Input.mousePosition.x - Screen.width / 2;
         this.GetComponent<Rigidbody>().velocity += this.transform.right * angle / 30;
+
+        //this.GetComponent<Rigidbody>().velocity *= float.Parse(SpeedInputField.text);
+        //Physics.gravity *= float.Parse(SpeedInputField.text);
+
+        if (health.value <= 20 || (health.value <= 50 && CurrentMaterialName() == iceballMaterial.name))
+        {
+            UpdateTrajectory(initialPosition, this.GetComponent<Rigidbody>().velocity, Physics.gravity, 200);
+        }
 
         dragging = false;
         isThrow = true;
@@ -195,6 +228,8 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
     // Update is called once per frame
     void Update()
     {
+        dragon.transform.LookAt(Camera.main.transform);
+
         //displayText.text = Vector3.Distance(dragon.transform.position, Camera.main.transform.position).ToString();
         //displayText.text = CurrentMaterialName()
         //    + "\n" + fireballMaterial.name
@@ -209,6 +244,7 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
         fireballAmount = Shop.GetProductClassAmount(ConstantClass.FireBallItemClassName);
         iceballAmount = Shop.GetProductClassAmount(ConstantClass.IceBallItemClassName);
+
         if (isThrow)
         {
             //ProductInfo fireball = Shop.GetProduct("fireball");
@@ -251,6 +287,8 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
             timeCounter += Time.deltaTime;
             isSpawned = false;
             transform.Rotate(new Vector3(10, 0, 0));
+
+            transform.SetParent(dragon.transform);
         }
 
         if (isHit)
@@ -286,6 +324,8 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
                 ShowDropItem();
 
                 resultOKButton.gameObject.SetActive(true);
+
+                BackgroundPlane.SetActive(true);
             }
 
             transform.position = new Vector3(0, Screen.height * 2, 0);
@@ -300,11 +340,38 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
             SwitchBall();
         }
 
-        GameObject.Find("MenuButton_A").transform.position = new Vector3(115, Screen.height-90, 0);
+        GameObject.Find("MenuButton_A").transform.position = new Vector3(115, Screen.height - 90, 0);
+
+        if (isWaitSphereCollider)
+        {
+            timeWaitSphereCollider += Time.deltaTime;
+        }
+        if (timeWaitSphereCollider >= 0.1)
+        {
+            foreach (var item in listSphereCollider)
+            {
+                Destroy(item);
+            }
+            //listSphereCollider.Clear();
+
+            timeWaitSphereCollider = 0;
+            isWaitSphereCollider = false;
+        }
+
+        if (LastHitScript.IsLastHit)
+        {
+            //GameObject.Find("DisplayText").GetComponent<Text>().text = "Last Hit";
+            BackgroundPlane.SetActive(false);
+            this.GetComponent<TrailRenderer>().enabled = true;
+        }
     }
 
     void createBall()
     {
+        transform.SetParent(GameObject.Find("Camera").transform);
+        LastHitScript.IsLastHit = false;
+        GameObject.Find("DisplayText").GetComponent<Text>().text = "";
+
         CancelInvoke();
         transform.position = initialPosition;
         timeCounter = 0;
@@ -324,8 +391,11 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
     void OnTriggerEnter(Collider other)
     {
-        hitPosition = transform.position;
-        isHit = true;
+        if (!other.gameObject.name.Contains("sphereCollider_"))
+        {
+            hitPosition = transform.position;
+            isHit = true;
+        }
 
         if (other.gameObject.CompareTag("Boundary"))
         {
@@ -650,5 +720,39 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
             MessageHelper.MessageDialog("Error", jsonResponse.Message);
             Debug.Log(jsonResponse.Message);
         }
+    }
+
+    void UpdateTrajectory(Vector3 initialPosition, Vector3 initialVelocity, Vector3 gravity, int numSteps)
+    {
+        //int numSteps = 20; // for example
+        float timeDelta = 1.0f / initialVelocity.magnitude; // for example
+
+        LineRenderer lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.SetVertexCount(numSteps);
+        lineRenderer.SetWidth(0, 0);
+
+        Vector3 position = initialPosition;
+        Vector3 velocity = initialVelocity;
+        for (int i = 0; i < numSteps; ++i)
+        {
+            lineRenderer.SetPosition(i, position);
+
+            position += velocity * timeDelta + 0.5f * gravity * timeDelta * timeDelta;
+            velocity += gravity * timeDelta;
+
+            GameObject sphereCollider = new GameObject("sphereCollider_" + i);
+            sphereCollider.AddComponent<SphereCollider>();
+            sphereCollider.GetComponent<SphereCollider>().isTrigger = true;
+            sphereCollider.AddComponent<Rigidbody>();
+            sphereCollider.GetComponent<Rigidbody>().useGravity = false;
+            sphereCollider.GetComponent<Rigidbody>().isKinematic = true;
+            sphereCollider.AddComponent<LastHitScript>();
+            sphereCollider.transform.position = position;
+
+            listSphereCollider.Add(sphereCollider);
+            //Destroy(sphereCollider);
+        }
+
+        isWaitSphereCollider = true;
     }
 }
