@@ -371,6 +371,8 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         transform.SetParent(GameObject.Find("Camera").transform);
         LastHitScript.IsLastHit = false;
         GameObject.Find("DisplayText").GetComponent<Text>().text = "";
+        this.GetComponent<TrailRenderer>().enabled = false;
+        this.GetComponent<LineRenderer>().enabled = false;
 
         CancelInvoke();
         transform.position = initialPosition;
@@ -583,15 +585,18 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
     public void SwitchBall()
     {
-        if (CurrentMaterialName() == fireballMaterial.name)
+        if (!isThrow)
         {
-            gameObject.transform.GetChild(0).GetComponent<Renderer>().material = iceballMaterial;
-            return;
-        }
-        if (CurrentMaterialName() == iceballMaterial.name)
-        {
-            gameObject.transform.GetChild(0).GetComponent<Renderer>().material = fireballMaterial;
-            return;
+            if (CurrentMaterialName() == fireballMaterial.name)
+            {
+                gameObject.transform.GetChild(0).GetComponent<Renderer>().material = iceballMaterial;
+                return;
+            }
+            if (CurrentMaterialName() == iceballMaterial.name)
+            {
+                gameObject.transform.GetChild(0).GetComponent<Renderer>().material = fireballMaterial;
+                return;
+            }
         }
     }
 
