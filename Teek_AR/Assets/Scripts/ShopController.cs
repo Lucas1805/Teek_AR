@@ -211,19 +211,20 @@ public class ShopController : MonoBehaviour {
 
     public void loadRedeemCodeScene()
     {
-        
-        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
-        MySceneManager.setLastScene(ConstantClass.GameSceneName);
-
+        LoadingManager.showLoadingIndicator(loadingPanel);
         SceneManager.LoadSceneAsync(ConstantClass.RedeemCodeSceneName);
+    }
+
+    public void loadMyEventScene()
+    {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        SceneManager.LoadSceneAsync(ConstantClass.MyEventScene);
     }
 
     public void loadHomeScene()
     {
-        
-        //SET LAST SCENE VALUE BEFORE LOAD NEXT SCENE
-        MySceneManager.setLastScene(ConstantClass.GameSceneName);
 
+        LoadingManager.showLoadingIndicator(loadingPanel);
         SceneManager.LoadSceneAsync(ConstantClass.HomeSceneName);
     }
 
@@ -255,6 +256,7 @@ public class ShopController : MonoBehaviour {
 
         UCSS.HTTP.PostForm(request);
     }
+
 
     public void LoadDropRate()
     {

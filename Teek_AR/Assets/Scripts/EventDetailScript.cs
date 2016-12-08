@@ -332,26 +332,27 @@ public class EventDetailScript : MonoBehaviour
 
     public void PlayGame(string GameIdText)
     {
-        ShopController.GameId = GameId;
-        SceneManager.LoadSceneAsync(ConstantClass.GameSceneName);
-        LoadingManager.hideLoadingIndicator(loadingPanel);
-        //LoadingManager.showLoadingIndicator(loadingPanel);
-        //string bssid = Utils.getBSSID();
-        //HTTPRequest request = new HTTPRequest();
-        //request.url = ConstantClass.API_CheckBSSID;
-        //GameId = int.Parse(GameIdText);
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        //ShopController.GameId = GameId;
+        //SceneManager.LoadSceneAsync(ConstantClass.GameSceneName);
 
-        //WWWForm form = new WWWForm();
-        //form.AddField("bssid", bssid);
-        //form.AddField("eventID", EventId);
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        string bssid = Utils.getBSSID();
+        HTTPRequest request = new HTTPRequest();
+        request.url = ConstantClass.API_CheckBSSID;
+        GameId = int.Parse(GameIdText);
 
-        //request.formData = form;
+        WWWForm form = new WWWForm();
+        form.AddField("bssid", bssid);
+        form.AddField("eventID", EventId);
 
-        //request.stringCallback = new EventHandlerHTTPString(this.OnDoneCheckBSSID);
-        //request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
-        //request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+        request.formData = form;
 
-        //UCSS.HTTP.PostForm(request);
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCheckBSSID);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+
+        UCSS.HTTP.PostForm(request);
 
     }
 
@@ -364,16 +365,13 @@ public class EventDetailScript : MonoBehaviour
         {
             ShopController.GameId = GameId;
             SceneManager.LoadSceneAsync(ConstantClass.GameSceneName);
-            LoadingManager.hideLoadingIndicator(loadingPanel);
         }
         else
         {
             //Show error message
             MessageHelper.ErrorDialog(jsonResponse.Message);
             LoadingManager.hideLoadingIndicator(loadingPanel);
-        }
-
-       
+        }       
     }
 
     public void LoadUserInformation()
