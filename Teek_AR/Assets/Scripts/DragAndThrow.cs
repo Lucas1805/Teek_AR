@@ -397,6 +397,35 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
         {
             hitPosition = transform.position;
             isHit = true;
+
+            if (LastHitScript.IsLastHit)
+            {
+                if (CurrentMaterialName() == fireballMaterial.name)
+                {
+                    health.value -= 10;
+                }
+                else
+                {
+                    health.value -= 10 * 2.5f;
+                }
+
+                anim.SetTrigger("Dead");
+                //anim.SetTrigger("IsDamaged");
+
+                hitSound.SetActive(false);
+                hitSound.SetActive(true);
+
+                //createBall();
+
+                if (health.value <= 0)
+                {
+                    isDead = true;
+
+                    dragonBackgroundSound.SetActive(false);
+                    victorySound.SetActive(true);
+                }
+                isHit = true;
+            }
         }
 
         if (other.gameObject.CompareTag("Boundary"))
@@ -406,31 +435,66 @@ minCurveAmountToCurveBall = 1f, maxCurveAmount = 2.5f;
 
         if (other.gameObject.CompareTag("Dragon"))
         {
-            if (CurrentMaterialName() == fireballMaterial.name)
+            if (health.value <= 20 || (health.value <= 50 && CurrentMaterialName() == iceballMaterial.name))
             {
-                health.value -= 10;
+                if (LastHitScript.IsLastHit)
+                {
+                    if (CurrentMaterialName() == fireballMaterial.name)
+                    {
+                        health.value -= 10;
+                    }
+                    else
+                    {
+                        health.value -= 10 * 2.5f;
+                    }
+
+                    anim.SetTrigger("Dead");
+                    //anim.SetTrigger("IsDamaged");
+
+                    hitSound.SetActive(false);
+                    hitSound.SetActive(true);
+
+                    //createBall();
+
+                    if (health.value <= 0)
+                    {
+                        isDead = true;
+
+                        dragonBackgroundSound.SetActive(false);
+                        victorySound.SetActive(true);
+                    }
+                    isHit = true;
+                }
             }
+
             else
             {
-                health.value -= 10 * 2.5f;
+                if (CurrentMaterialName() == fireballMaterial.name)
+                {
+                    health.value -= 10;
+                }
+                else
+                {
+                    health.value -= 10 * 2.5f;
+                }
+
+                anim.SetTrigger("Dead");
+                //anim.SetTrigger("IsDamaged");
+
+                hitSound.SetActive(false);
+                hitSound.SetActive(true);
+
+                //createBall();
+
+                if (health.value <= 0)
+                {
+                    isDead = true;
+
+                    dragonBackgroundSound.SetActive(false);
+                    victorySound.SetActive(true);
+                }
+                isHit = true;
             }
-
-            anim.SetTrigger("Dead");
-            //anim.SetTrigger("IsDamaged");
-
-            hitSound.SetActive(false);
-            hitSound.SetActive(true);
-
-            //createBall();
-
-            if (health.value <= 0)
-            {
-                isDead = true;
-
-                dragonBackgroundSound.SetActive(false);
-                victorySound.SetActive(true);
-            }
-            isHit = true;
         }
     }
 
