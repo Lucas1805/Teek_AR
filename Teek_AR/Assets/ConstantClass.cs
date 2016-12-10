@@ -48,42 +48,43 @@ namespace Assets
 
         #region API LINKS
         //API LINKS
-        public const string ImageHost = "http://" + API_HOST_IP + "/Teek";
-        public const string API_HOST_IP = "192.168.43.150";
-        public const string API_Login = "http://" + API_HOST_IP + "/Teek/api/account/login";
-        public const string API_Register = "http://" + API_HOST_IP + "/Teek/api/account/register";
-        public const string API_RedeemPrizeCode = "http://" + API_HOST_IP + "/Teek/api/Prize/ReedemPrize";
-        public const string API_GetAllEvents = "http://" + API_HOST_IP + "/Teek/api/event/GetEvents";
-        public const string API_GetParticipateEvents = "http://" + API_HOST_IP + "/Teek/api/event/ParticipateEvents";
-        public const string API_LoadStoreList = "http://" + API_HOST_IP + "/Teek/api/store/GetStoresByOrganizerId";
-        public const string API_LoadEventListByOrganizer = "http://" + API_HOST_IP + "/Teek/api/event/GetEventByOrganizer";
-        public const string API_LoadEventListByStore = "http://" + API_HOST_IP + "/Teek/api/event/GetEventByStore";
-        public const string API_LoadOrganizer = "http://" + API_HOST_IP + "/Teek/api/organizer/getorganizers";
-        public const string API_LoadMyBrand = "http://" + API_HOST_IP + "/Teek/api/organizer/GetOrganizersByUserId";
-        public const string API_LoadPrizeList= "http://" + API_HOST_IP + "/Teek/api/prize/GetPrizes";
-        public const string API_LoadCustomerInformation = "http://" + API_HOST_IP + "/Teek/api/Customer/GetCustomerInfo";
-        public const string API_LoadPrizeCode = "http://" + API_HOST_IP + "/Teek/api/Prize/GetPrizeCode";
-        public const string API_RedeemPrizeByTeek = "http://" + API_HOST_IP + "/Teek/api/Prize/RedeemPrizeByTeek";
-        public const string API_RedeemPrizeByGem = "http://" + API_HOST_IP + "/Teek/api/Prize/RedeemPrizeByGem";
-        public const string API_LoadUserProfile = "http://" + API_HOST_IP + "/Teek/api/PlayerInfo/GetPlayerInfoByUserId";
-        public const string API_RegisterEvent = "http://" + API_HOST_IP + "/Teek/api/Event/RegisterEvent";
-        public const string API_GetPublishedActivityByEventId = "http://" + API_HOST_IP + "/Teek/api/Activity/GetPublished";
-        public const string API_UpdateBallItem = "http://" + API_HOST_IP + "/Teek/api/Customer/UpdateBallItem";
-        public const string API_UpdateCoinItem = "http://" + API_HOST_IP + "/Teek/api/Customer/UpdateCoinAmount";
-        public const string API_LoadCouponList = "http://" + API_HOST_IP + "/Teek/api/RedeemCoupon/GetCouponList";
-        public const string API_RedeemCoupon = "http://" + API_HOST_IP + "/Teek/api/RedeemCoupon/RedeemCoupon";
-        public const string API_LoadMyEvent = "http://" + API_HOST_IP + "/Teek/api/Event/GetEventByUserId";
-        public const string API_LoadDropRate = "http://" + API_HOST_IP + "/Teek/api/Game/GetDropRate";
-        public const string API_GetStoreByEventId = "http://" + API_HOST_IP + "/Teek/api/store/GetStoresByEventId";
-        public const string API_GetEventDetails = "http://" + API_HOST_IP + "/Teek/api/event/GetEventDetails";
-        public const string API_GetUserParticipation = "http://" + API_HOST_IP + "/Teek/api/userparticipation/CheckUserParticipation";
-        public const string API_GetOrganizerDetail = "http://" + API_HOST_IP + "/Teek/api/organizer/GetOrganizerDetail";
-        public const string API_CheckBSSID = "http://" + API_HOST_IP + "/Teek/api/wifirouter/CheckBSSID";
-        public const string API_GetHotEvents = "http://" + API_HOST_IP + "/Teek/api/event/GetHotEvents";
+        public const string ImageHost = "http://" + API_HOST_IP;
+        public const string API_HOST_IP = "arg.azurewebsites.net/";
+        public const string API_Login = "http://" + API_HOST_IP + "/api/account/login";
+        public const string API_Register = "http://" + API_HOST_IP + "/api/account/register";
+        public const string API_RedeemPrizeCode = "http://" + API_HOST_IP + "/api/Prize/ReedemPrize";
+        public const string API_GetAllEvents = "http://" + API_HOST_IP + "/api/event/GetEvents";
+        public const string API_GetParticipateEvents = "http://" + API_HOST_IP + "/api/event/ParticipateEvents";
+        public const string API_LoadStoreList = "http://" + API_HOST_IP + "/api/store/GetStoresByOrganizerId";
+        public const string API_LoadEventListByOrganizer = "http://" + API_HOST_IP + "/api/event/GetEventByOrganizer";
+        public const string API_LoadEventListByStore = "http://" + API_HOST_IP + "/api/event/GetEventByStore";
+        public const string API_LoadOrganizer = "http://" + API_HOST_IP + "/api/organizer/getorganizers";
+        public const string API_LoadMyBrand = "http://" + API_HOST_IP + "/api/organizer/GetOrganizersByUserId";
+        public const string API_LoadPrizeList= "http://" + API_HOST_IP + "/api/prize/GetPrizes";
+        public const string API_LoadCustomerInformation = "http://" + API_HOST_IP + "/api/Customer/GetCustomerInfo";
+        public const string API_LoadPrizeCode = "http://" + API_HOST_IP + "/api/Prize/GetPrizeCode";
+        public const string API_RedeemPrizeByTeek = "http://" + API_HOST_IP + "/api/Prize/RedeemPrizeByTeek";
+        public const string API_RedeemPrizeByGem = "http://" + API_HOST_IP + "/api/Prize/RedeemPrizeByGem";
+        public const string API_LoadUserProfile = "http://" + API_HOST_IP + "/api/PlayerInfo/GetPlayerInfoByUserId";
+        public const string API_RegisterEvent = "http://" + API_HOST_IP + "/api/Event/RegisterEvent";
+        public const string API_GetPublishedActivityByEventId = "http://" + API_HOST_IP + "/api/Activity/GetPublished";
+        public const string API_UpdateBallItem = "http://" + API_HOST_IP + "/api/Customer/UpdateBallItem";
+        public const string API_UpdateCoinItem = "http://" + API_HOST_IP + "/api/Customer/UpdateCoinAmount";
+        public const string API_LoadCouponList = "http://" + API_HOST_IP + "/api/RedeemCoupon/GetCouponList";
+        public const string API_RedeemCoupon = "http://" + API_HOST_IP + "/api/RedeemCoupon/RedeemCoupon";
+        public const string API_LoadMyEvent = "http://" + API_HOST_IP + "/api/Event/GetEventByUserId";
+        public const string API_LoadDropRate = "http://" + API_HOST_IP + "/api/Game/GetDropRate";
+        public const string API_GetStoreByEventId = "http://" + API_HOST_IP + "/api/store/GetStoresByEventId";
+        public const string API_GetEventDetails = "http://" + API_HOST_IP + "/api/event/GetEventDetails";
+        public const string API_GetUserParticipation = "http://" + API_HOST_IP + "/api/userparticipation/CheckUserParticipation";
+        public const string API_GetOrganizerDetail = "http://" + API_HOST_IP + "/api/organizer/GetOrganizerDetail";
+        public const string API_CheckBSSID = "http://" + API_HOST_IP + "/api/wifirouter/CheckBSSID";
+        public const string API_GetHotEvents = "http://" + API_HOST_IP + "/api/event/GetHotEvents";
+        public const string API_CheckIn = "http://" + API_HOST_IP + "/api/UserParticipation/CheckIn";
 
-        public const string API_UserInfo = "http://" + API_HOST_IP + "/Teek/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
+        public const string API_UserInfo = "http://" + API_HOST_IP + "/api/account/getuserinfo?userId="; //Player Information in PlayerInfo Scene
 
-        public const string API_UpdateGemAmount = "http://" + API_HOST_IP + "/Teek/Api/Customer/UpdateGemAmount";
+        public const string API_UpdateGemAmount = "http://" + API_HOST_IP + "/Api/Customer/UpdateGemAmount";
         #endregion
 
         #region OTHERS
