@@ -23,12 +23,14 @@ public class EventDetailScript : MonoBehaviour
     public GameObject VotingTemplate;
     public GameObject CheckinTemplate;
     public GameObject RegisterEventButton;
-   
+    public GameObject CheckInButton;
+
     public static int EventId;
     //public static string EventName;
     public static Image EventImage;
     public int OrganizerId;
     private int GameId;
+    private int UserParticipationId;
 
     public GameObject loadingPanel;
 
@@ -37,6 +39,7 @@ public class EventDetailScript : MonoBehaviour
     public Text SapphireAmountText;
     public GameObject ActivityEmpty;
     public GameObject EmptyPanel;
+    public GameObject GiftPanel;
 
 
     //Buu
@@ -89,13 +92,71 @@ public class EventDetailScript : MonoBehaviour
         PlayerPrefs.Save();
 
         LoadUserInformation();
+        
         //LoadEventInfo();
         GetPrizeData();
         LoadInformtion();
         LoadStores();
         LoadActivities();
-        LoadPrizeCode();
+        LoadUserParticipation();
 
+
+    }
+
+    private void LoadUserParticipation()
+    {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        HTTPRequest request = new HTTPRequest();
+        request.url = ConstantClass.API_GetUserParticipation + "?EventId=" + EventId + "&UserId=" + Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey));
+
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneLoadUserParticipation);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        UCSS.HTTP.GetString(request);
+    }
+
+    private void OnDoneLoadUserParticipation(string result, string transactionId)
+    {
+        ResponseModel<UserParticipationResponseModel> jsonResponse = new ResponseModel<UserParticipationResponseModel>();
+        jsonResponse.Data = new UserParticipationResponseModel();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<UserParticipationResponseModel>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            var item = jsonResponse.Data;
+
+            UserParticipationId = item.Id;
+            if (item.CheckedIn)
+            {
+                CheckInButton.transform.GetChild(4).gameObject.SetActive(false);
+                CheckInButton.transform.GetChild(5).gameObject.SetActive(true);
+            }
+            RegisterEventButton.SetActive(false);
+        }
+        else
+        {
+            foreach (Transform child in ActivityPanel.transform)
+            {
+                if (child.childCount >= 4)
+                {
+                    GameObject childObject = child.GetChild(4).gameObject;
+                    if (childObject != null)
+                    {
+                        childObject.GetComponent<Button>().interactable = false;
+                    }
+                }
+
+
+            }
+            foreach (Transform child in PrizePanel.transform)
+            {
+                child.gameObject.GetComponent<Button>().interactable = false;
+            }
+            
+        }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
+       
     }
 
     private void LoadInformtion()
@@ -201,7 +262,6 @@ public class EventDetailScript : MonoBehaviour
            
             if (jsonResponse.Data.Count > 0)
             {
-                ActivityEmpty.SetActive(false);
                 foreach (var item in jsonResponse.Data)
                 {
                     if (item.GameId != null)
@@ -213,9 +273,6 @@ public class EventDetailScript : MonoBehaviour
                         newButton.transform.SetParent(ActivityPanel.transform, false);
                     }
                 }
-            } else
-            {
-                ActivityEmpty.SetActive(true);
             }
             
         }
@@ -393,6 +450,46 @@ public class EventDetailScript : MonoBehaviour
         UCSS.HTTP.PostForm(request);
     }
 
+    public void CheckIn()
+    {
+        LoadingManager.showLoadingIndicator(loadingPanel);
+        HTTPRequest request = new HTTPRequest();
+        request.url = ConstantClass.API_CheckIn;
+
+        WWWForm form = new WWWForm();
+        form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+        form.AddField("eventId", EventId);
+        string bssid = Utils.getBSSID();
+        form.AddField("bssid", bssid);
+
+        request.formData = form;
+
+        request.stringCallback = new EventHandlerHTTPString(this.OnDoneCheckIn);
+        request.onTimeOut = new EventHandlerServiceTimeOut(MessageHelper.OnTimeOut);
+        request.onError = new EventHandlerServiceError(MessageHelper.OnError);
+
+        UCSS.HTTP.PostForm(request);
+    }
+
+    private void OnDoneCheckIn(string result, string transactionId)
+    {
+        ResponseModel<string> jsonResponse = new ResponseModel<string>();
+        jsonResponse = JsonMapper.ToObject<ResponseModel<string>>(result);
+
+        if (jsonResponse.Succeed)
+        {
+            MessageHelper.SuccessDialog(jsonResponse.Message);
+            CheckInButton.transform.GetChild(4).gameObject.SetActive(false);
+            CheckInButton.transform.GetChild(5).gameObject.SetActive(true);
+        }
+        else
+        {
+            MessageHelper.ErrorDialog(jsonResponse.Message);
+        }
+
+        LoadingManager.hideLoadingIndicator(loadingPanel);
+    }
+
     public void LoadPrizeCode()
     {
         LoadingManager.showLoadingIndicator(loadingPanel);
@@ -425,6 +522,7 @@ public class EventDetailScript : MonoBehaviour
             RubyAmountText.text = jsonResponse.Data.Ruby.ToString();
             SapphireAmountText.text = jsonResponse.Data.Sapphire.ToString();
             CitrineAmountText.text = jsonResponse.Data.Citrine.ToString();
+            Debug.Log("Success");
         }
         else
         {
@@ -477,7 +575,7 @@ public class EventDetailScript : MonoBehaviour
                     sampleButton.CouponId.text = item.Id.ToString();
                     if (item.Status == false && item.Date != null)
                     {
-                        sampleButton.RedeemDate.text = "Redeem at: " + Utils.JsonDateToDateTimeLongString(item.Date);
+                        sampleButton.RedeemDate.text =  Utils.JsonDateToDateTimeLongString(item.Date);
                     }
                     sampleButton.Yes.GetComponent<Button>().onClick.AddListener(() => ShowRedeemPrizeCodePanel(int.Parse(sampleButton.CouponId.text)));
 
@@ -493,27 +591,13 @@ public class EventDetailScript : MonoBehaviour
                     newButton.transform.SetParent(BagPanel.transform, false);
                 }
             }
+            GiftPanel.SetActive(true);
+
         }
         else
         {
-            RegisterEventButton.SetActive(true);
-            foreach (Transform child in ActivityPanel.transform)
-            {
-                if (child.childCount >= 4)
-                {
-                    GameObject childObject = child.GetChild(4).gameObject;
-                    if (childObject != null)
-                    {
-                        childObject.GetComponent<Button>().interactable = false;
-                    }
-                }
-               
-                
-            }
-            foreach (Transform child in PrizePanel.transform)
-            {
-               child.gameObject.GetComponent<Button>().interactable = false;
-            }
+           
+           
         }
 
         LoadingManager.hideLoadingIndicator(loadingPanel);
@@ -524,7 +608,7 @@ public class EventDetailScript : MonoBehaviour
     public void Refresh()
     {
         LoadUserInformation();
-
+        LoadUserParticipation();
         //Clear Prize List
         foreach (Transform child in PrizePanel.transform)
         {
@@ -532,17 +616,16 @@ public class EventDetailScript : MonoBehaviour
         }
         GetPrizeData();
 
-        //Clear PrizeCode List
-        foreach (Transform child in BagPanel.transform)
-        {
-            GameObject.Destroy(child.gameObject);
-        }
-        LoadPrizeCode();
+        
 
         //Clear Activity List
         foreach (Transform child in ActivityPanel.transform)
         {
-            GameObject.Destroy(child.gameObject);
+            if (child.GetSiblingIndex() > 0)
+            {
+
+                GameObject.Destroy(child.gameObject);
+            }
         }
         LoadActivities();
         foreach (Transform child in InformationPanel.transform)
@@ -619,7 +702,7 @@ public class EventDetailScript : MonoBehaviour
                 GameObject.Destroy(child.gameObject);
             }
             //Load Prize Code Again
-            LoadPrizeCode();
+            LoadUserParticipation();
 
             //Show redeem prize code success panel
             RedeemPrizeCodeSuccessPanel.SetActive(true);

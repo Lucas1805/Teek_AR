@@ -14,7 +14,6 @@ namespace Assets.ResponseModels
             public  string ParticipationTime { get; set; }
             public  string Token { get; set; }
             public  string ParticipateCode { get; set; }
-            public  string QRCodeUrl { get; set; }
             public  bool CheckedIn { get; set; }
             public  bool Active { get; set; }
             

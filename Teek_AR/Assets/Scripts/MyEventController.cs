@@ -11,7 +11,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class MyEventController : MonoBehaviour {
-
+    
     public Text UsernameText;
     public Image ProfileImage;
     public GameObject EventButtonTemplate;
@@ -248,11 +248,17 @@ public class MyEventController : MonoBehaviour {
     {
 
         //Clear Event List
+        foreach (Transform child in AllEventPanel.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+        LoadAllEvent();
         foreach (Transform child in MyEventPanel.transform)
         {
             GameObject.Destroy(child.gameObject);
         }
         LoadMyEvent();
+        
         LoadUserInformation();
     }
 

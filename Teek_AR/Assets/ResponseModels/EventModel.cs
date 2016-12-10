@@ -16,8 +16,8 @@ namespace Assets.ResponseModels
         public virtual string StartDate { get; set; }
         public virtual string EndDate { get; set; }
         public virtual string Address { get; set; }
-        public virtual double Latitude { get; set; }
-        public virtual double Longitude { get; set; }
+        public virtual Nullable<double> Latitude { get; set; }
+        public virtual Nullable<double> Longitude { get; set; }
         public virtual string CreatedTime { get; set; }
         public virtual string SeoName { get; set; }
         public virtual bool IsFree { get; set; }
