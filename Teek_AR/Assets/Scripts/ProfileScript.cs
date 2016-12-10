@@ -66,11 +66,11 @@ public class ProfileScript : MonoBehaviour {
             EmailText.text = jsonResponse.Data.Email;
             PhoneText.text = jsonResponse.Data.Phone;
 
-            //Load event image
+            //Load profile image
             if (jsonResponse.Data.ImageURL != null)
             {
                 string url = ConstantClass.ImageHost + jsonResponse.Data.ImageURL;
-                WWW www_loadImage = new WWW(jsonResponse.Data.ImageURL);
+                WWW www_loadImage = new WWW(url);
                 StartCoroutine(loadProfileImage(www_loadImage));
             }
         }
@@ -91,9 +91,19 @@ public class ProfileScript : MonoBehaviour {
         {
             if (www.error == null)
             {
-                ProfileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-                ProfileImageMenu.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-                LoadingManager.hideLoadingIndicator(loadingPanel);
+                try
+                {
+                    ProfileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                    ProfileImageMenu.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                }
+                catch
+                {
+
+                }
+                finally
+                {
+                    LoadingManager.hideLoadingIndicator(loadingPanel);
+                }
             }
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);

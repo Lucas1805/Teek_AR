@@ -291,8 +291,13 @@ public class MyEventController : MonoBehaviour {
         {
             UsernameText.text = jsonResponse.Data.Username;
 
-            WWW www_loadImage = new WWW(jsonResponse.Data.ImageURL);
-            StartCoroutine(loadProfileImage(www_loadImage));
+            //Load profile image
+            if (jsonResponse.Data.ImageURL != null)
+            {
+                string url = ConstantClass.ImageHost + jsonResponse.Data.ImageURL;
+                WWW www_loadImage = new WWW(url);
+                StartCoroutine(loadProfileImage(www_loadImage));
+            }
         }
         else
         {
@@ -311,8 +316,18 @@ public class MyEventController : MonoBehaviour {
         {
             if (www.error == null)
             {
-                ProfileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-                //LoadingManager.hideLoadingIndicator(loadingPanel);
+                try
+                {
+                    ProfileImage.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                }
+                catch
+                {
+
+                }
+                finally
+                {
+                    LoadingManager.hideLoadingIndicator(loadingPanel);
+                }
             }
         }
         LoadingManager.hideLoadingIndicator(loadingPanel);
