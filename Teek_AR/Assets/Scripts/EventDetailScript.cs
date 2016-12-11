@@ -439,6 +439,10 @@ public class EventDetailScript : MonoBehaviour
         else
         {
             //Show error message
+            if (jsonResponse.Message == null)
+            {
+                jsonResponse.Message = "Please connect to available store wifi to play game";
+            }
             MessageHelper.ErrorDialog(jsonResponse.Message);
             LoadingManager.hideLoadingIndicator(loadingPanel);
         }       
@@ -846,7 +850,6 @@ public class EventDetailScript : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("prizeId", PrizeId);
         form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
-        form.AddField("organizerId", PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId));
         form.AddField("eventId", PlayerPrefs.GetInt(ConstantClass.PP_EventIDKey));
 
         request.formData = form;
@@ -868,7 +871,6 @@ public class EventDetailScript : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("prizeId", PrizeId);
         form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
-        form.AddField("organizerId", PlayerPrefs.GetInt(ConstantClass.PP_OrganizerId));
         form.AddField("eventId", PlayerPrefs.GetInt(ConstantClass.PP_EventIDKey));
 
         request.formData = form;
