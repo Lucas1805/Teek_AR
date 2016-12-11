@@ -957,27 +957,12 @@ public class EventDetailScript : MonoBehaviour
         jsonResponse = JsonMapper.ToObject<ResponseModel<String>>(result);
         if (jsonResponse.Succeed)
         {
-            if(jsonResponse.Data != null)
-            {
-                if(jsonResponse.Data.Length > 0)
-                {
-                    MessageHelper.SuccessDialog("Register campaign successfully!! You gain " + jsonResponse.Data + " coins");
-                }
-                else
-                {
-                    MessageHelper.SuccessDialog("Register campaign successfully!!");
-                }
-            }
-            else
-            {
-                MessageHelper.SuccessDialog("Register campaign successfully!!");
-            }
-            
+            MessageHelper.SuccessDialog("Success", "Join campaign successfully. You lost 10 coin. Please go to campaign place and check in to receive coins");          
             RegisterEventButton.SetActive(false);
         }
         else
         {
-            MessageHelper.ErrorDialog("Register campaign failed!!");
+            MessageHelper.ErrorDialog("Join campaign failed!!");
         }
         Refresh();
 
