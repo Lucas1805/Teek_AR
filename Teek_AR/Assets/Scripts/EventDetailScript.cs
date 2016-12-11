@@ -92,15 +92,11 @@ public class EventDetailScript : MonoBehaviour
         PlayerPrefs.Save();
 
         LoadUserInformation();
-        
-        //LoadEventInfo();
         GetPrizeData();
         LoadInformtion();
         LoadStores();
         LoadActivities();
         LoadUserParticipation();
-
-
     }
 
     private void LoadUserParticipation()
@@ -130,6 +126,23 @@ public class EventDetailScript : MonoBehaviour
             {
                 CheckInButton.transform.GetChild(4).gameObject.SetActive(false);
                 CheckInButton.transform.GetChild(5).gameObject.SetActive(true);
+            }
+            foreach (Transform child in ActivityPanel.transform)
+            {
+                if (child.childCount >= 4)
+                {
+                    GameObject childObject = child.GetChild(4).gameObject;
+                    if (childObject != null)
+                    {
+                        childObject.GetComponent<Button>().interactable = true;
+                    }
+                }
+
+
+            }
+            foreach (Transform child in PrizePanel.transform)
+            {
+                child.gameObject.GetComponent<Button>().interactable = true;
             }
             RegisterEventButton.SetActive(false);
         }
@@ -394,13 +407,13 @@ public class EventDetailScript : MonoBehaviour
         //SceneManager.LoadSceneAsync(ConstantClass.GameSceneName);
 
         LoadingManager.showLoadingIndicator(loadingPanel);
-        string bssid = Utils.getBSSID();
+        //string bssid = Utils.getBSSID();
         HTTPRequest request = new HTTPRequest();
         request.url = ConstantClass.API_CheckBSSID;
         GameId = int.Parse(GameIdText);
 
         WWWForm form = new WWWForm();
-        form.AddField("bssid", bssid);
+        form.AddField("bssid", "12:45:78:45:78:56");
         form.AddField("eventID", EventId);
 
         request.formData = form;
@@ -459,8 +472,8 @@ public class EventDetailScript : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
         form.AddField("eventId", EventId);
-        string bssid = Utils.getBSSID();
-        form.AddField("bssid", bssid);
+        //string bssid = Utils.getBSSID();
+        form.AddField("bssid", "12:45:78:45:78:56");
 
         request.formData = form;
 
@@ -493,6 +506,11 @@ public class EventDetailScript : MonoBehaviour
     public void LoadPrizeCode()
     {
         LoadingManager.showLoadingIndicator(loadingPanel);
+        foreach (Transform child in BagPanel.transform)
+        {
+                GameObject.Destroy(child.gameObject);
+
+        }
         HTTPRequest request = new HTTPRequest();
         request.url = ConstantClass.API_LoadPrizeCode;
 
@@ -575,7 +593,7 @@ public class EventDetailScript : MonoBehaviour
                     sampleButton.CouponId.text = item.Id.ToString();
                     if (item.Status == false && item.Date != null)
                     {
-                        sampleButton.RedeemDate.text =  Utils.JsonDateToDateTimeLongString(item.Date);
+                        sampleButton.RedeemDate.text =  Utils.JsonDateToDateTimeShortString(item.Date);
                     }
                     sampleButton.Yes.GetComponent<Button>().onClick.AddListener(() => ShowRedeemPrizeCodePanel(int.Parse(sampleButton.CouponId.text)));
 
@@ -608,7 +626,7 @@ public class EventDetailScript : MonoBehaviour
     public void Refresh()
     {
         LoadUserInformation();
-        LoadUserParticipation();
+        
         //Clear Prize List
         foreach (Transform child in PrizePanel.transform)
         {
@@ -636,6 +654,7 @@ public class EventDetailScript : MonoBehaviour
             
         }
         LoadStores();
+        LoadUserParticipation();
     }
 
     public void LoadPreviouseScene()
@@ -654,7 +673,7 @@ public class EventDetailScript : MonoBehaviour
     public void RedeemPrizeCode()
     {
         LoadingManager.showLoadingIndicator(loadingPanel);
-
+       
         if (MasterCodeText.text.Length > 0)
         {
             if (PrizeCodeId != 0)
@@ -702,7 +721,7 @@ public class EventDetailScript : MonoBehaviour
                 GameObject.Destroy(child.gameObject);
             }
             //Load Prize Code Again
-            LoadUserParticipation();
+            LoadPrizeCode();
 
             //Show redeem prize code success panel
             RedeemPrizeCodeSuccessPanel.SetActive(true);
