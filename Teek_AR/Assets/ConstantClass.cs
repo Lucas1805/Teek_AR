@@ -49,7 +49,7 @@ namespace Assets
         #region API LINKS
         //API LINKS
         public const string ImageHost = "http://" + API_HOST_IP;
-        public const string API_HOST_IP = "localhost:19291/Teek";
+        public const string API_HOST_IP = "arg.azurewebsites.net";
         public const string API_Login = "http://" + API_HOST_IP + "/api/account/login";
         public const string API_Register = "http://" + API_HOST_IP + "/api/account/register";
         public const string API_RedeemPrizeCode = "http://" + API_HOST_IP + "/api/Prize/ReedemPrize";

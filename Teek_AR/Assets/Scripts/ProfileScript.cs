@@ -16,6 +16,7 @@ public class ProfileScript : MonoBehaviour {
     public Text FullnameText;
     public Text EmailText;
     public Text PhoneText;
+    public Text UserCoinText;
     public Image ProfileImage;
     public Image ProfileImageMenu;
     public GameObject loadingPanel;
@@ -65,6 +66,15 @@ public class ProfileScript : MonoBehaviour {
             FullnameText.text = jsonResponse.Data.Fullname;
             EmailText.text = jsonResponse.Data.Email;
             PhoneText.text = jsonResponse.Data.Phone;
+
+            if (jsonResponse.Data.Coin > 2)
+            {
+                UserCoinText.text = jsonResponse.Data.Coin + " coins";
+            }
+            else
+            {
+                UserCoinText.text = jsonResponse.Data.Coin + " coin";
+            }
 
             //Load profile image
             if (jsonResponse.Data.ImageURL != null)

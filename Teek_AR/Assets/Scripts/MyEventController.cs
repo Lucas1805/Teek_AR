@@ -13,6 +13,7 @@ using UnityEngine.SceneManagement;
 public class MyEventController : MonoBehaviour {
     
     public Text UsernameText;
+    public Text UserCoinText;
     public Image ProfileImage;
     public GameObject EventButtonTemplate;
     public GameObject AllEventPanel;
@@ -290,6 +291,14 @@ public class MyEventController : MonoBehaviour {
         if (jsonResponse.Succeed)
         {
             UsernameText.text = jsonResponse.Data.Username;
+            if (jsonResponse.Data.Coin > 2)
+            {
+                UserCoinText.text = jsonResponse.Data.Coin + " coins";
+            }
+            else
+            {
+                UserCoinText.text = jsonResponse.Data.Coin + " coin";
+            }
 
             //Load profile image
             if (jsonResponse.Data.ImageURL != null)

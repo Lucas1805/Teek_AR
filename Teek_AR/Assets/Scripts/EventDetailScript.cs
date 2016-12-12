@@ -197,7 +197,8 @@ public class EventDetailScript : MonoBehaviour
                 EventFullName.text = item.Name.ToString();
                 EventMultiplier.text = item.Multiplier.ToString();
                 EventCalendar.text = Utils.JsonDateToDateTimeShortString(item.StartDate.ToString()) + " - " + Utils.JsonDateToDateTimeShortString(item.EndDate.ToString());
-
+            PlayerPrefs.SetInt(ConstantClass.PP_OrganizerId,(int)jsonResponse.Data.OrganizerId);
+            PlayerPrefs.Save();
             //Load event image
             if (item.ImageUrl != null)
             {
@@ -407,13 +408,13 @@ public class EventDetailScript : MonoBehaviour
         //SceneManager.LoadSceneAsync(ConstantClass.GameSceneName);
 
         LoadingManager.showLoadingIndicator(loadingPanel);
-        //string bssid = Utils.getBSSID();
+        string bssid = Utils.getBSSID();
         HTTPRequest request = new HTTPRequest();
         request.url = ConstantClass.API_CheckBSSID;
         GameId = int.Parse(GameIdText);
 
         WWWForm form = new WWWForm();
-        form.AddField("bssid", "12:45:78:45:78:56");
+        form.AddField("bssid", bssid);
         form.AddField("eventID", EventId);
 
         request.formData = form;
@@ -473,11 +474,12 @@ public class EventDetailScript : MonoBehaviour
         HTTPRequest request = new HTTPRequest();
         request.url = ConstantClass.API_CheckIn;
 
+        string bssid = Utils.getBSSID();
+
         WWWForm form = new WWWForm();
         form.AddField("userId", Decrypt.DecryptString(PlayerPrefs.GetString(ConstantClass.PP_UserIDKey)));
+        form.AddField("bssid", bssid);
         form.AddField("eventId", EventId);
-        //string bssid = Utils.getBSSID();
-        form.AddField("bssid", "12:45:78:45:78:56");
 
         request.formData = form;
 
@@ -729,7 +731,8 @@ public class EventDetailScript : MonoBehaviour
 
             //Show redeem prize code success panel
             RedeemPrizeCodeSuccessPanel.SetActive(true);
-            RedeemPrizeCodeSuccessMessage.text = "You got " + jsonResponse.Data.PrizeName + " from " + PlayerPrefs.GetString(ConstantClass.PP_OrganizerName);
+            //RedeemPrizeCodeSuccessMessage.text = "You got " + jsonResponse.Data.PrizeName + " from " + PlayerPrefs.GetString(ConstantClass.PP_OrganizerName);
+            RedeemPrizeCodeSuccessMessage.text = jsonResponse.Message;
             StartCountTime = true;
         }
         else

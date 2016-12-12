@@ -15,6 +15,7 @@ public class CouponController : MonoBehaviour {
     public GameObject CouponTemplate;
     public InputField CouponCodeInputField;
     public Text UsernameText;
+    public Text UserCoinText;
     public Image ProfileImage;
 
 	// Use this for initialization
@@ -103,6 +104,15 @@ public class CouponController : MonoBehaviour {
         if (jsonResponse.Succeed)
         {
             UsernameText.text = jsonResponse.Data.Username;
+            if(jsonResponse.Data.Coin > 2)
+            {
+                UserCoinText.text = jsonResponse.Data.Coin + " coins";
+            }
+            else
+            {
+                UserCoinText.text = jsonResponse.Data.Coin + " coin";
+            }
+
             //Load profile image
             if (jsonResponse.Data.ImageURL != null)
             {
